@@ -1,0 +1,85 @@
+C251 COMPILER V5.60.0,  STEP                                                               21/01/22  23:05:16  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE STEP
+OBJECT MODULE PLACED IN .\Objects\STEP.MOTOR.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\DRIVER\STEP.MOTOR.C LARGE INTR2 BROWSE INCDIR(.\CODE\ALGORITHM;.\
+                    -CODE\DRIVER;.\CODE\Libraries\libraries;.\CODE\Libraries\seekfree_libraries;.\CODE\Libraries\seekfree_peripheral;.\CODE\U
+                    -SER) DEBUG PRINT(.\Listings\STEP.MOTOR.lst) TABS(2) OBJECT(.\Objects\STEP.MOTOR.obj) 
+
+stmt  level    source
+
+    1          #include "STEP_MOTOR.H"
+    2          #include "zf_gpio.h"
+    3          #include "STEP_MOTOR_CONTROL.h"
+    4          //步进电机控制芯片HIP4082真值表
+    5          /*——————————————————————————————————�
+             -��————————————————————
+    6           |  | ALI | BLI |   | ALO | AHO | BLO | BHO | |  STATE  |
+    7           |  —————————————————————————————————�
+             -�——————— | ——————— |
+    8           |  |  1  |  0  |   |  1  |  0  |  0  |  1  | | FORWARD |
+    9           |  —————————————————————————————————�
+             -�——————— | ——————— |
+   10           |  |  0  |  1  |   |  0  |  1  |  1  |  0  | |   BACK  |
+   11           |  —————————————————————————————————�
+             -�——————— | ——————— |
+   12           |  |  1  |  1  |   |  1  |  0  |  1  |  0  | |   STOP  | 
+   13           |  —————————————————————————————————�
+             -�——————— | ——————— |
+   14           |  |  0  |  0  |   |  0  |  1  |  0  |  1  | |   NULL  |
+   15          ———————————————————————————————————
+             -—————————————————————*/
+   16          
+   17          #define MOTOR_FREQUENCY 17000
+   18          #define MOTOR_MAX_DUTY  4000
+   19          
+   20          void STEP_MOTOR_INIT(){
+   21   1          pwm_init(PWM_CHANNEL_ALI,12500,0);
+   22   1          pwm_init(PWM_CHANNEL_BLI,12500,0);
+   23   1          gpio_mode(P6_0,GPO_PP);
+   24   1          gpio_mode(P6_4,GPO_PP);
+   25   1          FLAG=OFF;
+   26   1      }
+   27              
+   28          void STEP_MOTOR_STOP(){
+   29   1          pwm_duty(PWM_CHANNEL_ALI,0);
+   30   1          pwm_duty(PWM_CHANNEL_BLI,0);
+   31   1      }
+   32              
+   33          void STEP_MOTOR_FORWORD(int duty){
+   34   1          pwm_duty(PWM_CHANNEL_ALI,duty); 
+   35   1          pwm_duty(PWM_CHANNEL_BLI,0);
+   36   1          
+   37   1      }
+   38           
+   39          void STEP_MOTOR_BACKWARD(int duty){
+   40   1          pwm_duty(PWM_CHANNEL_ALI,0); 
+   41   1          pwm_duty(PWM_CHANNEL_BLI,duty);
+   42   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =       330     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =        32     ------
+C251 COMPILER V5.60.0,  STEP                                                               21/01/22  23:05:16  PAGE 2   
+
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,1 @@
+"CODE\USER\CONTROL_SYSTEM.c" LARGE INTR2 BROWSE INCDIR(.\CODE\ALGORITHM;.\CODE\DRIVER;.\CODE\Libraries\libraries;.\CODE\Libraries\seekfree_libraries;.\CODE\Libraries\seekfree_peripheral;.\CODE\USER) DEBUG PRINT(.\Listings\CONTROL_SYSTEM.lst) TABS (2) OBJECT(.\Objects\CONTROL_SYSTEM.obj)

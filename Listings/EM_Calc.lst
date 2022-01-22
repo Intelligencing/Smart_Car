@@ -1,0 +1,57 @@
+C251 COMPILER V5.60.0,  EM_Calc                                                            22/01/22  12:02:32  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE EM_Calc
+OBJECT MODULE PLACED IN .\Objects\EM_Calc.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\ALGORITHM\EM_Calc.c LARGE INTR2 BROWSE INCDIR(.\CODE\ALGORITHM;.\
+                    -CODE\DRIVER;.\CODE\Libraries\libraries;.\CODE\Libraries\seekfree_libraries;.\CODE\Libraries\seekfree_peripheral;.\CODE\U
+                    -SER) DEBUG PRINT(.\Listings\EM_Calc.lst) TABS(2) OBJECT(.\Objects\EM_Calc.obj) 
+
+stmt  level    source
+
+    1          #include "EM_Calc.h"
+    2          
+    3          #define L 0
+    4          #define LM 1
+    5          #define RM 2
+    6          #define R 3
+    7          
+    8          #define ParamA 1
+    9          #define ParamB 2
+   10          
+   11          
+   12          float EM_CALC_POS_RES(int *EM_data){
+   13   1          float RES;
+   14   1          RES = (EM_data[LM]-EM_data[RM])>0 ? (
+   15   1             ((float)(EM_data[L]-EM_data[R])*ParamA + (float)(EM_data[LM]-EM_data[RM])*ParamB)
+   16   1             /((float)(EM_data[L]+EM_data[R])*ParamA + (float)(EM_data[LM]-EM_data[RM])*ParamB)
+   17   1          ):(
+   18   1              ((float)(EM_data[L]-EM_data[R])*ParamA + (float)(EM_data[LM]-EM_data[RM])*ParamB)
+   19   1              /((float)(EM_data[L]+EM_data[R])*ParamA + (float)(EM_data[RM]-EM_data[LM])*ParamB)
+   20   1          );
+   21   1         return RES;
+   22   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =       164     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,39 @@
+C251 COMPILER V5.60.0,  DISPLAY                                                            22/01/22  13:25:31  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE DISPLAY
+OBJECT MODULE PLACED IN .\Objects\DISPLAY.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\USER\DISPLAY.c LARGE INTR2 BROWSE INCDIR(.\CODE\ALGORITHM;.\CODE\
+                    -DRIVER;.\CODE\Libraries\libraries;.\CODE\Libraries\seekfree_libraries;.\CODE\Libraries\seekfree_peripheral;.\CODE\USER) 
+                    -DEBUG PRINT(.\Listings\DISPLAY.lst) TABS(2) OBJECT(.\Objects\DISPLAY.obj) 
+
+stmt  level    source
+
+    1          #include "ENCODE_SENSOR.h"
+    2          #include "DISPLAY.h"
+*** ERROR C53 IN LINE 7 OF .\CODE\DRIVER\ENCODE_SENSOR.h: redefinition of 'TIMER0_P34'
+*** ERROR C53 IN LINE 8 OF .\CODE\DRIVER\ENCODE_SENSOR.h: redefinition of 'TIMER1_P35'
+*** ERROR C53 IN LINE 9 OF .\CODE\DRIVER\ENCODE_SENSOR.h: redefinition of 'TIMER2_P54'
+*** ERROR C53 IN LINE 10 OF .\CODE\DRIVER\ENCODE_SENSOR.h: redefinition of 'TIMER3_P04'
+*** ERROR C53 IN LINE 12 OF .\CODE\DRIVER\ENCODE_SENSOR.h: redefinition of 'TIMER4_P06'
+*** ERROR C48 IN LINE 12 OF .\CODE\DRIVER\ENCODE_SENSOR.h: 'ENCODING_OUTPUT_enum': struct/union type redefinition
+               
+               int READ_DATA[4];
+               
+               void display(){
+                   lcd_showstr(0,0,"L");
+                   lcd_showint16(60,0,READ_DATA[0]);
+                   lcd_showstr(0,1,"LM");
+                   lcd_showint16(60,1,READ_DATA[1]);
+                   lcd_showstr(0,2,"RM");
+                   lcd_showint16(60,2,READ_DATA[2]);
+                   lcd_showstr(0,3,"R");
+                   lcd_showint16(60,3,READ_DATA[3]);
+                   lcd_showstr(0,4,"div");
+                   lcd_showint16(60,4,(READ_DATA[0]*100-READ_DATA[3]*100)/(READ_DATA[0]*100+READ_DATA[3]*100));
+                   lcd_showstr(0,5,"SPPED");
+                   lcd_showuint16(60,5,(ENCODING_READ_RESULT()));
+               }
+*** ERROR C316 IN LINE 19 OF CODE\USER\DISPLAY.c: unterminated conditionals
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  7 ERROR(S)

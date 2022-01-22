@@ -1,0 +1,53 @@
+C251 COMPILER V5.60.0,  main                                                               22/01/22  13:25:30  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE main
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\USER\main.c LARGE INTR2 BROWSE INCDIR(.\CODE\ALGORITHM;.\CODE\DRI
+                    -VER;.\CODE\Libraries\libraries;.\CODE\Libraries\seekfree_libraries;.\CODE\Libraries\seekfree_peripheral;.\CODE\USER) DEB
+                    -UG PRINT(.\Listings\main.lst) TABS(2) OBJECT(.\Objects\main.obj) 
+
+stmt  level    source
+
+    1          #include "headfile.h"
+    2          #include "ENCODE_SENSOR.h"
+    3          
+    4          void SYS_INIT_ALL(){
+    5   1          sys_clk=30000000;
+    6   1          board_init();
+    7   1          lcd_init();
+    8   1          ISR_INIT();
+    9   1          EnableGlobalIRQ();
+   10   1          
+   11   1      }
+   12          
+   13          void main(){
+   14   1          SYS_INIT_ALL();
+   15   1          while(1){
+   16   2      
+   17   2          }
+   18   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =        35     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

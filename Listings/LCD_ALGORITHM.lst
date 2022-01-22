@@ -1,0 +1,104 @@
+C251 COMPILER V5.60.0,  LCD_ALGORITHM                                                      22/01/22  12:02:32  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE LCD_ALGORITHM
+OBJECT MODULE PLACED IN .\Objects\LCD_ALGORITHM.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\ALGORITHM\LCD_ALGORITHM.c LARGE INTR2 BROWSE INCDIR(.\CODE\ALGORI
+                    -THM;.\CODE\DRIVER;.\CODE\Libraries\libraries;.\CODE\Libraries\seekfree_libraries;.\CODE\Libraries\seekfree_peripheral;.\
+                    -CODE\USER) DEBUG PRINT(.\Listings\LCD_ALGORITHM.lst) TABS(2) OBJECT(.\Objects\LCD_ALGORITHM.obj) 
+
+stmt  level    source
+
+    1          #include "LCD_ALGORITHM.h"
+    2          #include "COMMON.h"
+    3          #include "SEEKFREE_18TFT.h"
+    4          #include "SEEKFREE_FONT.h"
+    5          
+    6          void LCD_INITIAL() {
+    7   1          lcd_init();
+    8   1      }
+    9          void LCD_CLEAN() {
+   10   1          lcd_clear(WHITE);
+   11   1      }
+   12          
+   13          int LCD_DISPLAY_uINT(int x, int y, int NUM) {
+   14   1          int LENGTH, temp;
+   15   1          temp = NUM;
+   16   1          while (temp != 0) {
+   17   2              temp = temp / 10;
+   18   2              LENGTH++;
+   19   2          }
+   20   1          temp = LENGTH;
+   21   1          while (LENGTH != 0) {
+   22   2              lcd_showchar(x + LENGTH * 8, y, '0' + NUM % 10);
+*** WARNING C188 IN LINE 22 OF CODE\ALGORITHM\LCD_ALGORITHM.c: 'parameter 3': value truncated
+   23   2              LENGTH--;
+   24   2              NUM /= 10;
+   25   2          }
+   26   1          return (temp + 1) * 8 + x;
+   27   1      }
+   28          
+   29          int LCD_DISPLAY_uFLOAT(int x, int y, float NUM) {
+   30   1          int int_NUM, float_NUM, point_pos;
+   31   1          int_NUM = NUM * 100;
+   32   1          float_NUM = int_NUM - int_NUM / 100 * 100;
+   33   1          int_NUM /= 100;
+   34   1          point_pos = LCD_DISPLAY_uINT(x, y, int_NUM);
+   35   1          return LCD_DISPLAY_uINT(point_pos + 8, y, float_NUM);
+   36   1      }
+   37          
+   38          void LCD_DISPLAY_INT(int x, int y, int NUM) {
+   39   1          int sign_pos,temp;
+   40   1          if(NUM == 0) return ;
+   41   1          temp = NUM>0? NUM : -NUM;
+   42   1          sign_pos = LCD_DISPLAY_uINT(x, y, temp);
+   43   1          if (NUM >= 0) {
+   44   2              lcd_showchar(sign_pos, y, '+');
+   45   2          } else {
+   46   2              lcd_showchar(sign_pos, y, '-');
+   47   2          }
+   48   1      }
+   49          
+   50          void LCD_DISPLAY_FLOAT(int x, int y, float NUM) {
+   51   1          int sign_pos;
+   52   1          float temp;
+   53   1          temp = NUM>0? NUM : -NUM;
+   54   1          sign_pos = LCD_DISPLAY_uFLOAT(x, y, temp);
+   55   1          if (NUM >= 0) {
+   56   2              lcd_showchar(sign_pos, y, '+');
+C251 COMPILER V5.60.0,  LCD_ALGORITHM                                                      22/01/22  12:02:32  PAGE 2   
+
+   57   2          } else {
+   58   2              lcd_showchar(sign_pos, y, '-');
+   59   2          }
+   60   1      }
+   61          
+   62          void LCD_DISPLAY_STRING(uint16 x, uint16 y, const int8 dat[]) {
+*** WARNING C57 IN LINE 62 OF CODE\ALGORITHM\LCD_ALGORITHM.c: parameter 1: different from declaration
+*** WARNING C57 IN LINE 62 OF CODE\ALGORITHM\LCD_ALGORITHM.c: parameter 2: different from declaration
+   63   1          lcd_showstr(x, y, dat);
+   64   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =       382     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------          8
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  3 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "STEP.MOTOR.C": "cpp",
+        "headfile.h": "c",
+        "servo_motor.h": "c",
+        "encode_sensor.h": "c",
+        "control_system.h": "c",
+        "STEP_MOTOR.C": "cpp",
+        "display.h": "c",
+        "servo_motor_control.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}

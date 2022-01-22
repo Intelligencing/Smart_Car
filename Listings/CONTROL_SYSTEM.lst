@@ -1,0 +1,159 @@
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     22/01/22  13:24:33  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE CONTROL_SYSTEM
+OBJECT MODULE PLACED IN .\Objects\CONTROL_SYSTEM.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\USER\CONTROL_SYSTEM.c LARGE INTR2 BROWSE INCDIR(.\CODE\ALGORITHM;
+                    -.\CODE\DRIVER;.\CODE\Libraries\libraries;.\CODE\Libraries\seekfree_libraries;.\CODE\Libraries\seekfree_peripheral;.\CODE
+                    -\USER) DEBUG PRINT(.\Listings\CONTROL_SYSTEM.lst) TABS(2) OBJECT(.\Objects\CONTROL_SYSTEM.obj) 
+
+stmt  level    source
+
+    1          #include "headfile.h"
+    2          #include "SERVO_MOTOR_CONTROL.h"
+    3          #include "STEP_MOTOR_CONTROL.h"
+    4          #include "EM_SENSOR.h"
+    5          #include "EM_FILTER.h"
+    6          #include "ENCODE_SENSOR.h"
+    7          #include "CONTROL_SYSTEM.h"
+    8          
+    9          #define min_SPEED 1             
+   10          #define max_SPEED 2             
+   11          
+   12          // MyCAR_STATUS TEMP_STATUS; //临时状态变量
+   13          MyCAR_STATUS CUR_STATUS;  //当前状态
+   14          int EM_DATA_LIST[4];  //电磁传感器数据存储列表
+   15          int TARGET_SPEED;     //目标速度
+   16          int CURRENT_SPEED;    //当前速度
+   17          int index;            //临时变量
+   18          float ANGLE;          //舵机打角
+   19          
+   20          EM_FILTER FILTER;        //电磁传感器               
+   21          
+   22          void (*func_list[7])();//函数指针数组，用于映射不同状态对应的函数
+   23          
+   24          MyCAR_STATUS CAR_STATUS_JUDGE() {//状态判断
+   25   1      
+   26   1          return STRAIGHT;
+   27   1      }
+   28          
+   29          void MYSYS_INIT(){
+   30   1          //状态函数列表初始化
+   31   1          func_list[0] = FUNC_STRAIGHT;
+   32   1          func_list[1] = FUNC_INTO_CURVE;
+   33   1          func_list[2] = FUNC_ON_CURVE;
+   34   1          func_list[3] = FUNC_OUT_CURVE;
+   35   1          func_list[4] = FUNC_INTO_CIRCLE;
+   36   1          func_list[5] = FUNC_ON_CIRCLE;
+   37   1          func_list[6] = FUNC_OUT_CIRCLE;
+   38   1      
+   39   1          FLAG=OFF;
+   40   1          
+   41   1          EM_SENSOR_INIT();//电磁传感器初始化
+   42   1          ENCODING_INIT();//编码器初始化
+   43   1          SERVO_MOTOR_PID_INIT();//初始化舵机PID
+   44   1          SERVO_MOTOR_INIT();//初始化舵机控制系统
+   45   1          STEP_MOTOR_INIT();//初始化步进电机控制系统
+   46   1          STEP_MOTOR_PID_INIT();//初始化步进电机PID
+   47   1          EM_FILTER_INIT(&FILTER);//滤波器初始化
+   48   1      }
+   49          
+   50          void Data_update(){
+   51   1          for (index = 0; index < 6; index++) {
+   52   2              EM_READ_SENSOR(EM_DATA_LIST);                 //读取数据
+   53   2              EM_FILTER_ADD_SAMPLE(&FILTER, EM_DATA_LIST);  //加入滤波器中
+   54   2          }
+   55   1          EM_FILTER_READ_RESULT(&FILTER, EM_DATA_LIST);  //获取滤波结果
+   56   1          ENCODING_READ_RESULT();//编码器读取电机转速
+   57   1      }
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     22/01/22  13:24:33  PAGE 2   
+
+   58          
+   59          //前进函数
+   60          void FORWARD_FUNC(){
+   61   1          ANGLE=SERVO_MOTOR_CONTROL(EM_DATA_LIST);
+   62   1          CURRENT_SPEED=ENCODING_READ_RESULT();//编码器计算当前速度
+   63   1          TARGET_SPEED=min_SPEED + (max_SPEED - min_SPEED)/10*ANGLE;//利用舵机打角角度，处理出速�
+             -�目标值
+   64   1          STEP_MOTOR_CONTROL(CURRENT_SPEED,TARGET_SPEED);//电机输出
+   65   1      }
+   66          
+   67          //直线行驶状态函数实现
+   68          void FUNC_STRAIGHT() {
+   69   1          FORWARD_FUNC();
+   70   1      }
+   71          
+   72          //入弯状态函数实现
+   73          void FUNC_INTO_CURVE(){
+   74   1          SERVO_MOTOR_PID_INIT(&SERVO_MOTOR_PID,STEPMOTOR_Kp,STEPMOTOR_Ki,STEPMOTOR_Kd,0,PID_INCREASE_MODE);
+*** WARNING C95 IN LINE 74 OF CODE\USER\CONTROL_SYSTEM.c: 'SERVO_MOTOR_PID_INIT': too many actual parameters
+   75   1          FORWARD_FUNC();
+   76   1          CUR_STATUS = ON_CURVE;
+   77   1      }
+   78          
+   79          //在弯道中状态函数实现
+   80          void FUNC_ON_CURVE(){
+   81   1          FORWARD_FUNC();
+   82   1      }
+   83          
+   84          //出弯状态函数实现
+   85          void FUNC_OUT_CURVE(){
+   86   1          SERVO_MOTOR_PID_INIT(&SERVO_MOTOR_PID,STEPMOTOR_Kp,STEPMOTOR_Ki,STEPMOTOR_Kd,0,PID_INCREASE_MODE);
+*** WARNING C95 IN LINE 86 OF CODE\USER\CONTROL_SYSTEM.c: 'SERVO_MOTOR_PID_INIT': too many actual parameters
+   87   1          FORWARD_FUNC();
+   88   1          CUR_STATUS = STRAIGHT;
+   89   1      }
+   90          
+   91          //入环状态函数实现
+   92          void FUNC_INTO_CIRCLE(){
+   93   1          SERVO_MOTOR_PID_INIT(&SERVO_MOTOR_PID,STEPMOTOR_Kp,STEPMOTOR_Ki,STEPMOTOR_Kd,0,PID_INCREASE_MODE);
+*** WARNING C95 IN LINE 93 OF CODE\USER\CONTROL_SYSTEM.c: 'SERVO_MOTOR_PID_INIT': too many actual parameters
+   94   1          SERVO_MOTOR_ANGLE(10);
+   95   1          delay_ms(1000);
+   96   1          CUR_STATUS = ON_CIRCLE;
+   97   1      }
+   98          
+   99          //在环岛中状态函数实现
+  100          void FUNC_ON_CIRCLE(){
+  101   1          FORWARD_FUNC();
+  102   1      }
+  103          
+  104          //出环状态函数实现
+  105          void FUNC_OUT_CIRCLE(){
+  106   1          SERVO_MOTOR_PID_INIT(&SERVO_MOTOR_PID,STEPMOTOR_Kp,STEPMOTOR_Ki,STEPMOTOR_Kd,0,PID_INCREASE_MODE);
+*** WARNING C95 IN LINE 106 OF CODE\USER\CONTROL_SYSTEM.c: 'SERVO_MOTOR_PID_INIT': too many actual parameters
+  107   1          FORWARD_FUNC();
+  108   1          delay_ms(1000);
+  109   1          CUR_STATUS = STRAIGHT;
+  110   1      }
+  111          
+  112          void My_routineTask() {
+  113   1          CUR_STATUS = CAR_STATUS_JUDGE();
+  114   1          (*func_list[CUR_STATUS])();
+  115   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     22/01/22  13:24:33  PAGE 3   
+
+  code size            =       903     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =       126     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  4 WARNING(S),  0 ERROR(S)

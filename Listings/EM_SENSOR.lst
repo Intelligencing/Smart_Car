@@ -1,0 +1,51 @@
+C251 COMPILER V5.60.0,  EM_SENSOR                                                          22/01/22  12:02:37  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE EM_SENSOR
+OBJECT MODULE PLACED IN .\Objects\EM_SENSOR.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\DRIVER\EM_SENSOR.c LARGE INTR2 BROWSE INCDIR(.\CODE\ALGORITHM;.\C
+                    -ODE\DRIVER;.\CODE\Libraries\libraries;.\CODE\Libraries\seekfree_libraries;.\CODE\Libraries\seekfree_peripheral;.\CODE\US
+                    -ER) DEBUG PRINT(.\Listings\EM_SENSOR.lst) TABS(2) OBJECT(.\Objects\EM_SENSOR.obj) 
+
+stmt  level    source
+
+    1          #include "EM_SENSOR.h"
+    2          #include "zf_adc.h"
+    3          
+    4          void EM_SENSOR_INIT(){
+    5   1          adc_init(ADC_P00,ADC_SYSclk_DIV_10);
+    6   1          adc_init(ADC_P01,ADC_SYSclk_DIV_10);
+    7   1          adc_init(ADC_P05,ADC_SYSclk_DIV_10);
+    8   1          adc_init(ADC_P06,ADC_SYSclk_DIV_10);
+    9   1      }
+   10          
+   11          void EM_READ_SENSOR(int* DATA_LIST){
+   12   1          DATA_LIST[0] = adc_once(ADC_P00,ADC_12BIT);
+   13   1          DATA_LIST[1] = adc_once(ADC_P01,ADC_12BIT);
+   14   1          DATA_LIST[2] = adc_once(ADC_P05,ADC_12BIT);
+   15   1          DATA_LIST[3] = adc_once(ADC_P06,ADC_12BIT);
+   16   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =       102     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

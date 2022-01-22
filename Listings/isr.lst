@@ -1,0 +1,150 @@
+C251 COMPILER V5.60.0,  isr                                                                22/01/22  12:17:16  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE isr
+OBJECT MODULE PLACED IN .\Objects\isr.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\USER\isr.c LARGE INTR2 BROWSE INCDIR(.\CODE\ALGORITHM;.\CODE\DRIV
+                    -ER;.\CODE\Libraries\libraries;.\CODE\Libraries\seekfree_libraries;.\CODE\Libraries\seekfree_peripheral;.\CODE\USER) DEBU
+                    -G PRINT(.\Listings\isr.lst) TABS(2) OBJECT(.\Objects\isr.obj) 
+
+stmt  level    source
+
+    1          #include "isr.h"
+    2          
+    3          struct FUNC_CONTAINER{
+    4              void (*func)();
+    5          };
+    6          
+    7          struct FUNC_CONTAINER FUNCLIST[27];
+    8          
+    9          void ISR_INIT(){
+   10   1          int i;
+   11   1          for(i=0;i<27;i++){
+   12   2              FUNCLIST[i].func=0;
+   13   2          }
+   14   1      }
+   15          
+   16          void SET_ISR_FUNC(ISR_TYPE Isr,void (*func)()){
+   17   1          FUNCLIST[Isr].func = func;
+   18   1      }
+   19          
+   20          void  INT0_Isr()  interrupt 0{
+   21   1          if(FUNCLIST[0].func!=0)
+   22   1              (*FUNCLIST[0].func)();
+   23   1      }
+   24          void  TM0_Isr()   interrupt 1{
+   25   1          if(FUNCLIST[1].func!=0)
+   26   1              (*FUNCLIST[1].func)();
+   27   1      }
+   28          void  INT1_Isr()  interrupt 2{
+   29   1          if(FUNCLIST[2].func!=0)
+   30   1              (*FUNCLIST[2].func)();
+   31   1      }
+   32          void  TM1_Isr()   interrupt 3{
+   33   1          if(FUNCLIST[3].func!=0)
+   34   1              (*FUNCLIST[3].func)();
+   35   1      }
+   36          void  UART1_Isr() interrupt 4{
+   37   1          if(FUNCLIST[4].func!=0)
+   38   1              (*FUNCLIST[4].func)();
+   39   1      }
+   40          void  ADC_Isr()   interrupt 5{
+   41   1          if(FUNCLIST[5].func!=0)
+   42   1              (*FUNCLIST[5].func)();
+   43   1      }
+   44          void  LVD_Isr()   interrupt 6{
+   45   1          if(FUNCLIST[6].func!=0)
+   46   1              (*FUNCLIST[6].func)();
+   47   1      }
+   48          void  PCA_Isr()   interrupt 7{
+   49   1          if(FUNCLIST[7].func!=0)
+   50   1              (*FUNCLIST[7].func)();
+   51   1      }
+   52          void  UART2_Isr() interrupt 8{
+   53   1          if(FUNCLIST[8].func!=0)
+   54   1              (*FUNCLIST[8].func)();
+   55   1      }
+   56          void  SPI_Isr()   interrupt 9{
+   57   1          if(FUNCLIST[9].func!=0)
+C251 COMPILER V5.60.0,  isr                                                                22/01/22  12:17:16  PAGE 2   
+
+   58   1              (*FUNCLIST[9].func)();
+   59   1      }
+   60          void  INT2_Isr()  interrupt 10{
+   61   1          if(FUNCLIST[10].func!=0)
+   62   1              (*FUNCLIST[10].func)();
+   63   1      }
+   64          void  INT3_Isr()  interrupt 11{
+   65   1          if(FUNCLIST[11].func!=0)
+   66   1              (*FUNCLIST[11].func)();
+   67   1      }
+   68          void  TM2_Isr()   interrupt 12{
+   69   1          if(FUNCLIST[12].func!=0)
+   70   1              (*FUNCLIST[12].func)();
+   71   1      }
+   72          void  INT4_Isr()  interrupt 16{
+   73   1          if(FUNCLIST[16].func!=0)
+   74   1              (*FUNCLIST[16].func)();
+   75   1      }
+   76          void  UART3_Isr() interrupt 17{
+   77   1          if(FUNCLIST[17].func!=0)
+   78   1              (*FUNCLIST[17].func)();
+   79   1      }
+   80          void  UART4_Isr() interrupt 18{
+   81   1          if(FUNCLIST[18].func!=0)
+   82   1              (*FUNCLIST[18].func)();
+   83   1      }
+   84          void  TM3_Isr()   interrupt 19{
+   85   1          if(FUNCLIST[19].func!=0)
+   86   1              (*FUNCLIST[19].func)();
+   87   1      }
+   88          void  TM4_Isr()   interrupt 20{
+   89   1          if(FUNCLIST[20].func!=0)
+   90   1              (*FUNCLIST[20].func)();
+   91   1      }
+   92          void  CMP_Isr()   interrupt 21{
+   93   1          if(FUNCLIST[21].func!=0)
+   94   1              (*FUNCLIST[21].func)();
+   95   1      }
+   96          void  I2C_Isr()   interrupt 24{
+   97   1          if(FUNCLIST[24].func!=0)
+   98   1              (*FUNCLIST[24].func)();
+   99   1      }
+  100          void  USB_Isr()   interrupt 25{
+  101   1          if(FUNCLIST[25].func!=0)
+  102   1              (*FUNCLIST[25].func)();
+  103   1      }
+  104          void  PWM1_Isr()  interrupt 26{
+  105   1          if(FUNCLIST[26].func!=0)
+  106   1              (*FUNCLIST[26].func)();
+  107   1      }
+  108          void  PWM2_Isr()  interrupt 27{
+  109   1          if(FUNCLIST[27].func!=0)
+  110   1              (*FUNCLIST[27].func)();
+  111   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =      1564     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =        54     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+C251 COMPILER V5.60.0,  isr                                                                22/01/22  12:17:16  PAGE 3   
+
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
