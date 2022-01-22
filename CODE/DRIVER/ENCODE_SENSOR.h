@@ -11,6 +11,11 @@ typedef enum{
     TIMER4_P06 = TIM_4
 }ENCODING_OUTPUT_enum;
 
+typedef enum{
+    FORWARD  = 1,
+    BACKWARD = 0
+}Direction;
+
 void ENCODING_INIT();
 
 uint16 ENCODING_READ_RESULT();
