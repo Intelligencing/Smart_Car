@@ -1,0 +1,1 @@
+"CODE\USER\SERVO_MOTOR_CONTROL.C" LARGE INTR2 BROWSE INCDIR(.\CODE\ALGORITHM;.\CODE\DRIVER;.\CODE\Libraries\libraries;.\CODE\Libraries\seekfree_libraries;.\CODE\Libraries\seekfree_peripheral;.\CODE\USER) DEBUG PRINT(.\Listings\SERVO_MOTOR_CONTROL.lst) TABS (2) OBJECT(.\Objects\SERVO_MOTOR_CONTROL.obj)

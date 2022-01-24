@@ -1,6 +1,13 @@
 #ifndef CONTROL_SYSTEM_H
 #define CONTROL_SYSTEM_H
 
+#include "SERVO_MOTOR_CONTROL.h"
+#include "STEP_MOTOR_CONTROL.h"
+#include "EM_SENSOR.h"
+#include "EM_FILTER.h"
+#include "ENCODE_SENSOR.h"
+#include "LCD_show.h"
+
 typedef enum { //车状态枚举
     STRAIGHT, 
     INTO_CURVE,

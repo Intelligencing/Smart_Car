@@ -7,7 +7,12 @@
         "control_system.h": "c",
         "STEP_MOTOR.C": "cpp",
         "display.h": "c",
-        "servo_motor_control.h": "c"
+        "servo_motor_control.h": "c",
+        "SERVO_MOTOR_CONTROL.C": "cpp",
+        "STEP_MOTOR_CONTROL.C": "cpp",
+        "em_sensor.h": "c",
+        "step_motor_control.h": "c",
+        "step_motor.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

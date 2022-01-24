@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  main                                                               22/01/22  22:21:58  PAGE 1   
+C251 COMPILER V5.60.0,  main                                                               24/01/22  11:39:21  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE main
@@ -9,34 +9,69 @@ COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\USER\main.c LARGE INTR2 B
 
 stmt  level    source
 
-    1          #include "headfile.h"
-    2          #include "ENCODE_SENSOR.h"
-    3          
-    4          void SYS_INIT_ALL(){
-    5   1          sys_clk=30000000;
-    6   1          board_init();
-    7   1          lcd_init();
-    8   1          ISR_INIT();
-    9   1          EnableGlobalIRQ();
-   10   1          
-   11   1      }
-   12          
-   13          void main(){
-   14   1          SYS_INIT_ALL();
-   15   1          while(1){
-   16   2      
-   17   2          }
-   18   1      }
+    1          #include "EM_Calc.h"
+    2          #include "LCD_show.h"
+    3          #include "CONTROL_SYSTEM.h"
+    4          
+    5          #define TARGET_SPEED 200
+    6          
+    7          void SYS_INIT_ALL(){
+    8   1          sys_clk=30000000;
+    9   1          board_init();
+   10   1          lcd_init();
+   11   1          ISR_INIT();
+   12   1          EnableGlobalIRQ();
+   13   1          
+   14   1      }
+   15          
+   16          //begin-----------------------------------------------------------------
+   17          // ENCODE_SENSOR SENSOR;
+   18          int res;
+   19          int datalist[4];      //电磁传感器数据存储列表
+   20          
+   21          void display(){
+   22   1          // debug-----------------------------------------------------------------
+   23   1          LCD_display("L",datalist[0],0);
+   24   1          LCD_display("LM",datalist[1],1);
+   25   1          LCD_display("RM",datalist[2],2);
+   26   1          LCD_display("R",datalist[3],3);
+   27   1          LCD_display("dir",EM_CALC_POS_RES(datalist)*1000,4);
+   28   1      //-----------------------------------------------------------------
+   29   1      }
+   30          //end-----------------------------------------------------------------
+   31          
+   32          void main(){
+   33   1          SYS_INIT_ALL();
+   34   1      //    lcd_clear(BLUE);
+   35   1      //    lcd_clear(WHITE);
+   36   1          MYSYS_INIT();
+   37   1      //begin-----------------------------------------------------------------
+   38   1          ENCODING_INIT();
+   39   1      //end-----------------------------------------------------------------
+   40   1         
+   41   1          while(1){
+   42   2              // res = ENCODING_READ_RESULT();
+   43   2              // STEP_MOTOR_CONTROL(RES,TARGET_SPEED);
+   44   2              // delay_ms(5);
+   45   2              EM_READ_SENSOR(datalist);
+   46   2              LCD_display("ANGLE",SERVO_MOTOR_CONTROL(datalist,0),5);
+   47   2              display();
+   48   2              
+   49   2              // MySteeringControl_TASK(datalist,0);
+   50   2          }
+   51   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =        35     ------
+  code size            =       195     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
+C251 COMPILER V5.60.0,  main                                                               24/01/22  11:39:21  PAGE 2   
+
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =    ------     ------
+  xdata size           =        10     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
@@ -46,7 +81,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =    ------     ------
+  hconst size          =        20     ------
 End of Module Information.
 
 

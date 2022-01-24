@@ -364,6 +364,16 @@
               <FileType>5</FileType>
               <FilePath>.\CODE\ALGORITHM\PID.h</FilePath>
             </File>
+            <File>
+              <FileName>LCD_show.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CODE\ALGORITHM\LCD_show.c</FilePath>
+            </File>
+            <File>
+              <FileName>LCD_show.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CODE\ALGORITHM\LCD_show.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -743,6 +753,16 @@
               <FileName>DISPLAY.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\CODE\USER\DISPLAY.h</FilePath>
+            </File>
+            <File>
+              <FileName>SERVO_MOTOR_CONTROL.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CODE\USER\SERVO_MOTOR_CONTROL.C</FilePath>
+            </File>
+            <File>
+              <FileName>STEP_MOTOR_CONTROL.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CODE\USER\STEP_MOTOR_CONTROL.C</FilePath>
             </File>
           </Files>
         </Group>

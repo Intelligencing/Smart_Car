@@ -16,6 +16,21 @@ typedef enum{
     BACKWARD = 0
 }Direction;
 
+struct ENCODING_RES_STRUCT{
+    int speed;
+    Direction dir;
+};
+
+typedef struct ENCODING_RES_STRUCT ENCODE_RES;
+
+// struct ENCODE_SENSOR_STRUCT{
+//     ENCODING_OUTPUT_enum LSB_PIN;
+//     PIN_enum DIR_PIN;
+//     ENCODE_RES RESULT;
+// };
+
+// typedef struct ENCODE_SENSOR_STRUCT ENCODE_SENSOR;
+
 void ENCODING_INIT();
 
 uint16 ENCODING_READ_RESULT();

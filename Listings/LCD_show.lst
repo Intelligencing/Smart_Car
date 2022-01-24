@@ -1,0 +1,41 @@
+C251 COMPILER V5.60.0,  LCD_show                                                           24/01/22  10:52:21  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE LCD_show
+OBJECT MODULE PLACED IN .\Objects\LCD_show.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\ALGORITHM\LCD_show.c LARGE INTR2 BROWSE INCDIR(.\CODE\ALGORITHM;.
+                    -\CODE\DRIVER;.\CODE\Libraries\libraries;.\CODE\Libraries\seekfree_libraries;.\CODE\Libraries\seekfree_peripheral;.\CODE\
+                    -USER) DEBUG PRINT(.\Listings\LCD_show.lst) TABS(2) OBJECT(.\Objects\LCD_show.obj) 
+
+stmt  level    source
+
+    1          #include "LCD_show.h"
+    2          
+    3          void LCD_display(const int8* str,int16 value,int8 row_num){
+    4   1          lcd_showstr(0,row_num,str);
+    5   1          lcd_showint16(40,row_num,value);
+    6   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =        31     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

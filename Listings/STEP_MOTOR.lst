@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  STEP_MOTOR                                                         22/01/22  13:10:05  PAGE 1   
+C251 COMPILER V5.60.0,  STEP_MOTOR                                                         24/01/22  10:52:22  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE STEP_MOTOR
@@ -55,20 +55,25 @@ stmt  level    source
    38   1          pwm_duty(PWM_CHANNEL_ALI,0); 
    39   1          pwm_duty(PWM_CHANNEL_BLI,duty);
    40   1      }
+   41          
+   42          uint32 STEP_MOTOR_GET_DUTY(STEP_MOTOR* MOTOR){
+   43   1          return MOTOR->CURRENT_PWM_DUTY;
+   44   1      }
+   45          
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       139     ------
+  code size            =       148     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
+C251 COMPILER V5.60.0,  STEP_MOTOR                                                         24/01/22  10:52:22  PAGE 2   
+
   idata size           =    ------     ------
   pdata size           =    ------     ------
   xdata size           =    ------     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
-C251 COMPILER V5.60.0,  STEP_MOTOR                                                         22/01/22  13:10:05  PAGE 2   
-
   bit size             =    ------     ------
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------

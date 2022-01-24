@@ -38,3 +38,8 @@ void STEP_MOTOR_BACKWARD(int duty){
     pwm_duty(PWM_CHANNEL_ALI,0); 
     pwm_duty(PWM_CHANNEL_BLI,duty);
 }
+
+uint32 STEP_MOTOR_GET_DUTY(STEP_MOTOR* MOTOR){
+    return MOTOR->CURRENT_PWM_DUTY;
+}
+

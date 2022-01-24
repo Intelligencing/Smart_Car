@@ -2,7 +2,7 @@
 #include "SERVO_MOTOR.h"
 #include "zf_delay.h"
 
-#define MAX_ANGLE 10
+#define MAX_ANGLE 7
 
 void SERVO_MOTOR_INIT(){
     pwm_init(PWM_CHANNEL_SERVO,50,760);

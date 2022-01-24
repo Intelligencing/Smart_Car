@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  SERVO_MOTOR                                                        22/01/22  12:02:37  PAGE 1   
+C251 COMPILER V5.60.0,  SERVO_MOTOR                                                        24/01/22  10:52:22  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE SERVO_MOTOR
@@ -13,7 +13,7 @@ stmt  level    source
     2          #include "SERVO_MOTOR.h"
     3          #include "zf_delay.h"
     4          
-    5          #define MAX_ANGLE 10
+    5          #define MAX_ANGLE 7
     6          
     7          void SERVO_MOTOR_INIT(){
     8   1          pwm_init(PWM_CHANNEL_SERVO,50,760);
