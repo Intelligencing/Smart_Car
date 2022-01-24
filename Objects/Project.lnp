@@ -39,7 +39,8 @@
 ".\Objects\isr.obj",
 ".\Objects\CONTROL_SYSTEM.obj",
 ".\Objects\SERVO_MOTOR_CONTROL.obj",
-".\Objects\STEP_MOTOR_CONTROL.obj" 
+".\Objects\STEP_MOTOR_CONTROL.obj",
+".\Objects\TASK_SYS.obj" 
 TO ".\Objects\Project" 
 PRINT(".\Listings\Project.map") CASE 
 CLASSES (EDATA (0x0-0x1FFF), 

@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  PID                                                                22/01/22  12:02:32  PAGE 1   
+C251 COMPILER V5.60.0,  PID                                                                24/01/22  20:36:13  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE PID
@@ -14,7 +14,7 @@ stmt  level    source
     3           * @Author       : FZU Liao
     4           * @Date         : 2022-01-02 20:19:32
     5           * @LastEditors  : Liao
-    6           * @LastEditTime : 2022-01-12 23:35:24
+    6           * @LastEditTime : 2022-01-22 16:49:46
     7           * @FilePath     : \ALGORITHM\PID.c
     8           * Copyright 2022 FZU Liao, All Rights Reserved. 
     9           */
@@ -33,60 +33,55 @@ stmt  level    source
    22   1      }
    23          
    24          float PID_CALC_RESULT(PID* PID_CONTROL,float CURRENT_INPUT){
-   25   1          float PID_OUTPUT;
-   26   1          float ERROR,d_ERROR;
-   27   1          if(PID_CONTROL->PID_X_MODE == PID_REALIZE_MODE){
-   28   2              ERROR = PID_CONTROL->TARGET_VALUE - CURRENT_INPUT;
-   29   2              PID_CONTROL->PID_SUM_ERROR += ERROR;
-   30   2              d_ERROR = PID_CONTROL->PID_CURRENT_ERROR - PID_CONTROL->PID_LAST_ERROR;
-   31   2              PID_CONTROL->PID_LAST_ERROR    = PID_CONTROL->PID_CURRENT_ERROR;
-   32   2              PID_CONTROL->PID_CURRENT_ERROR = ERROR;
-   33   2              PID_OUTPUT = (
-   34   2                  PID_CONTROL->FACTOR_Proportional*ERROR +
-   35   2                  PID_CONTROL->FACTOR_Integral*PID_CONTROL->PID_SUM_ERROR + 
-   36   2                  PID_CONTROL->FACTOR_Differential*d_ERROR
-   37   2              );
-   38   2          }else{
-   39   2              ERROR = PID_CONTROL->TARGET_VALUE - CURRENT_INPUT;
-   40   2              d_ERROR = ERROR - 2*PID_CONTROL->PID_CURRENT_ERROR + PID_CONTROL->PID_LAST_ERROR;
-   41   2              PID_OUTPUT = (
-   42   2                  PID_CONTROL->FACTOR_Proportional*(ERROR-PID_CONTROL->PID_CURRENT_ERROR) +
-   43   2                  PID_CONTROL->FACTOR_Integral*ERROR + 
-   44   2                  PID_CONTROL->FACTOR_Differential*d_ERROR
-   45   2              );
-   46   2              PID_CONTROL->PID_LAST_ERROR = PID_CONTROL->PID_CURRENT_ERROR;
-   47   2              PID_CONTROL->PID_CURRENT_ERROR = ERROR;
-   48   2          }
-   49   1          return PID_OUTPUT;
-   50   1      }
-   51          
-   52          void PID_INIT_NEWPID(PID* NEW_PID,float Param_P,float Param_I,float Param_D,float Param_Target,PID_CONTRO
+   25   1          float P , I , D;
+   26   1          float PID_OUTPUT;
+   27   1          float ERROR,d_ERROR;
+   28   1          ERROR = PID_CONTROL->TARGET_VALUE - CURRENT_INPUT;
+   29   1          PID_CONTROL->PID_SUM_ERROR += ERROR;
+   30   1          if(PID_CONTROL->PID_X_MODE == PID_REALIZE_MODE){
+   31   2              d_ERROR = PID_CONTROL->PID_LAST_ERROR - PID_CONTROL->PID_PREV_ERROR;
+   32   2              P = PID_CONTROL->FACTOR_Proportional*ERROR;
+   33   2              I = PID_CONTROL->FACTOR_Integral*PID_CONTROL->PID_SUM_ERROR;
+   34   2              D = PID_CONTROL->FACTOR_Differential*d_ERROR;
+   35   2          }else{
+   36   2              d_ERROR = ERROR - 2*PID_CONTROL->PID_LAST_ERROR + PID_CONTROL->PID_PREV_ERROR;
+   37   2              P = (ERROR-PID_CONTROL->PID_LAST_ERROR)*PID_CONTROL->FACTOR_Proportional;
+   38   2              I = PID_CONTROL->FACTOR_Integral*ERROR;
+   39   2              D = PID_CONTROL->FACTOR_Differential*d_ERROR;
+   40   2          }
+   41   1          PID_CONTROL->PID_PREV_ERROR = PID_CONTROL->PID_LAST_ERROR;
+   42   1          PID_CONTROL->PID_LAST_ERROR = ERROR;
+   43   1          PID_OUTPUT = P+I+D;
+   44   1          return PID_OUTPUT;
+   45   1      }
+   46          
+   47          void PID_INIT_NEWPID(PID* NEW_PID,float Param_P,float Param_I,float Param_D,float Param_Target,PID_CONTRO
              -L_MODE PID_MODE){
-   53   1          //memset(NEW_PID,0,sizeof(struct PID_CONTROL_STRUCT));
-   54   1          NEW_PID->PID_X_MODE = PID_MODE;
-   55   1          NEW_PID->PID_CURRENT_ERROR  = 0;
-   56   1          NEW_PID->PID_LAST_ERROR     = 0;
-C251 COMPILER V5.60.0,  PID                                                                22/01/22  12:02:32  PAGE 2   
+   48   1          //memset(NEW_PID,0,sizeof(struct PID_CONTROL_STRUCT));
+   49   1          NEW_PID->PID_X_MODE = PID_MODE;
+   50   1          NEW_PID->PID_PREV_ERROR     = 0;
+   51   1          NEW_PID->PID_LAST_ERROR     = 0;
+   52   1          NEW_PID->PID_SUM_ERROR      = 0;
+   53   1          PID_SET_FACTORS(NEW_PID,Param_P,Param_I,Param_D);
+   54   1          PID_SET_TARGET(NEW_PID,Param_Target);
+   55   1      }
+   56          
+C251 COMPILER V5.60.0,  PID                                                                24/01/22  20:36:13  PAGE 2   
 
-   57   1          NEW_PID->PID_SUM_ERROR      = 0;
-   58   1          PID_SET_FACTORS(NEW_PID,Param_P,Param_I,Param_D);
-   59   1          PID_SET_TARGET(NEW_PID,Param_Target);
-   60   1      }
-   61          
-   62          void PID_DEINIT_PID(PID* PID_CONTROL){
-   63   1          //free(PID_CONTROL);
-   64   1      }
-*** WARNING C47 IN LINE 62 OF CODE\ALGORITHM\PID.c: 'PID_CONTROL': unreferenced parameter
+   57          void PID_DEINIT_PID(PID* PID_CONTROL){
+   58   1          //free(PID_CONTROL);
+   59   1      }
+*** WARNING C47 IN LINE 57 OF CODE\ALGORITHM\PID.c: 'PID_CONTROL': unreferenced parameter
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       463     ------
+  code size            =       436     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =    ------         22
+  xdata size           =    ------         30
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------

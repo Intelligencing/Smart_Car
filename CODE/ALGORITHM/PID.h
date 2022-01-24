@@ -26,8 +26,8 @@ struct PID_CONTROL_STRUCT{
     
     float TARGET_VALUE;             //目标值
     
-    float PID_CURRENT_ERROR;        //当前误差记录
     float PID_LAST_ERROR;           //前一次误差记录
+    float PID_PREV_ERROR;           //前两次误差记录
     float PID_SUM_ERROR;            //误差积分
     
 };

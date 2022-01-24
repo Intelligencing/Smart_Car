@@ -60,7 +60,7 @@ void FORWARD_FUNC(){
     CURRENT_SPEED=ENCODING_READ_RESULT();//编码器计算当前速度
     TARGET_SPEED=SPEED; //min_SPEED + (max_SPEED - min_SPEED)/10*ANGLE;
     //利用舵机打角角度，处理出速度目标值
-    STEP_MOTOR_CONTROL(CURRENT_SPEED,TARGET_SPEED);//电机输出
+    STEP_MOTOR_CONTROL(RES_L,TARGET_SPEED);//电机输出
 }
 
 //直线行驶状态函数实现
@@ -109,6 +109,9 @@ void FUNC_OUT_CIRCLE(){
 }
 
 void My_routineTask() {
-    CUR_STATUS = CAR_STATUS_JUDGE();
-    (*func_list[CUR_STATUS])();
+    ANGLE = SERVO_MOTOR_CONTROL(EM_DATA_LIST, 0);
+   STEP_MOTOR_CONTROL(RES_L,SPEED);
+    SERVO_MOTOR_ANGLE(ANGLE_ADAPTER(ANGLE));
+    // CUR_STATUS = CAR_STATUS_JUDGE();
+    // (*func_list[CUR_STATUS])();
 }

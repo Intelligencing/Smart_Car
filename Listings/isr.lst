@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  isr                                                                22/01/22  12:17:16  PAGE 1   
+C251 COMPILER V5.60.0,  isr                                                                24/01/22  20:36:18  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE isr
@@ -66,7 +66,7 @@ stmt  level    source
    55   1      }
    56          void  SPI_Isr()   interrupt 9{
    57   1          if(FUNCLIST[9].func!=0)
-C251 COMPILER V5.60.0,  isr                                                                22/01/22  12:17:16  PAGE 2   
+C251 COMPILER V5.60.0,  isr                                                                24/01/22  20:36:18  PAGE 2   
 
    58   1              (*FUNCLIST[9].func)();
    59   1      }
@@ -135,7 +135,7 @@ Module Information          Static   Overlayable
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
-C251 COMPILER V5.60.0,  isr                                                                22/01/22  12:17:16  PAGE 3   
+C251 COMPILER V5.60.0,  isr                                                                24/01/22  20:36:18  PAGE 3   
 
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------

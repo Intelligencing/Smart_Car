@@ -1,0 +1,115 @@
+C251 COMPILER V5.60.0,  TASK_SYS                                                           24/01/22  20:36:18  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE TASK_SYS
+OBJECT MODULE PLACED IN .\Objects\TASK_SYS.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\USER\TASK_SYS.c LARGE INTR2 BROWSE INCDIR(.\CODE\ALGORITHM;.\CODE
+                    -\DRIVER;.\CODE\Libraries\libraries;.\CODE\Libraries\seekfree_libraries;.\CODE\Libraries\seekfree_peripheral;.\CODE\USER)
+                    - DEBUG PRINT(.\Listings\TASK_SYS.lst) TABS(2) OBJECT(.\Objects\TASK_SYS.obj) 
+
+stmt  level    source
+
+    1          /*
+    2           * @Description  : 任务系统实现
+    3           * @Author       : FZU Liao
+    4           * @Date         : 2022-01-01 21:20:45
+    5           * @LastEditors  : Liao
+    6           * @LastEditTime : 2022-01-23 13:06:02
+    7           * @FilePath     : \USER\TASK_SYS.c
+    8           * Copyright 2022 FZU Liao, All Rights Reserved. 
+    9           */
+   10          
+   11          #include "headfile.h"
+   12          #include "TASK_SYS.h"
+   13          
+   14          TASK* TaskList[TASK_MAX_N];
+   15          
+   16          void Task_Excute(TASK* task){
+   17   1          if(task == 0) return;
+   18   1          task->COUNTER++;
+   19   1          task->COUNTER%=task->THRESHOLD;
+   20   1          if(task->COUNTER==0) (*task->FUNC)();
+   21   1      }
+   22          
+   23          void TASK_STATE_UPDATE(){
+   24   1          int i;
+   25   1          for(i=0;i<TASK_MAX_N;i++){
+   26   2              Task_Excute(TaskList[i]);
+   27   2          }
+   28   1      }
+   29          
+   30          void TASK_INIT_TASKSYS(){
+   31   1          lcd_clear(RED);
+   32   1          lcd_clear(BLUE);
+   33   1          SET_ISR_FUNC(TM1_interrupt,TASK_STATE_UPDATE);
+   34   1          pit_timer_ms(TIM_1,1);
+   35   1      }
+   36          
+   37          void TASK_INIT_NEWTASK(TASK* task,uint16 Threshold,void (*func)()){
+   38   1          //memset(task,0,sizeof(task));
+   39   1          task->COUNTER = 0;
+   40   1          task->THRESHOLD = Threshold;
+   41   1          task->FUNC = func;
+   42   1      }
+   43          
+   44          void TASK_SETID(uint8 ID,TASK* task){
+   45   1          task->ID=ID;
+   46   1      }
+   47          
+   48          void TASK_SETFUNC(void (*func)(),TASK* task){
+   49   1          task->FUNC=func;
+   50   1      }
+   51          
+   52          void TASK_ADD_TASK(TASK* task){
+   53   1          int i;
+   54   1          for (i = 0; i < TASK_MAX_N; i++) {
+   55   2              if(TaskList[i]==0){
+   56   3                  TaskList[i]=task;
+   57   3                  TASK_SETID(i,task);
+C251 COMPILER V5.60.0,  TASK_SYS                                                           24/01/22  20:36:18  PAGE 2   
+
+*** WARNING C188 IN LINE 57 OF CODE\USER\TASK_SYS.c: 'parameter 1': value truncated
+   58   3                  return ;
+   59   3              }
+   60   2          }
+   61   1      }
+   62          
+   63          void TASK_DELETE_TASK(TASK* task){
+   64   1          TaskList[task->ID]=0;
+   65   1      }
+   66          
+   67          void TASK_PAUSE_TASKSYS(){
+   68   1      
+   69   1      }
+   70          
+   71          void TASK_DEINIT_TASKSYS(){
+   72   1          int i;
+   73   1          for (i = 0; i < TASK_MAX_N; i++) {
+   74   2              TaskList[i] = 0;
+   75   2          }
+   76   1      }
+   77          
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =       275     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =        16     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

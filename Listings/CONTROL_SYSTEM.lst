@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     24/01/22  11:39:22  PAGE 1   
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     24/01/22  20:48:50  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE CONTROL_SYSTEM
@@ -66,7 +66,7 @@ stmt  level    source
    55   1      }
    56          
    57          //前进函数
-C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     24/01/22  11:39:22  PAGE 2   
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     24/01/22  20:48:50  PAGE 2   
 
    58          void FORWARD_FUNC(){
    59   1          ANGLE=SERVO_MOTOR_CONTROL(EM_DATA_LIST);
@@ -74,7 +74,7 @@ stmt  level    source
    60   1          CURRENT_SPEED=ENCODING_READ_RESULT();//编码器计算当前速度
    61   1          TARGET_SPEED=SPEED; //min_SPEED + (max_SPEED - min_SPEED)/10*ANGLE;
    62   1          //利用舵机打角角度，处理出速度目标值
-   63   1          STEP_MOTOR_CONTROL(CURRENT_SPEED,TARGET_SPEED);//电机输出
+   63   1          STEP_MOTOR_CONTROL(RES_L,TARGET_SPEED);//电机输出
    64   1      }
    65          
    66          //直线行驶状态函数实现
@@ -123,20 +123,23 @@ stmt  level    source
   109   1      }
   110          
   111          void My_routineTask() {
-  112   1          CUR_STATUS = CAR_STATUS_JUDGE();
-  113   1          (*func_list[CUR_STATUS])();
-  114   1      }
+  112   1          ANGLE = SERVO_MOTOR_CONTROL(EM_DATA_LIST, 0);
+  113   1         STEP_MOTOR_CONTROL(RES_L,SPEED);
+  114   1          SERVO_MOTOR_ANGLE(ANGLE_ADAPTER(ANGLE));
+  115   1          // CUR_STATUS = CAR_STATUS_JUDGE();
+  116   1          // (*func_list[CUR_STATUS])();
+  117   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       295     ------
+  code size            =       330     ------
   ecode size           =    ------     ------
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     24/01/22  20:48:50  PAGE 3   
+
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     24/01/22  11:39:22  PAGE 3   
-
   xdata size           =        66     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
