@@ -1,7 +1,7 @@
 #include "EM_SENSOR.h"
 #include "zf_adc.h"
 
-void EM_SENSOR_INIT(){
+void EM_INIT_SENSOR(){
     adc_init(ADC_P00,ADC_SYSclk_DIV_10);
     adc_init(ADC_P01,ADC_SYSclk_DIV_10);
     adc_init(ADC_P05,ADC_SYSclk_DIV_10);

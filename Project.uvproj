@@ -750,11 +750,6 @@
               <FilePath>.\CODE\USER\CONTROL_SYSTEM.c</FilePath>
             </File>
             <File>
-              <FileName>DISPLAY.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\CODE\USER\DISPLAY.h</FilePath>
-            </File>
-            <File>
               <FileName>SERVO_MOTOR_CONTROL.C</FileName>
               <FileType>1</FileType>
               <FilePath>.\CODE\USER\SERVO_MOTOR_CONTROL.C</FilePath>

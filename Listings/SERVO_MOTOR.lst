@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  SERVO_MOTOR                                                        24/01/22  20:36:17  PAGE 1   
+C251 COMPILER V5.60.0,  SERVO_MOTOR                                                        25/01/22  13:56:09  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE SERVO_MOTOR
@@ -9,29 +9,41 @@ COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\DRIVER\SERVO_MOTOR.c LARG
 
 stmt  level    source
 
-    1          #include "zf_gpio.h"
-    2          #include "SERVO_MOTOR.h"
-    3          #include "zf_delay.h"
-    4          
-    5          #define MAX_ANGLE 7
-    6          
-    7          void SERVO_MOTOR_INIT(){
-    8   1          pwm_init(PWM_CHANNEL_SERVO,50,760);
-    9   1      }
-   10             
-   11          void SERVO_MOTOR_ANGLE(int angle){
-   12   1          uint16 duty;
-   13   1          if(angle>MAX_ANGLE) angle = MAX_ANGLE;
-   14   1          if(angle<-MAX_ANGLE) angle = -MAX_ANGLE;
-   15   1          duty=angle*30;
-   16   1          pwm_duty(PWM_CHANNEL_SERVO,760+duty);
-   17   1          delay_ms(30);
-   18   1      }
+    1          /*
+    2           * @Description  : 伺服电机控制实现
+    3           * @Author       : FZU Liao
+    4           * @Date         : 2022-01-03 14:35:08
+    5           * @LastEditors  : Liao
+    6           * @LastEditTime : 2022-01-16 23:21:34
+    7           * @FilePath     : \Driver\SERVO_MOTOR.c
+    8           * Copyright 2022 FZU Liao, All Rights Reserved. 
+    9           */
+   10          
+   11          #include "SERVO_MOTOR.h"
+   12          #include "zf_delay.h"
+   13          #include "zf_pwm.h"
+   14          
+   15          #define SERVO_OUTPUT PWMB_CH1_P74
+   16          
+   17          #define MAX_ANGLE 7
+   18          
+   19          void SERVO_INIT_MOTOR(){
+   20   1          pwm_init(SERVO_OUTPUT,50,770);
+   21   1      }
+   22          
+   23          void SERVO_SET_ANGLE(float Angle){
+   24   1          uint16 DUTY;
+   25   1          if(Angle>MAX_ANGLE) Angle = MAX_ANGLE;
+   26   1          if(Angle<-MAX_ANGLE) Angle = -MAX_ANGLE;
+   27   1          DUTY = (Angle*30);
+   28   1          pwm_duty(SERVO_OUTPUT,770+DUTY);
+   29   1          delay_ms(30);
+   30   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =        73     ------
+  code size            =        95     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------

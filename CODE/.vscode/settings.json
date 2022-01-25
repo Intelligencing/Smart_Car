@@ -12,7 +12,10 @@
         "STEP_MOTOR_CONTROL.C": "cpp",
         "em_sensor.h": "c",
         "step_motor_control.h": "c",
-        "step_motor.h": "c"
+        "step_motor.h": "c",
+        "zf_adc.h": "c",
+        "zf_pwm.h": "c",
+        "lcd_show.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

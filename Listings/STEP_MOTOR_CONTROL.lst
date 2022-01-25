@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 24/01/22  20:36:18  PAGE 1   
+C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 25/01/22  13:56:10  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE STEP_MOTOR_CONTROL
@@ -10,68 +10,65 @@ COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\USER\STEP_MOTOR_CONTROL.C
 stmt  level    source
 
     1          #include "STEP_MOTOR_CONTROL.h"
-    2          
-    3          #define ERROR_RANGE 1
-    4          #define STEERING_Kp 0.5
-    5          #define STEERING_Ki 0.3
-    6          #define STEERING_Kd 0.07
-    7          #define STEP_MOTOR_MAX_DUTY 5000
-    8          #define MOTOR_MAX_PWM(speed) speed + 4000
-    9          
-   10          STATUS_FLAG FLAG;
-   11          STEP_MOTOR STEP_MOTOR_L;
-   12          PID STEP_MOTOR_PID;
+    2          #include "STEP_MOTOR.h"
+    3          #include "PID.h"
+    4          #include "LCD_show.h"
+    5          
+    6          STEP_MOTOR STEP_MOTOR_L;
+    7          PID MySTEPMOTOR_PID;
+    8          
+    9          void MyStepMotorControl_INIT(){
+   10   1          PID_INIT_NEWPID(&MySTEPMOTOR_PID,STEERING_Kp,STEERING_Ki,STEERING_Kd,0,PID_REALIZE_MODE);
+   11   1          STEP_MOTOR_INIT(&STEP_MOTOR_L, PWMA_CH2P_P62,PWMA_CH1P_P60, P6_0, P6_2);
+   12   1      }
    13          
-   14          void STEP_MOTOR_PID_INIT(){
-   15   1          PID_INIT_NEWPID(&STEP_MOTOR_PID,STEERING_Kp,STEERING_Ki,STEERING_Kd,0,PID_REALIZE_MODE);
-   16   1          FLAG = OFF;
-   17   1      }
-   18          
-   19          int STEP_MOTOR_CONTROL(uint16 CURRENT_SPEED,uint16 TARGET_SPEED){
-   20   1          // if(CURRENT_SPEED>0 && FLAG == OFF) FLAG = ON;
-   21   1          // if (CURRENT_SPEED==0 && FLAG == ON || CURRENT_SPEED - TARGET_SPEED > ERROR_RANGE) {
-   22   1          //     STEP_MOTOR_STOP();
-   23   1          // }
-   24   1          // else if(CURRENT_SPEED - TARGET_SPEED <ERROR_RANGE){
-   25   1          //     STEP_MOTOR_FORWORD(STEP_MOTOR_MAX_DUTY);
-   26   1          // }
-   27   1          // else{
-   28   1          //     PID_SET_TARGET(&STEP_MOTOR_PID,TARGET_SPEED);
-   29   1          //     STEP_MOTOR_FORWORD(PID_CALC_RESULT(&STEP_MOTOR_PID,CURRENT_SPEED));
-   30   1          // }
-   31   1          int delta;
-   32   1          int max_pwm;
-   33   1          max_pwm = MOTOR_MAX_PWM(CURRENT_SPEED);
-   34   1          PID_SET_TARGET(&STEP_MOTOR_PID,TARGET_SPEED);
-   35   1          delta = PID_CALC_RESULT(&STEP_MOTOR_PID,CURRENT_SPEED);
-   36   1          STEP_MOTOR_L.CURRENT_PWM_DUTY = STEP_MOTOR_L.CURRENT_PWM_DUTY +delta ;
-   37   1          if(STEP_MOTOR_L.CURRENT_PWM_DUTY > max_pwm) STEP_MOTOR_L.CURRENT_PWM_DUTY = max_pwm;
-   38   1          if(STEP_MOTOR_L.CURRENT_PWM_DUTY < 0) STEP_MOTOR_L.CURRENT_PWM_DUTY = 0;
-   39   1          STEP_MOTOR_FORWORD(delta);
-   40   1          LCD_display("V",CURRENT_SPEED,1);
-   41   1          LCD_display("delta",delta,2);
-   42   1          LCD_display("PWM",STEP_MOTOR_L.CURRENT_PWM_DUTY,0);
-   43   1          
-   44   1          return delta;
-   45   1      }
+   14          int MyStepMotorControl_TASK(int CURRENT_SPEED,int TARGET_SPEED){
+   15   1          // if(CURRENT_SPEED>0 && FLAG == OFF) FLAG = ON;
+   16   1          // if (CURRENT_SPEED==0 && FLAG == ON || CURRENT_SPEED - TARGET_SPEED > ERROR_RANGE) {
+   17   1          //     STEP_MOTOR_STOP();
+   18   1          // }
+   19   1          // else if(CURRENT_SPEED - TARGET_SPEED <ERROR_RANGE){
+   20   1          //     STEP_MOTOR_FORWORD(STEP_MOTOR_MAX_DUTY);
+   21   1          // }
+   22   1          // else{
+   23   1          //     PID_SET_TARGET(&STEP_MOTOR_PID,TARGET_SPEED);
+   24   1          //     STEP_MOTOR_FORWORD(PID_CALC_RESULT(&STEP_MOTOR_PID,CURRENT_SPEED));
+   25   1          // }
+   26   1          int delta;
+   27   1          int max_pwm;
+   28   1          max_pwm = MOTOR_MAX_PWM(CURRENT_SPEED);
+   29   1          PID_SET_TARGET(&MySTEPMOTOR_PID,TARGET_SPEED);
+   30   1          delta = PID_CALC_RESULT(&MySTEPMOTOR_PID,CURRENT_SPEED);
+   31   1          STEP_MOTOR_L.CURRENT_PWM_DUTY = STEP_MOTOR_L.CURRENT_PWM_DUTY +delta ;
+   32   1          if(STEP_MOTOR_L.CURRENT_PWM_DUTY > max_pwm) STEP_MOTOR_L.CURRENT_PWM_DUTY = max_pwm;
+   33   1          if(STEP_MOTOR_L.CURRENT_PWM_DUTY < 0) STEP_MOTOR_L.CURRENT_PWM_DUTY = 0;
+   34   1          STEP_MOTOR_FORWARD(delta);
+*** WARNING C96 IN LINE 34 OF CODE\USER\STEP_MOTOR_CONTROL.C: 'STEP_MOTOR_FORWARD': too few actual parameters
+*** WARNING C40 IN LINE 34 OF CODE\USER\STEP_MOTOR_CONTROL.C: 'int' converted to 'far' pointer
+   35   1          LCD_display("V",CURRENT_SPEED,5);
+   36   1          LCD_display("delta",delta,6);
+   37   1          LCD_display("PWM",STEP_MOTOR_L.CURRENT_PWM_DUTY,7);
+   38   1          
+   39   1          return delta;
+   40   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       242     ------
+  code size            =       281     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =        38          2
+  xdata size           =        36          2
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
-C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 24/01/22  20:36:18  PAGE 2   
-
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------
   ebitaddressable size =    ------     ------
+C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 25/01/22  13:56:10  PAGE 2   
+
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
@@ -79,4 +76,4 @@ Module Information          Static   Overlayable
 End of Module Information.
 
 
-C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
+C251 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)

@@ -1,18 +1,30 @@
-#include "zf_gpio.h"
+/*
+ * @Description  : 伺服电机控制实现
+ * @Author       : FZU Liao
+ * @Date         : 2022-01-03 14:35:08
+ * @LastEditors  : Liao
+ * @LastEditTime : 2022-01-16 23:21:34
+ * @FilePath     : \Driver\SERVO_MOTOR.c
+ * Copyright 2022 FZU Liao, All Rights Reserved. 
+ */
+
 #include "SERVO_MOTOR.h"
 #include "zf_delay.h"
+#include "zf_pwm.h"
+
+#define SERVO_OUTPUT PWMB_CH1_P74
 
 #define MAX_ANGLE 7
 
-void SERVO_MOTOR_INIT(){
-    pwm_init(PWM_CHANNEL_SERVO,50,760);
+void SERVO_INIT_MOTOR(){
+    pwm_init(SERVO_OUTPUT,50,770);
 }
-   
-void SERVO_MOTOR_ANGLE(int angle){
-    uint16 duty;
-    if(angle>MAX_ANGLE) angle = MAX_ANGLE;
-    if(angle<-MAX_ANGLE) angle = -MAX_ANGLE;
-    duty=angle*30;
-    pwm_duty(PWM_CHANNEL_SERVO,760+duty);
+
+void SERVO_SET_ANGLE(float Angle){
+    uint16 DUTY;
+    if(Angle>MAX_ANGLE) Angle = MAX_ANGLE;
+    if(Angle<-MAX_ANGLE) Angle = -MAX_ANGLE;
+    DUTY = (Angle*30);
+    pwm_duty(SERVO_OUTPUT,770+DUTY);
     delay_ms(30);
 }

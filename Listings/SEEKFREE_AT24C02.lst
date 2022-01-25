@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  SEEKFREE_AT24C02                                                   24/01/22  20:36:15  PAGE 1   
+C251 COMPILER V5.60.0,  SEEKFREE_AT24C02                                                   25/01/22  13:56:07  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE SEEKFREE_AT24C02
@@ -66,7 +66,7 @@ stmt  level    source
              -------------
    49          uint8 at24c02_read_byte(uint8 byte_reg)
    50          {
-C251 COMPILER V5.60.0,  SEEKFREE_AT24C02                                                   24/01/22  20:36:15  PAGE 2   
+C251 COMPILER V5.60.0,  SEEKFREE_AT24C02                                                   25/01/22  13:56:07  PAGE 2   
 
    51   1        delay_ms(6);
    52   1        return simiic_read_reg(AT24C02_DEV_ADDR, byte_reg, SIMIIC);
@@ -134,7 +134,7 @@ stmt  level    source
   110   2              *dat_add++ = read_ch(1); //读取数据
   111   2          byte_reg++;
   112   2          }
-C251 COMPILER V5.60.0,  SEEKFREE_AT24C02                                                   24/01/22  20:36:15  PAGE 3   
+C251 COMPILER V5.60.0,  SEEKFREE_AT24C02                                                   25/01/22  13:56:07  PAGE 3   
 
   113   1        *dat_add++ = read_ch(0); //读取数据
   114   1        simiic_stop();

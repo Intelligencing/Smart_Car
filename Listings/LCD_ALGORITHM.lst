@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  LCD_ALGORITHM                                                      24/01/22  20:36:13  PAGE 1   
+C251 COMPILER V5.60.0,  LCD_ALGORITHM                                                      25/01/22  13:56:04  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE LCD_ALGORITHM
@@ -66,7 +66,7 @@ stmt  level    source
    54   1          sign_pos = LCD_DISPLAY_uFLOAT(x, y, temp);
    55   1          if (NUM >= 0) {
    56   2              lcd_showchar(sign_pos, y, '+');
-C251 COMPILER V5.60.0,  LCD_ALGORITHM                                                      24/01/22  20:36:13  PAGE 2   
+C251 COMPILER V5.60.0,  LCD_ALGORITHM                                                      25/01/22  13:56:04  PAGE 2   
 
    57   2          } else {
    58   2              lcd_showchar(sign_pos, y, '-');

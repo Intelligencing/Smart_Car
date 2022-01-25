@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  STEP_MOTOR                                                         24/01/22  20:36:17  PAGE 1   
+C251 COMPILER V5.60.0,  STEP_MOTOR                                                         25/01/22  13:56:09  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE STEP_MOTOR
@@ -9,69 +9,85 @@ COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\DRIVER\STEP_MOTOR.C LARGE
 
 stmt  level    source
 
-    1          #include "STEP_MOTOR.H"
-    2          #include "zf_gpio.h"
-    3          //步进电机控制芯片HIP4082真值表
-    4          /*——————————————————————————————————�
+    1          /*
+    2           * @Description  : 步进电机控制实现
+    3           * @Author       : FZU Liao
+    4           * @Date         : 2022-01-03 15:48:25
+    5           * @LastEditors  : Liao
+    6           * @LastEditTime : 2022-01-15 23:14:28
+    7           * @FilePath     : \Driver\STEP_MOTOR.c
+    8           * Copyright 2022 FZU Liao, All Rights Reserved. 
+    9           */
+   10          
+   11          //步进电机控制芯片HIP4082真值表
+   12          /*——————————————————————————————————�
              -��————————————————————
-    5           |  | ALI | BLI |   | ALO | AHO | BLO | BHO | |  STATE  |
-    6           |  —————————————————————————————————�
+   13           |  | ALI | BLI |   | ALO | AHO | BLO | BHO | |  STATE  |
+   14           |  —————————————————————————————————�
              -�——————— | ——————— |
-    7           |  |  1  |  0  |   |  1  |  0  |  0  |  1  | | FORWARD |
-    8           |  —————————————————————————————————�
+   15           |  |  1  |  0  |   |  1  |  0  |  0  |  1  | | FORWARD |
+   16           |  —————————————————————————————————�
              -�——————— | ——————— |
-    9           |  |  0  |  1  |   |  0  |  1  |  1  |  0  | |   BACK  |
-   10           |  —————————————————————————————————�
+   17           |  |  0  |  1  |   |  0  |  1  |  1  |  0  | |   BACK  |
+   18           |  —————————————————————————————————�
              -�——————— | ——————— |
-   11           |  |  1  |  1  |   |  1  |  0  |  1  |  0  | |   STOP  | 
-   12           |  —————————————————————————————————�
+   19           |  |  1  |  1  |   |  1  |  0  |  1  |  0  | |   STOP  | 
+   20           |  —————————————————————————————————�
              -�——————— | ——————— |
-   13           |  |  0  |  0  |   |  0  |  1  |  0  |  1  | |   NULL  |
-   14          ———————————————————————————————————
+   21           |  |  0  |  0  |   |  0  |  1  |  0  |  1  | |   NULL  |
+   22          ———————————————————————————————————
              -—————————————————————*/
-   15          
-   16          #define MOTOR_FREQUENCY 17000
-   17          #define MOTOR_MAX_DUTY  4000
-   18          
-   19          void STEP_MOTOR_INIT(){
-   20   1          pwm_init(PWM_CHANNEL_ALI,12500,0);
-   21   1          pwm_init(PWM_CHANNEL_BLI,12500,0);
-   22   1          gpio_mode(P6_0,GPO_PP);
-   23   1          gpio_mode(P6_4,GPO_PP);
-   24   1      }
-   25              
-   26          void STEP_MOTOR_STOP(){
-   27   1          pwm_duty(PWM_CHANNEL_ALI,0);
-   28   1          pwm_duty(PWM_CHANNEL_BLI,0);
-   29   1      }
-   30              
-   31          void STEP_MOTOR_FORWORD(int duty){
-   32   1          pwm_duty(PWM_CHANNEL_ALI,duty); 
-   33   1          pwm_duty(PWM_CHANNEL_BLI,0);
-   34   1          
-   35   1      }
-   36           
-   37          void STEP_MOTOR_BACKWARD(int duty){
-   38   1          pwm_duty(PWM_CHANNEL_ALI,0); 
-   39   1          pwm_duty(PWM_CHANNEL_BLI,duty);
-   40   1      }
-   41          
-   42          uint32 STEP_MOTOR_GET_DUTY(STEP_MOTOR* MOTOR){
-   43   1          return MOTOR->CURRENT_PWM_DUTY;
+   23          
+   24          #include "STEP_MOTOR.h"
+   25          #include "zf_delay.h"
+   26          
+   27          #define MOTOR_FREQUENCY 17000
+   28          #define MOTOR_MAX_DUTY  4000
+   29          
+   30          void STEP_MOTOR_INIT(STEP_MOTOR* MOTOR,STEP_MOTOR_CHANNEL ALI,STEP_MOTOR_CHANNEL BLI,PIN_enum GPIO_Pin_AL
+             -I,PIN_enum GPIO_PIN_BLI){
+   31   1          gpio_mode(GPIO_Pin_ALI,GPO_PP);
+   32   1          gpio_mode(GPIO_PIN_BLI,GPO_PP);
+   33   1          MOTOR->ALI = ALI;
+   34   1          MOTOR->BLI = BLI;
+   35   1          MOTOR->CURRENT_PWM_DUTY = 0;
+   36   1          pwm_init(ALI,MOTOR_FREQUENCY,0);       
+   37   1          pwm_init(BLI,MOTOR_FREQUENCY,0);  
+   38   1      }
+   39          
+   40          void STEP_MOTOR_FORWARD(STEP_MOTOR* MOTOR,int Duty){
+   41   1          MOTOR->CURRENT_PWM_DUTY = Duty;
+   42   1          pwm_duty(MOTOR->ALI,Duty);
+   43   1          pwm_duty(MOTOR->BLI,0);
    44   1      }
    45          
+   46          void STEP_MOTOR_STOP(STEP_MOTOR* MOTOR){
+   47   1          pwm_duty(MOTOR->ALI,1000);
+   48   1          pwm_duty(MOTOR->BLI,1000);
+   49   1      }
+   50          
+C251 COMPILER V5.60.0,  STEP_MOTOR                                                         25/01/22  13:56:09  PAGE 2   
+
+   51          void STEP_MOTOR_BACK(STEP_MOTOR* MOTOR,int Duty){
+   52   1          MOTOR->CURRENT_PWM_DUTY = Duty;
+   53   1          pwm_duty(MOTOR->ALI,0);
+   54   1          pwm_duty(MOTOR->BLI,Duty);
+   55   1      }
+   56          
+   57          uint32 STEP_MOTOR_GET_DUTY(STEP_MOTOR* MOTOR){
+   58   1          return MOTOR->CURRENT_PWM_DUTY;
+   59   1      }
+   60          
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       148     ------
+  code size            =       239     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
-C251 COMPILER V5.60.0,  STEP_MOTOR                                                         24/01/22  20:36:17  PAGE 2   
-
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =    ------     ------
+  xdata size           =    ------         10
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------

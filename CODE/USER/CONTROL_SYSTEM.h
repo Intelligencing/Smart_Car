@@ -1,13 +1,6 @@
 #ifndef CONTROL_SYSTEM_H
 #define CONTROL_SYSTEM_H
 
-#include "SERVO_MOTOR_CONTROL.h"
-#include "STEP_MOTOR_CONTROL.h"
-#include "EM_SENSOR.h"
-#include "EM_FILTER.h"
-#include "ENCODE_SENSOR.h"
-#include "LCD_show.h"
-
 typedef enum { //车状态枚举
     STRAIGHT, 
     INTO_CURVE,
@@ -28,7 +21,7 @@ void FUNC_OUT_CURVE();//出弯状态函数实现
 void FUNC_INTO_CIRCLE();//入环状态函数实现
 void FUNC_ON_CIRCLE();//在环岛中状态函数实现
 void FUNC_OUT_CIRCLE();//出环状态函数实现
-void My_routineTask();
+void MyControlSys_TASK();
 //MyCAR_STATUS CAR_STATUS_JUDGE();
 
 #endif

@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                24/01/22  20:36:18  PAGE 1   
+C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                25/01/22  13:56:09  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE SERVO_MOTOR_CONTROL
@@ -10,77 +10,66 @@ COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\USER\SERVO_MOTOR_CONTROL.
 stmt  level    source
 
     1          #include "SERVO_MOTOR_CONTROL.h"
-    2          
-    3          //#define STEPMOTOR_Kp 0.7
-    4          //#define STEPMOTOR_Ki 0.3
-    5          //#define STEPMOTOR_Kd 0.5
+    2          #include"EM_Calc.h"
+    3          #include "PID.h"
+    4          #include "SERVO_MOTOR.h"
+    5          #include "LCD_show.h"
     6          
-    7          #define STEERING_Kp_0 0.1
-    8          #define STEERING_Ki_0 0
-    9          #define STEERING_Kd_0 0.1
-   10          #define STEERING_Kp_1 0.1
-   11          #define STEERING_Ki_1 0
-   12          #define STEERING_Kd_1 0.1
-   13          
-   14          struct MySteeringPID_params MyParams[2];
-   15          
-   16          PID SERVO_MOTOR_PID;
-   17          
-   18          float ANGLE_ADAPTER(float WHEEL_ANGLE){
-   19   1          float Steering_ANGLE;
-   20   1          Steering_ANGLE = WHEEL_ANGLE*0.22;
-   21   1          if(Steering_ANGLE>7) Steering_ANGLE = 7;
-   22   1          if(Steering_ANGLE<-7) Steering_ANGLE = -7;
-   23   1          return Steering_ANGLE;
-   24   1      }
-   25          
-   26          void MySTEERING_PID_STATE(SteeringState State){
-   27   1          PID_SET_FACTORS(&SERVO_MOTOR_PID,MyParams[State].Kp,MyParams[State].Ki,MyParams[State].Kd);
-   28   1      }
-   29          
-   30          void SERVO_MOTOR_PID_INIT(){
-   31   1        MyParams[0].Kp = STEERING_Kp_0;
-   32   1          MyParams[0].Ki = STEERING_Ki_0;
-   33   1          MyParams[0].Kd = STEERING_Kd_0;
-   34   1          MyParams[1].Kp = STEERING_Kp_1;
-   35   1          MyParams[1].Ki = STEERING_Ki_1;
-   36   1          MyParams[1].Kd = STEERING_Kd_1;
-   37   1          PID_INIT_NEWPID(&SERVO_MOTOR_PID,0,0,0,0,PID_INCREASE_MODE);
-   38   1        MySTEERING_PID_STATE(0);
-   39   1      }
-   40          
-   41          float SERVO_MOTOR_CONTROL(int* EM_DATA,int userAngle){
-   42   1          float CURRENT_INPUT;
-   43   1          float ANGLE;
-   44   1          float res;
-   45   1          CURRENT_INPUT=EM_CALC_POS_RES(EM_DATA);//接收传入的已经滤波过的电磁信号
-   46   1        //利用电磁信号计算舵机大致摆角（调用PIDadapter算ERROR与目标值）
-   47   1          if(userAngle == 0) 
-   48   1              if(CURRENT_INPUT>300||CURRENT_INPUT<-300) ANGLE = PID_CALC_RESULT(&SERVO_MOTOR_PID,CURRENT_INPUT)
-             -;
-   49   1          else 
-   50   1              ANGLE = userAngle;
-   51   1          //输出到舵机
-   52   1          SERVO_MOTOR_ANGLE(ANGLE_ADAPTER(ANGLE));
-   53   1          //返回摆角
-   54   1          res = PID_CALC_RESULT(&SERVO_MOTOR_PID,CURRENT_INPUT);
-   55   1          LCD_display("in",CURRENT_INPUT,6);
-   56   1          LCD_display("res",res,7);
-C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                24/01/22  20:36:18  PAGE 2   
-
-   57   1          
-   58   1          return ANGLE;//返回摆角
-   59   1      }
+    7          struct MySteeringPID_params MyParams[2];
+    8          
+    9          PID MySTEERING_PID;
+   10          
+   11          float ANGLE_ADAPTER(float WHEEL_ANGLE){
+   12   1          float Steering_ANGLE;
+   13   1          Steering_ANGLE = WHEEL_ANGLE*0.22;
+   14   1          if(Steering_ANGLE>7) Steering_ANGLE = 7;
+   15   1          if(Steering_ANGLE<-7) Steering_ANGLE = -7;
+   16   1          return Steering_ANGLE;
+   17   1      }
+   18          
+   19          void MySteeringPIDAdapter_State(SteeringState State){
+   20   1          PID_SET_FACTORS(&MySTEERING_PID,MyParams[State].Kp,MyParams[State].Ki,MyParams[State].Kd);
+   21   1      }
+   22          
+   23          void MySteeringControl_INIT(){
+   24   1        SERVO_INIT_MOTOR();
+   25   1          MyParams[0].Kp = STEERING_Kp_0;
+   26   1          MyParams[0].Ki = STEERING_Ki_0;
+   27   1          MyParams[0].Kd = STEERING_Kd_0;
+   28   1          MyParams[1].Kp = STEERING_Kp_1;
+   29   1          MyParams[1].Ki = STEERING_Ki_1;
+   30   1          MyParams[1].Kd = STEERING_Kd_1;
+   31   1          PID_INIT_NEWPID(&MySTEERING_PID,0,0,0,0,PID_INCREASE_MODE);
+   32   1        MySteeringPIDAdapter_State(ON_STRAIGHT);
+   33   1      }
+   34          
+   35          void MySteeringControl_TASK(float ANGLE){
+   36   1          SERVO_SET_ANGLE(ANGLE_ADAPTER(ANGLE));//利用电磁信号计算舵机大致摆角（调用PIDadapter
+             -算ERROR与目标值）
+   37   1      }
+   38          
+   39          float MySteeringControl_GETANGLE(int* EM_DATA,int userAngle){
+   40   1          float CURRENT_INPUT;
+   41   1          float ANGLE;
+   42   1          CURRENT_INPUT = EM_CALC_POS_RES(EM_DATA)*1000;//接收传入的已经滤波过的电磁信号
+   43   1          if(userAngle == 0) 
+   44   1              ANGLE = PID_CALC_RESULT(&MySTEERING_PID,CURRENT_INPUT);
+   45   1          else 
+   46   1              ANGLE = userAngle;
+   47   1              return ANGLE;//返回摆角
+   48   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       437     ------
+  code size            =       313     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =        42          8
+C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                25/01/22  13:56:09  PAGE 2   
+
+  xdata size           =        42          4
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
@@ -90,7 +79,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =         7     ------
+  hconst size          =    ------     ------
 End of Module Information.
 
 

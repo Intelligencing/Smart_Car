@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  ENCODE_SENSOR                                                      24/01/22  20:36:17  PAGE 1   
+C251 COMPILER V5.60.0,  ENCODE_SENSOR                                                      25/01/22  13:56:09  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE ENCODE_SENSOR
@@ -11,22 +11,37 @@ stmt  level    source
 
     1          #include "ENCODE_SENSOR.h"
     2          
-    3          void ENCODING_INIT(){
-    4   1          ctimer_count_init(TIMER3_P04);
-    5   1          ctimer_count_clean(TIMER3_P04);
-    6   1      }
-    7              
-    8          uint16 ENCODING_READ_RESULT(){
-    9   1          uint16 result;
-   10   1          result=ctimer_count_read(TIMER3_P04);
-   11   1          ctimer_count_clean(TIMER3_P04);
-   12   1          return result;
-   13   1      }
+    3          // void ENCODING_INIT(ENCODE_SENSOR* SENSOR,ENCODING_OUTPUT_enum LSB_PIN,PIN_enum DIR_PIN){
+    4          //     SENSOR->DIR_PIN = DIR_PIN;
+    5          //     SENSOR->LSB_PIN = LSB_PIN;
+    6          //     ctimer_count_init(SENSOR->LSB_PIN);
+    7          //     ctimer_count_clean(SENSOR->LSB_PIN);
+    8          //     SENSOR->DIR_PIN = FORWARD;
+    9          // }
+   10          // ENCODE_RES ENCODING_READ_RESULT(ENCODE_SENSOR* SENSOR){
+   11          //     ENCODE_RES RES_SET;
+   12          //     RES_SET.speed = ctimer_count_read(SENSOR->LSB_PIN);
+   13          //     RES_SET.dir = gpio_read(SENSOR->DIR_PIN);
+   14          //     ctimer_count_clean(SENSOR->LSB_PIN);
+   15          //     return RES_SET;
+   16          // }
+   17          
+   18          void ENCODING_INIT(){
+   19   1          ctimer_count_init(TIM_0);
+   20   1          ctimer_count_clean(TIM_0);
+   21   1      }
+   22              
+   23          uint16 ENCODING_READ_RESULT(){
+   24   1          uint16 result;
+   25   1          result=ctimer_count_read(TIM_0);
+   26   1          ctimer_count_clean(TIM_0);
+   27   1          return result;
+   28   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =        37     ------
+  code size            =        29     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
