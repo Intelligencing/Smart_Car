@@ -1,12 +1,3 @@
-/*
- * @Description  : 滤波算法，采取去除一个最高值、一个最低值后再取平均的方式
- * @Author       : FZU Liao
- * @Date         : 2022-01-08 18:23:36
- * @LastEditors  : Liao
- * @LastEditTime : 2022-01-10 09:33:48
- * @FilePath     : \TEMPLATE_PROJECT\CODES\ALGORITHM\EM_FILTER.h
- * Copyright 2022 FZU Liao, All Rights Reserved. 
- */
 
 #ifndef __EM_FILTER_H__
 #define __EM_FILTER_C__

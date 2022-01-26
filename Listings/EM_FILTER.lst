@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  EM_FILTER                                                          25/01/22  13:56:04  PAGE 1   
+C251 COMPILER V5.60.0,  EM_FILTER                                                          26/01/22  12:28:48  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE EM_FILTER
@@ -9,66 +9,55 @@ COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\ALGORITHM\EM_FILTER.c LAR
 
 stmt  level    source
 
-    1          /*
-    2           * @Description  : 电磁滤波器实现
-    3           * @Author       : FZU Liao
-    4           * @Date         : 2022-01-08 18:23:10
-    5           * @LastEditors  : Liao
-    6           * @LastEditTime : 2022-01-09 22:24:26
-    7           * @FilePath     : \TEMPLATE_PROJECT\CODES\ALGORITHM\EM_FILTER.c
-    8           * Copyright 2022 FZU Liao, All Rights Reserved. 
-    9           */
-   10          
-   11          #include "EM_FILTER.h"
-   12          #include "COMMON.h"
-   13          
-   14          #define EM_MAX -100000
-   15          #define EM_MIN  100000
-   16          
-   17          void EM_FILTER_INIT(EM_FILTER* FILTER){
-   18   1          int index;
-   19   1          FILTER->times = 0;
-   20   1          for(index = 0 ; index<LIST_LENGTH ; index++){
-   21   2              FILTER->FILTER_LIST[index] = 0;
-   22   2              FILTER->MAX_LIST[index] = EM_MAX;
-*** WARNING C188 IN LINE 22 OF CODE\ALGORITHM\EM_FILTER.c: 'constant': value truncated
-   23   2              FILTER->MIN_LIST[index] = EM_MIN;
-*** WARNING C188 IN LINE 23 OF CODE\ALGORITHM\EM_FILTER.c: 'constant': value truncated
-   24   2          }
-   25   1      }
-   26          
-   27          void EM_FILTER_ADD_SAMPLE(EM_FILTER* FILTER,int* DATA_SAMPLE_LIST){
-   28   1          int index,temp;
-   29   1          for(index=0;index<LIST_LENGTH;index++){
-   30   2              temp = DATA_SAMPLE_LIST[index];
-   31   2              if(temp>FILTER->MAX_RANGE) temp = FILTER->MAX_RANGE;
-   32   2              if(temp<FILTER->MIN_RANGE) temp = FILTER->MIN_RANGE;
-   33   2              FILTER->MAX_LIST[index] = FILTER->MAX_LIST[index]<temp ? temp : FILTER->MAX_LIST[index];
-   34   2              FILTER->MIN_LIST[index] = FILTER->MIN_LIST[index]>temp ? temp : FILTER->MIN_LIST[index];
-   35   2              FILTER->FILTER_LIST[index] += temp;
-   36   2          }
-   37   1          FILTER->times++;
-   38   1      }
-   39          
-   40          void EM_FILTER_READ_RESULT(EM_FILTER* FILTER,int* RES_SET){
-   41   1          int index;
-   42   1          for(index=0;index<LIST_LENGTH;index++){
-   43   2              if(FILTER->times>=3)
-   44   2                  RES_SET[index] = (FILTER->FILTER_LIST[index]-FILTER->MAX_LIST[index]-FILTER->MIN_LIST[index])
+    1          
+    2          #include "EM_FILTER.h"
+    3          #include "COMMON.h"
+    4          
+    5          #define EM_MAX -100000
+    6          #define EM_MIN  100000
+    7          
+    8          void EM_FILTER_INIT(EM_FILTER* FILTER){
+    9   1          int index;
+   10   1          FILTER->times = 0;
+   11   1          for(index = 0 ; index<LIST_LENGTH ; index++){
+   12   2              FILTER->FILTER_LIST[index] = 0;
+   13   2              FILTER->MAX_LIST[index] = EM_MAX;
+*** WARNING C188 IN LINE 13 OF CODE\ALGORITHM\EM_FILTER.c: 'constant': value truncated
+   14   2              FILTER->MIN_LIST[index] = EM_MIN;
+*** WARNING C188 IN LINE 14 OF CODE\ALGORITHM\EM_FILTER.c: 'constant': value truncated
+   15   2          }
+   16   1      }
+   17          
+   18          void EM_FILTER_ADD_SAMPLE(EM_FILTER* FILTER,int* DATA_SAMPLE_LIST){
+   19   1          int index,temp;
+   20   1          for(index=0;index<LIST_LENGTH;index++){
+   21   2              temp = DATA_SAMPLE_LIST[index];
+   22   2              if(temp>FILTER->MAX_RANGE) temp = FILTER->MAX_RANGE;
+   23   2              if(temp<FILTER->MIN_RANGE) temp = FILTER->MIN_RANGE;
+   24   2              FILTER->MAX_LIST[index] = FILTER->MAX_LIST[index]<temp ? temp : FILTER->MAX_LIST[index];
+   25   2              FILTER->MIN_LIST[index] = FILTER->MIN_LIST[index]>temp ? temp : FILTER->MIN_LIST[index];
+   26   2              FILTER->FILTER_LIST[index] += temp;
+   27   2          }
+   28   1          FILTER->times++;
+   29   1      }
+   30          
+   31          void EM_FILTER_READ_RESULT(EM_FILTER* FILTER,int* RES_SET){
+   32   1          int index;
+   33   1          for(index=0;index<LIST_LENGTH;index++){
+   34   2              if(FILTER->times>=3)
+   35   2                  RES_SET[index] = (FILTER->FILTER_LIST[index]-FILTER->MAX_LIST[index]-FILTER->MIN_LIST[index])
              -/(FILTER->times-2);
-   45   2              else
-   46   2                  RES_SET[index] = FILTER->FILTER_LIST[index];
-   47   2          }
-   48   1          EM_FILTER_INIT(FILTER);
-   49   1      }
+   36   2              else
+   37   2                  RES_SET[index] = FILTER->FILTER_LIST[index];
+   38   2          }
+   39   1          EM_FILTER_INIT(FILTER);
+   40   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
   code size            =       273     ------
   ecode size           =    ------     ------
-C251 COMPILER V5.60.0,  EM_FILTER                                                          25/01/22  13:56:04  PAGE 2   
-
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
@@ -78,6 +67,8 @@ Module Information          Static   Overlayable
   bit size             =    ------     ------
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------
+C251 COMPILER V5.60.0,  EM_FILTER                                                          26/01/22  12:28:48  PAGE 2   
+
   ebitaddressable size =    ------     ------
   far data size        =    ------     ------
   huge data size       =    ------     ------

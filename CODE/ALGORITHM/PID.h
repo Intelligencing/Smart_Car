@@ -1,13 +1,3 @@
-/*
- * @Description  : PID控制算法封装
- * @Author       : FZU Liao
- * @Date         : 2022-01-02 20:19:26
- * @LastEditors  : Liao
- * @LastEditTime : 2022-01-06 17:20:16
- * @FilePath     : \TEMPLATE_PROJECT\CODES\ALGORITHM\PID.h
- * Copyright 2022 FZU Liao, All Rights Reserved. 
- */
-
 #ifndef __PID_H__
 #define __PID_H__
 

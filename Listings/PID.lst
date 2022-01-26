@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  PID                                                                25/01/22  13:56:04  PAGE 1   
+C251 COMPILER V5.60.0,  PID                                                                26/01/22  12:28:48  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE PID
@@ -9,69 +9,57 @@ COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\ALGORITHM\PID.c LARGE INT
 
 stmt  level    source
 
-    1          /*
-    2           * @Description  : PID控制算法实现
-    3           * @Author       : FZU Liao
-    4           * @Date         : 2022-01-02 20:19:32
-    5           * @LastEditors  : Liao
-    6           * @LastEditTime : 2022-01-22 16:49:46
-    7           * @FilePath     : \ALGORITHM\PID.c
-    8           * Copyright 2022 FZU Liao, All Rights Reserved. 
-    9           */
-   10          
-   11          #include "PID.h"
-   12          #include "stdio.h"
+    1          #include "PID.h"
+    2          #include "stdio.h"
+    3          
+    4          void PID_SET_TARGET(PID* PID_CONTROL,float Param_Target){
+    5   1          PID_CONTROL->TARGET_VALUE = Param_Target;
+    6   1      }
+    7          
+    8          void PID_SET_FACTORS(PID* PID_CONTROL,float Param_P,float Param_I,float Param_D){
+    9   1          PID_CONTROL->FACTOR_Proportional = Param_P;
+   10   1          PID_CONTROL->FACTOR_Integral     = Param_I;
+   11   1          PID_CONTROL->FACTOR_Differential = Param_D;
+   12   1      }
    13          
-   14          void PID_SET_TARGET(PID* PID_CONTROL,float Param_Target){
-   15   1          PID_CONTROL->TARGET_VALUE = Param_Target;
-   16   1      }
-   17          
-   18          void PID_SET_FACTORS(PID* PID_CONTROL,float Param_P,float Param_I,float Param_D){
-   19   1          PID_CONTROL->FACTOR_Proportional = Param_P;
-   20   1          PID_CONTROL->FACTOR_Integral     = Param_I;
-   21   1          PID_CONTROL->FACTOR_Differential = Param_D;
-   22   1      }
-   23          
-   24          float PID_CALC_RESULT(PID* PID_CONTROL,float CURRENT_INPUT){
-   25   1          float P , I , D;
-   26   1          float PID_OUTPUT;
-   27   1          float ERROR,d_ERROR;
-   28   1          ERROR = PID_CONTROL->TARGET_VALUE - CURRENT_INPUT;
-   29   1          PID_CONTROL->PID_SUM_ERROR += ERROR;
-   30   1          if(PID_CONTROL->PID_X_MODE == PID_REALIZE_MODE){
-   31   2              d_ERROR = PID_CONTROL->PID_LAST_ERROR - PID_CONTROL->PID_PREV_ERROR;
-   32   2              P = PID_CONTROL->FACTOR_Proportional*ERROR;
-   33   2              I = PID_CONTROL->FACTOR_Integral*PID_CONTROL->PID_SUM_ERROR;
-   34   2              D = PID_CONTROL->FACTOR_Differential*d_ERROR;
-   35   2          }else{
-   36   2              d_ERROR = ERROR - 2*PID_CONTROL->PID_LAST_ERROR + PID_CONTROL->PID_PREV_ERROR;
-   37   2              P = (ERROR-PID_CONTROL->PID_LAST_ERROR)*PID_CONTROL->FACTOR_Proportional;
-   38   2              I = PID_CONTROL->FACTOR_Integral*ERROR;
-   39   2              D = PID_CONTROL->FACTOR_Differential*d_ERROR;
-   40   2          }
-   41   1          PID_CONTROL->PID_PREV_ERROR = PID_CONTROL->PID_LAST_ERROR;
-   42   1          PID_CONTROL->PID_LAST_ERROR = ERROR;
-   43   1          PID_OUTPUT = P+I+D;
-   44   1          return PID_OUTPUT;
+   14          float PID_CALC_RESULT(PID* PID_CONTROL,float CURRENT_INPUT){
+   15   1          float P , I , D;
+   16   1          float PID_OUTPUT;
+   17   1          float ERROR,d_ERROR;
+   18   1          ERROR = PID_CONTROL->TARGET_VALUE - CURRENT_INPUT;
+   19   1          PID_CONTROL->PID_SUM_ERROR += ERROR;
+   20   1          if(PID_CONTROL->PID_X_MODE == PID_REALIZE_MODE){
+   21   2              d_ERROR = PID_CONTROL->PID_LAST_ERROR - PID_CONTROL->PID_PREV_ERROR;
+   22   2              P = PID_CONTROL->FACTOR_Proportional*ERROR;
+   23   2              I = PID_CONTROL->FACTOR_Integral*PID_CONTROL->PID_SUM_ERROR;
+   24   2              D = PID_CONTROL->FACTOR_Differential*d_ERROR;
+   25   2          }else{
+   26   2              d_ERROR = ERROR - 2*PID_CONTROL->PID_LAST_ERROR + PID_CONTROL->PID_PREV_ERROR;
+   27   2              P = (ERROR-PID_CONTROL->PID_LAST_ERROR)*PID_CONTROL->FACTOR_Proportional;
+   28   2              I = PID_CONTROL->FACTOR_Integral*ERROR;
+   29   2              D = PID_CONTROL->FACTOR_Differential*d_ERROR;
+   30   2          }
+   31   1          PID_CONTROL->PID_PREV_ERROR = PID_CONTROL->PID_LAST_ERROR;
+   32   1          PID_CONTROL->PID_LAST_ERROR = ERROR;
+   33   1          PID_OUTPUT = P+I+D;
+   34   1          return PID_OUTPUT;
+   35   1      }
+   36          
+   37          void PID_INIT_NEWPID(PID* NEW_PID,float Param_P,float Param_I,float Param_D,float Param_Target,PID_CONTRO
+             -L_MODE PID_MODE){
+   38   1          //memset(NEW_PID,0,sizeof(struct PID_CONTROL_STRUCT));
+   39   1          NEW_PID->PID_X_MODE = PID_MODE;
+   40   1          NEW_PID->PID_PREV_ERROR     = 0;
+   41   1          NEW_PID->PID_LAST_ERROR     = 0;
+   42   1          NEW_PID->PID_SUM_ERROR      = 0;
+   43   1          PID_SET_FACTORS(NEW_PID,Param_P,Param_I,Param_D);
+   44   1          PID_SET_TARGET(NEW_PID,Param_Target);
    45   1      }
    46          
-   47          void PID_INIT_NEWPID(PID* NEW_PID,float Param_P,float Param_I,float Param_D,float Param_Target,PID_CONTRO
-             -L_MODE PID_MODE){
-   48   1          //memset(NEW_PID,0,sizeof(struct PID_CONTROL_STRUCT));
-   49   1          NEW_PID->PID_X_MODE = PID_MODE;
-   50   1          NEW_PID->PID_PREV_ERROR     = 0;
-   51   1          NEW_PID->PID_LAST_ERROR     = 0;
-   52   1          NEW_PID->PID_SUM_ERROR      = 0;
-   53   1          PID_SET_FACTORS(NEW_PID,Param_P,Param_I,Param_D);
-   54   1          PID_SET_TARGET(NEW_PID,Param_Target);
-   55   1      }
-   56          
-C251 COMPILER V5.60.0,  PID                                                                25/01/22  13:56:04  PAGE 2   
-
-   57          void PID_DEINIT_PID(PID* PID_CONTROL){
-   58   1          //free(PID_CONTROL);
-   59   1      }
-*** WARNING C47 IN LINE 57 OF CODE\ALGORITHM\PID.c: 'PID_CONTROL': unreferenced parameter
+   47          void PID_DEINIT_PID(PID* PID_CONTROL){
+   48   1          //free(PID_CONTROL);
+   49   1      }
+*** WARNING C47 IN LINE 47 OF CODE\ALGORITHM\PID.c: 'PID_CONTROL': unreferenced parameter
 
 
 Module Information          Static   Overlayable
@@ -79,6 +67,8 @@ Module Information          Static   Overlayable
   code size            =       436     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
+C251 COMPILER V5.60.0,  PID                                                                26/01/22  12:28:48  PAGE 2   
+
   idata size           =    ------     ------
   pdata size           =    ------     ------
   xdata size           =    ------         30

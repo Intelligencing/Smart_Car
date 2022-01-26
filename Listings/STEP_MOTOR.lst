@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  STEP_MOTOR                                                         25/01/22  13:56:09  PAGE 1   
+C251 COMPILER V5.60.0,  STEP_MOTOR                                                         26/01/22  12:28:52  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE STEP_MOTOR
@@ -9,75 +9,65 @@ COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\DRIVER\STEP_MOTOR.C LARGE
 
 stmt  level    source
 
-    1          /*
-    2           * @Description  : 步进电机控制实现
-    3           * @Author       : FZU Liao
-    4           * @Date         : 2022-01-03 15:48:25
-    5           * @LastEditors  : Liao
-    6           * @LastEditTime : 2022-01-15 23:14:28
-    7           * @FilePath     : \Driver\STEP_MOTOR.c
-    8           * Copyright 2022 FZU Liao, All Rights Reserved. 
-    9           */
-   10          
-   11          //步进电机控制芯片HIP4082真值表
-   12          /*——————————————————————————————————�
+    1          //步进电机控制芯片HIP4082真值表
+    2          /*——————————————————————————————————�
              -��————————————————————
-   13           |  | ALI | BLI |   | ALO | AHO | BLO | BHO | |  STATE  |
-   14           |  —————————————————————————————————�
+    3           |  | ALI | BLI |   | ALO | AHO | BLO | BHO | |  STATE  |
+    4           |  —————————————————————————————————�
              -�——————— | ——————— |
-   15           |  |  1  |  0  |   |  1  |  0  |  0  |  1  | | FORWARD |
-   16           |  —————————————————————————————————�
+    5           |  |  1  |  0  |   |  1  |  0  |  0  |  1  | | FORWARD |
+    6           |  —————————————————————————————————�
              -�——————— | ——————— |
-   17           |  |  0  |  1  |   |  0  |  1  |  1  |  0  | |   BACK  |
-   18           |  —————————————————————————————————�
+    7           |  |  0  |  1  |   |  0  |  1  |  1  |  0  | |   BACK  |
+    8           |  —————————————————————————————————�
              -�——————— | ——————— |
-   19           |  |  1  |  1  |   |  1  |  0  |  1  |  0  | |   STOP  | 
-   20           |  —————————————————————————————————�
+    9           |  |  1  |  1  |   |  1  |  0  |  1  |  0  | |   STOP  | 
+   10           |  —————————————————————————————————�
              -�——————— | ——————— |
-   21           |  |  0  |  0  |   |  0  |  1  |  0  |  1  | |   NULL  |
-   22          ———————————————————————————————————
+   11           |  |  0  |  0  |   |  0  |  1  |  0  |  1  | |   NULL  |
+   12          ———————————————————————————————————
              -—————————————————————*/
-   23          
-   24          #include "STEP_MOTOR.h"
-   25          #include "zf_delay.h"
-   26          
-   27          #define MOTOR_FREQUENCY 17000
-   28          #define MOTOR_MAX_DUTY  4000
-   29          
-   30          void STEP_MOTOR_INIT(STEP_MOTOR* MOTOR,STEP_MOTOR_CHANNEL ALI,STEP_MOTOR_CHANNEL BLI,PIN_enum GPIO_Pin_AL
+   13          
+   14          #include "STEP_MOTOR.h"
+   15          #include "zf_delay.h"
+   16          
+   17          #define MOTOR_FREQUENCY 17000
+   18          #define MOTOR_MAX_DUTY  4000
+   19          
+   20          void STEP_MOTOR_INIT(STEP_MOTOR* MOTOR,STEP_MOTOR_CHANNEL ALI,STEP_MOTOR_CHANNEL BLI,PIN_enum GPIO_Pin_AL
              -I,PIN_enum GPIO_PIN_BLI){
-   31   1          gpio_mode(GPIO_Pin_ALI,GPO_PP);
-   32   1          gpio_mode(GPIO_PIN_BLI,GPO_PP);
-   33   1          MOTOR->ALI = ALI;
-   34   1          MOTOR->BLI = BLI;
-   35   1          MOTOR->CURRENT_PWM_DUTY = 0;
-   36   1          pwm_init(ALI,MOTOR_FREQUENCY,0);       
-   37   1          pwm_init(BLI,MOTOR_FREQUENCY,0);  
-   38   1      }
-   39          
-   40          void STEP_MOTOR_FORWARD(STEP_MOTOR* MOTOR,int Duty){
-   41   1          MOTOR->CURRENT_PWM_DUTY = Duty;
-   42   1          pwm_duty(MOTOR->ALI,Duty);
-   43   1          pwm_duty(MOTOR->BLI,0);
-   44   1      }
-   45          
-   46          void STEP_MOTOR_STOP(STEP_MOTOR* MOTOR){
-   47   1          pwm_duty(MOTOR->ALI,1000);
-   48   1          pwm_duty(MOTOR->BLI,1000);
+   21   1          gpio_mode(GPIO_Pin_ALI,GPO_PP);
+   22   1          gpio_mode(GPIO_PIN_BLI,GPO_PP);
+   23   1          MOTOR->ALI = ALI;
+   24   1          MOTOR->BLI = BLI;
+   25   1          MOTOR->CURRENT_PWM_DUTY = 0;
+   26   1          pwm_init(ALI,MOTOR_FREQUENCY,0);       
+   27   1          pwm_init(BLI,MOTOR_FREQUENCY,0);  
+   28   1      }
+   29          
+   30          void STEP_MOTOR_FORWARD(STEP_MOTOR* MOTOR,int Duty){
+   31   1          MOTOR->CURRENT_PWM_DUTY = Duty;
+   32   1          pwm_duty(MOTOR->ALI,Duty);
+   33   1          pwm_duty(MOTOR->BLI,0);
+   34   1      }
+   35          
+   36          void STEP_MOTOR_STOP(STEP_MOTOR* MOTOR){
+   37   1          pwm_duty(MOTOR->ALI,1000);
+   38   1          pwm_duty(MOTOR->BLI,1000);
+   39   1      }
+   40          
+   41          void STEP_MOTOR_BACK(STEP_MOTOR* MOTOR,int Duty){
+   42   1          MOTOR->CURRENT_PWM_DUTY = Duty;
+   43   1          pwm_duty(MOTOR->ALI,0);
+   44   1          pwm_duty(MOTOR->BLI,Duty);
+   45   1      }
+   46          
+   47          uint32 STEP_MOTOR_GET_DUTY(STEP_MOTOR* MOTOR){
+   48   1          return MOTOR->CURRENT_PWM_DUTY;
    49   1      }
    50          
-C251 COMPILER V5.60.0,  STEP_MOTOR                                                         25/01/22  13:56:09  PAGE 2   
+C251 COMPILER V5.60.0,  STEP_MOTOR                                                         26/01/22  12:28:52  PAGE 2   
 
-   51          void STEP_MOTOR_BACK(STEP_MOTOR* MOTOR,int Duty){
-   52   1          MOTOR->CURRENT_PWM_DUTY = Duty;
-   53   1          pwm_duty(MOTOR->ALI,0);
-   54   1          pwm_duty(MOTOR->BLI,Duty);
-   55   1      }
-   56          
-   57          uint32 STEP_MOTOR_GET_DUTY(STEP_MOTOR* MOTOR){
-   58   1          return MOTOR->CURRENT_PWM_DUTY;
-   59   1      }
-   60          
 
 
 Module Information          Static   Overlayable

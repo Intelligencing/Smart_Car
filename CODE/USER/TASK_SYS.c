@@ -1,13 +1,3 @@
-/*
- * @Description  : 任务系统实现
- * @Author       : FZU Liao
- * @Date         : 2022-01-01 21:20:45
- * @LastEditors  : Liao
- * @LastEditTime : 2022-01-23 13:06:02
- * @FilePath     : \USER\TASK_SYS.c
- * Copyright 2022 FZU Liao, All Rights Reserved. 
- */
-
 #include "headfile.h"
 #include "TASK_SYS.h"
 

@@ -1,14 +1,3 @@
-/*
- * @Description  : 多任务封装
- * @Author       : FZU Liao
- * @Date         : 2022-01-01 21:20:35
- * @LastEditors  : Liao
- * @LastEditTime : 2022-01-23 12:44:37
- * @FilePath     : \USER\TASK_SYS.h
- * @note         : 若使用多任务，则默认TIEMR0作为系统时钟，不可再进行修改
- * Copyright 2022 FZU Liao, All Rights Reserved. 
- */
-
 #ifndef __TASK_H__
 #define __TASK_H__
 

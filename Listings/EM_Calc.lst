@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  EM_Calc                                                            25/01/22  13:56:04  PAGE 1   
+C251 COMPILER V5.60.0,  EM_Calc                                                            26/01/22  12:28:48  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE EM_Calc
@@ -9,46 +9,36 @@ COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE CODE\ALGORITHM\EM_Calc.c LARGE
 
 stmt  level    source
 
-    1          /*
-    2           * @Description  : 差和比差加权算法实现
-    3           * @Author       : FZU Liao
-    4           * @Date         : 2022-01-10 12:39:00
-    5           * @LastEditors  : Liao
-    6           * @LastEditTime : 2022-01-23 20:52:58
-    7           * @FilePath     : \ALGORITHM\EM_Calc.c
-    8           * Copyright 2022 FZU Liao, All Rights Reserved. 
-    9           */
+    1          #include "EM_Calc.h"
+    2          
+    3          #define L  1
+    4          #define LM 0
+    5          #define RM 3
+    6          #define R  2
+    7          
+    8          #define ParamA 1
+    9          #define ParamB 0
    10          
-   11          #include "EM_Calc.h"
-   12          
-   13          #define L  1
-   14          #define LM 0
-   15          #define RM 3
-   16          #define R  2
-   17          
-   18          #define ParamA 1
-   19          #define ParamB 1
-   20          
-   21          float EM_CALC_POS_RES(int* EM_data){
-   22   1         float RES;
-   23   1         int i;
-   24   1         for(i=0;i<4;i++){
-   25   2             if(EM_data[i]<10) EM_data[i]=0; 
-   26   2         }
-   27   1         RES = (EM_data[LM]-EM_data[RM])>0 ? (
-   28   1             ((float)(EM_data[L]-EM_data[R])*ParamA + (float)(EM_data[LM]-EM_data[RM])*ParamB)
-   29   1             /((float)(EM_data[L]+EM_data[R])*ParamA + (float)(EM_data[LM]-EM_data[RM])*ParamB)
-   30   1          ):(
-   31   1              ((float)(EM_data[L]-EM_data[R])*ParamA + (float)(EM_data[LM]-EM_data[RM])*ParamB)
-   32   1              /((float)(EM_data[L]+EM_data[R])*ParamA + (float)(EM_data[RM]-EM_data[LM])*ParamB)
-   33   1          );
-   34   1         return RES;
-   35   1      }
+   11          float EM_CALC_POS_RES(int* EM_data){
+   12   1         float RES;
+   13   1         int i;
+   14   1         for(i=0;i<4;i++){
+   15   2             if(EM_data[i]<10) EM_data[i]=0; 
+   16   2         }
+   17   1         RES = (EM_data[LM]-EM_data[RM])>0 ? (
+   18   1             ((float)(EM_data[L]-EM_data[R])*ParamA + (float)(EM_data[LM]-EM_data[RM])*ParamB)
+   19   1             /((float)(EM_data[L]+EM_data[R])*ParamA + (float)(EM_data[LM]-EM_data[RM])*ParamB)
+   20   1          ):(
+   21   1              ((float)(EM_data[L]-EM_data[R])*ParamA + (float)(EM_data[LM]-EM_data[RM])*ParamB)
+   22   1              /((float)(EM_data[L]+EM_data[R])*ParamA + (float)(EM_data[RM]-EM_data[LM])*ParamB)
+   23   1          );
+   24   1         return RES;
+   25   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       153     ------
+  code size            =        78     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------

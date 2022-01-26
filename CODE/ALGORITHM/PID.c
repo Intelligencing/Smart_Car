@@ -1,13 +1,3 @@
-/*
- * @Description  : PID控制算法实现
- * @Author       : FZU Liao
- * @Date         : 2022-01-02 20:19:32
- * @LastEditors  : Liao
- * @LastEditTime : 2022-01-22 16:49:46
- * @FilePath     : \ALGORITHM\PID.c
- * Copyright 2022 FZU Liao, All Rights Reserved. 
- */
-
 #include "PID.h"
 #include "stdio.h"
 

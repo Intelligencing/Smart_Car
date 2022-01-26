@@ -1,13 +1,3 @@
-/*
- * @Description  : 步进电机控制实现
- * @Author       : FZU Liao
- * @Date         : 2022-01-03 15:48:25
- * @LastEditors  : Liao
- * @LastEditTime : 2022-01-15 23:14:28
- * @FilePath     : \Driver\STEP_MOTOR.c
- * Copyright 2022 FZU Liao, All Rights Reserved. 
- */
-
 //步进电机控制芯片HIP4082真值表
 /*———————————————————————————————————————————————————————
  |  | ALI | BLI |   | ALO | AHO | BLO | BHO | |  STATE  |

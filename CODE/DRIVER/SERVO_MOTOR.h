@@ -1,13 +1,3 @@
-/*
- * @Description  : 伺服电机控制封装
- * @Author       : FZU Liao
- * @Date         : 2022-01-03 14:34:30
- * @LastEditors  : Liao
- * @LastEditTime : 2022-01-06 20:02:43
- * @FilePath     : \TEMPLATE_PROJECT\CODES\DRIVER\SERVO_MOTOR.h
- * Copyright 2022 FZU Liao, All Rights Reserved. 
- */
-
 #ifndef __SERVO_MOTOR_H__
 #define __SERVO_MOTOR_H__
 

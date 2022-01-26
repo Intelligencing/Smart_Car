@@ -1,12 +1,3 @@
-/*
- * @Description  : 电磁滤波器实现
- * @Author       : FZU Liao
- * @Date         : 2022-01-08 18:23:10
- * @LastEditors  : Liao
- * @LastEditTime : 2022-01-09 22:24:26
- * @FilePath     : \TEMPLATE_PROJECT\CODES\ALGORITHM\EM_FILTER.c
- * Copyright 2022 FZU Liao, All Rights Reserved. 
- */
 
 #include "EM_FILTER.h"
 #include "COMMON.h"

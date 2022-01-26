@@ -1,13 +1,3 @@
-/*
- * @Description  : 伺服电机控制实现
- * @Author       : FZU Liao
- * @Date         : 2022-01-03 14:35:08
- * @LastEditors  : Liao
- * @LastEditTime : 2022-01-16 23:21:34
- * @FilePath     : \Driver\SERVO_MOTOR.c
- * Copyright 2022 FZU Liao, All Rights Reserved. 
- */
-
 #include "SERVO_MOTOR.h"
 #include "zf_delay.h"
 #include "zf_pwm.h"

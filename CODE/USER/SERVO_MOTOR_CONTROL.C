@@ -10,7 +10,7 @@ PID MySTEERING_PID;
 
 float ANGLE_ADAPTER(float WHEEL_ANGLE){
     float Steering_ANGLE;
-    Steering_ANGLE = WHEEL_ANGLE*0.22;
+    Steering_ANGLE = WHEEL_ANGLE*0.23333;
     if(Steering_ANGLE>7) Steering_ANGLE = 7;
     if(Steering_ANGLE<-7) Steering_ANGLE = -7;
     return Steering_ANGLE;
@@ -21,15 +21,21 @@ void MySteeringPIDAdapter_State(SteeringState State){
 }
 
 void MySteeringControl_INIT(){
-	SERVO_INIT_MOTOR();
+	  SERVO_INIT_MOTOR();
     MyParams[0].Kp = STEERING_Kp_0;
     MyParams[0].Ki = STEERING_Ki_0;
     MyParams[0].Kd = STEERING_Kd_0;
-    MyParams[1].Kp = STEERING_Kp_1;
+    MyParams[1].Kp = STEERING_Kp_1; 
     MyParams[1].Ki = STEERING_Ki_1;
     MyParams[1].Kd = STEERING_Kd_1;
+    MyParams[2].Kp = STEERING_Kp_2; 
+    MyParams[2].Ki = STEERING_Ki_2;
+    MyParams[2].Kd = STEERING_Kd_2;
+    MyParams[3].Kp = STEERING_Kp_3; 
+    MyParams[3].Ki = STEERING_Ki_3;
+    MyParams[3].Kd = STEERING_Kd_3;
     PID_INIT_NEWPID(&MySTEERING_PID,0,0,0,0,PID_INCREASE_MODE);
-	MySteeringPIDAdapter_State(ON_STRAIGHT);
+  	MySteeringPIDAdapter_State(ON_STRAIGHT);
 }
 
 void MySteeringControl_TASK(float ANGLE){
@@ -39,7 +45,7 @@ void MySteeringControl_TASK(float ANGLE){
 float MySteeringControl_GETANGLE(int* EM_DATA,int userAngle){
     float CURRENT_INPUT;
     float ANGLE;
-    CURRENT_INPUT = EM_CALC_POS_RES(EM_DATA)*1000;//接收传入的已经滤波过的电磁信号
+    CURRENT_INPUT = EM_CALC_POS_RES(EM_DATA)*1000;
     if(userAngle == 0) 
         ANGLE = PID_CALC_RESULT(&MySTEERING_PID,CURRENT_INPUT);
     else 

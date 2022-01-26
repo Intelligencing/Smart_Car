@@ -1,13 +1,3 @@
-/**
- *@description :步进电机控制
- *@author HQU zeng
- *@date 2022/1/14 21:49
- *@LastEditors:Zeng
- *@LastEdit Time:
- *@FilePath:C:\Users\123456\Desktop\SMARTER CAR\CODE\DRIVER\STEP_MOTOR_H
- *@copyright 2022 FZU Liao,ALL Rights Reserved.
- */
-
 #ifndef STEP_MOTOR_H
 #define STEP_MOTOR_H
 #include "zf_pwm.h"
