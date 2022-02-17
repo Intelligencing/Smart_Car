@@ -9,9 +9,11 @@ typedef enum { //车状态枚举
     INTO_CIRCLE,
     ON_CIRCLE,
     OUT_CIRCLE
-} MyCAR_STATUS;
+} CAR_STATUS;
 
-void MYSYS_INIT();
+//CAR_STATUS CAR_STATUS_JUDGE();
+void SYS_INIT_ALL();
+void CONTROL_SYS_INIT();
 void Data_update();
 void FORWARD_FUNC();//前进函数
 void FUNC_STRAIGHT(); //直线行驶状态函数实现
@@ -21,7 +23,7 @@ void FUNC_OUT_CURVE();//出弯状态函数实现
 void FUNC_INTO_CIRCLE();//入环状态函数实现
 void FUNC_ON_CIRCLE();//在环岛中状态函数实现
 void FUNC_OUT_CIRCLE();//出环状态函数实现
-void MyControlSys_TASK();
-//MyCAR_STATUS CAR_STATUS_JUDGE();
+void ControlSys();
+
 
 #endif

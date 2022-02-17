@@ -4,9 +4,9 @@
 #include "SERVO_MOTOR.h"
 #include "LCD_show.h"
 
-struct MySteeringPID_params MyParams[2];
+struct SteeringPID_params Params[4];
 
-PID MySTEERING_PID;
+PID STEERING_PID;
 
 float ANGLE_ADAPTER(float WHEEL_ANGLE){
     float Steering_ANGLE;
@@ -16,39 +16,41 @@ float ANGLE_ADAPTER(float WHEEL_ANGLE){
     return Steering_ANGLE;
 }
 
-void MySteeringPIDAdapter_State(SteeringState State){
-    PID_SET_FACTORS(&MySTEERING_PID,MyParams[State].Kp,MyParams[State].Ki,MyParams[State].Kd);
+void SteeringPID_State(SteeringState State){
+    PID_SET_FACTORS(&STEERING_PID,Params[State].Kp,Params[State].Ki,Params[State].Kd);
 }
 
-void MySteeringControl_INIT(){
-	  SERVO_INIT_MOTOR();
-    MyParams[0].Kp = STEERING_Kp_0;
-    MyParams[0].Ki = STEERING_Ki_0;
-    MyParams[0].Kd = STEERING_Kd_0;
-    MyParams[1].Kp = STEERING_Kp_1; 
-    MyParams[1].Ki = STEERING_Ki_1;
-    MyParams[1].Kd = STEERING_Kd_1;
-    MyParams[2].Kp = STEERING_Kp_2; 
-    MyParams[2].Ki = STEERING_Ki_2;
-    MyParams[2].Kd = STEERING_Kd_2;
-    MyParams[3].Kp = STEERING_Kp_3; 
-    MyParams[3].Ki = STEERING_Ki_3;
-    MyParams[3].Kd = STEERING_Kd_3;
-    PID_INIT_NEWPID(&MySTEERING_PID,0,0,0,0,PID_INCREASE_MODE);
-  	MySteeringPIDAdapter_State(ON_STRAIGHT);
+void SteeringControl_INIT(){
+	SERVO_INIT_MOTOR();
+    Params[0].Kp = STEERING_Kp_0;
+    Params[0].Ki = STEERING_Ki_0;
+    Params[0].Kd = STEERING_Kd_0;
+    Params[1].Kp = STEERING_Kp_1; 
+    Params[1].Ki = STEERING_Ki_1;
+    Params[1].Kd = STEERING_Kd_1;
+    Params[2].Kp = STEERING_Kp_2; 
+    Params[2].Ki = STEERING_Ki_2;
+    Params[2].Kd = STEERING_Kd_2;
+    Params[3].Kp = STEERING_Kp_3; 
+    Params[3].Ki = STEERING_Ki_3;
+    Params[3].Kd = STEERING_Kd_3;
+    PID_INIT_NEWPID(&STEERING_PID,0,0,0,0,PID_REALIZE_MODE);
+  	SteeringPID_State(ON_STRAIGHT);
 }
 
-void MySteeringControl_TASK(float ANGLE){
+void SteeringControl(float ANGLE){
     SERVO_SET_ANGLE(ANGLE_ADAPTER(ANGLE));//利用电磁信号计算舵机大致摆角（调用PIDadapter算ERROR与目标值）
 }
 
-float MySteeringControl_GETANGLE(int* EM_DATA,int userAngle){
+float ANGLE_GETANGLE(int* EM_DATA,int userAngle){
     float CURRENT_INPUT;
     float ANGLE;
     CURRENT_INPUT = EM_CALC_POS_RES(EM_DATA)*1000;
-    if(userAngle == 0) 
-        ANGLE = PID_CALC_RESULT(&MySTEERING_PID,CURRENT_INPUT);
+	LCD("D",CURRENT_INPUT,5);
+    if(userAngle == 0){
+        ANGLE = PID_CALC_RESULT(&STEERING_PID,CURRENT_INPUT); 
+    }       
     else 
-        ANGLE = userAngle;
+        ANGLE = userAngle;//强制打角
         return ANGLE;//返回摆角
 }

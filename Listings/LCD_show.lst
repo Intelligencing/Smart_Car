@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  LCD_show                                                           26/01/22  12:28:48  PAGE 1   
+C251 COMPILER V5.60.0,  LCD_show                                                           17/02/22  14:35:28  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE LCD_show
@@ -11,7 +11,7 @@ stmt  level    source
 
     1          #include "LCD_show.h"
     2          
-    3          void LCD_display(const int8* str,int16 value,int8 row_num){
+    3          void LCD(const int8* str,int16 value,int8 row_num){
     4   1          lcd_showstr(0,row_num,str);
     5   1          lcd_showint16(40,row_num,value);
     6   1      }

@@ -2,53 +2,46 @@
 #include "SERVO_MOTOR_CONTROL.h"
 #include "STEP_MOTOR_CONTROL.h"
 #include "EM_SENSOR.h"
-#include "EM_FILTER.h"
 #include "ENCODE_SENSOR.h"
 #include "LCD_show.h"
 #include "headfile.h"
 
-#define SPEED 500
-#define AUTO_CONTROL 0
+#define SPEED 400
 
-// MyCAR_STATUS TEMP_STATUS; //临时状态变量
-MyCAR_STATUS CUR_STATUS;  //当前状态
+CAR_STATUS CUR_STATUS;  //当前状态
 
-int EM_DATA_LIST[4];  //电磁传感器数据存储列表
+int DATA[4];  //电磁传感器数据存储列表
 int TARGET_SPEED;     //目标速度
 int CURRENT_SPEED;    //当前速度
-int index;            //临时变量
 float ANGLE;          //舵机打角
-int RES_L;
+int RES;
 
-//EM_FILTER FILTER;        //电磁传感器               
-//ENCODE_SENSOR ENCODE_L;  //左轮编码器
+void (*func[7])();//函数指针数组，用于映射不同状态对应的函数
 
-void (*func_list[7])();//函数指针数组，用于映射不同状态对应的函数
-
-MyCAR_STATUS CAR_STATUS_JUDGE() {//状态判断
-    float backup;
+CAR_STATUS CAR_STATUS_JUDGE() {//状态判断
+    float backup;//左右电感差值
     int TARGET_SPEED;
     int huan_dw;//环岛标志位
 
-    if((EM_DATA_LIST[0]-EM_DATA_LIST[3])>0)  backup=EM_DATA_LIST[0]-EM_DATA_LIST[3];
-    if((EM_DATA_LIST[0]-EM_DATA_LIST[3])<0)  backup=EM_DATA_LIST[3]-EM_DATA_LIST[1];
+    if((DATA[0]-DATA[3])>0)  backup=DATA[0]-DATA[3];
+    if((DATA[0]-DATA[3])<0)  backup=DATA[3]-DATA[1];
     TARGET_SPEED=430-(int)(backup*1.2);   //弯道最低+直道加速
     //分段PD
     if(backup<=50)     return STRAIGHT;
     /* * * 弯道处理 * * */
     if(50<backup<=200){
-        MySteeringPIDAdapter_State(2);
+        SteeringPID_State(2);
         return ON_CURVE;
     }   
     if(200<backup){
-         MySteeringPIDAdapter_State(3);
+         SteeringPID_State(3);
          return ON_CURVE;
     } 
      /* * * 环岛处理 * * */      
-    if((EM_DATA_LIST[0]>90&&EM_DATA_LIST[1]>90&&EM_DATA_LIST[1]>=65&&
-         EM_DATA_LIST[1]<=70&&EM_DATA_LIST[0]>=65&&EM_DATA_LIST[0]<=70)   
-         ||(EM_DATA_LIST[0]>90&&EM_DATA_LIST[1]>90&&EM_DATA_LIST[1]>=65&&
-            EM_DATA_LIST[1]<=70&&EM_DATA_LIST[0]>=65&&EM_DATA_LIST[0]<70)) {//环标志
+    if((DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
+         DATA[1]<=70&&DATA[0]>=65&&DATA[0]<=70)   
+         ||(DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
+            DATA[1]<=70&&DATA[0]>=65&&DATA[0]<70)) {//环标志
         if(huan_dw==0) return INTO_CIRCLE;
         else {//防止再次入环
             huan_dw=0;
@@ -56,64 +49,70 @@ MyCAR_STATUS CAR_STATUS_JUDGE() {//状态判断
     }
 }
 
-void MYSYS_INIT(){
-    //状态函数列表初始化
-    func_list[0] = FUNC_STRAIGHT;
-    func_list[1] = FUNC_INTO_CURVE;
-    func_list[2] = FUNC_ON_CURVE;
-    func_list[3] = FUNC_OUT_CURVE;
-    func_list[4] = FUNC_INTO_CIRCLE;
-    func_list[5] = FUNC_ON_CIRCLE;
-    func_list[6] = FUNC_OUT_CIRCLE;
+void SYS_INIT_ALL(){
+    sys_clk=30000000;//时钟频率
+    board_init();//固件初始化
+    lcd_init();//显示屏初始化
+    ISR_INIT();
+    EnableGlobalIRQ();//中断初始化
+}
 
-    //FLAG=OFF;
+void CONTROL_SYS_INIT(){
+    //状态函数列表初始化
+    func[0] = FUNC_STRAIGHT;
+    func[1] = FUNC_INTO_CURVE;
+    func[2] = FUNC_ON_CURVE;
+    func[3] = FUNC_OUT_CURVE;
+    func[4] = FUNC_INTO_CIRCLE;
+    func[5] = FUNC_ON_CIRCLE;
+    func[6] = FUNC_OUT_CIRCLE;
     
-    EM_INIT_SENSOR();//电磁传感器初始化
+    EM_INIT();//电磁传感器初始化
     ENCODING_INIT();//编码器初始化
-    MyStepMotorControl_INIT();      //初始化步进电机控制系统
-    MySteeringControl_INIT();       //初始化舵机
+    StepMotorControl_INIT();//步进电机控制系统初始化
+    SteeringControl_INIT();//舵机控制系统初始化
+    lcd_clear(BLUE);
+    lcd_clear(WHITE);//lcd刷新
 }
 
 void Data_update(){
-    EM_READ_SENSOR(EM_DATA_LIST);                 //读取数据
-    // debug-----------------------------------------------------------------
-    LCD_display("L",EM_DATA_LIST[0],0);
-    LCD_display("LM",EM_DATA_LIST[1],1);
-    LCD_display("RM",EM_DATA_LIST[2],2);
-    LCD_display("R",EM_DATA_LIST[3],3);
-    LCD_display("LV",RES_L,4);
-//-----------------------------------------------------------------  
-    RES_L = ENCODING_READ_RESULT();//编码器读取电机转速
+    EM_READ(DATA);//读取数据
+    LCD("L",DATA[0],0);//显示电感值
+    LCD("LM",DATA[1],1);
+    LCD("RM",DATA[2],2);
+    LCD("R",DATA[3],3);
+    LCD("SPEED",RES,4);//显示编码器读取数据
+    RES = ENCODING_READ_RESULT();//编码器读取电机转速
 }
 
-void MyControlSys_TASK() {
-
-    // ANGLE = MySteeringControl_GETANGLE(EM_DATA_LIST, 0);
-    // MyStepMotorControl_TASK(RES_L,SPEED);
-    // MySteeringControl_TASK(ANGLE);
+void ControlSys() {
+    //  ANGLE = SPEED(DATA, 0);
+    //  StepMotorControl(RES,SPEED);
+    //  SteeringControl(-ANGLE);
     CUR_STATUS = CAR_STATUS_JUDGE();
-    (*func_list[CUR_STATUS])();
+    //LCD("STATU",CUR_STATUS,8);
+    (*func[CUR_STATUS])();
 }
 
 //前进函数
 void FORWARD_FUNC(){
-    ANGLE=MySteeringControl_GETANGLE(EM_DATA_LIST,0);
+    ANGLE=ANGLE_GETANGLE(DATA,0);
     CURRENT_SPEED=ENCODING_READ_RESULT();//编码器计算当前速度
     TARGET_SPEED=SPEED; //min_SPEED + (max_SPEED - min_SPEED)/10*ANGLE;
     //利用舵机打角角度，处理出速度目标值
-    MyStepMotorControl_TASK(RES_L,TARGET_SPEED);//电机输出
-    MySteeringControl_TASK(ANGLE);
+    StepMotorControl(RES,TARGET_SPEED);//电机输出
+    SteeringControl(-ANGLE);
 }
 
 //直线行驶状态函数实现
 void FUNC_STRAIGHT() {
-    MySteeringPIDAdapter_State(ON_STRAIGHT);
+    SteeringPID_State(ON_STRAIGHT);
     FORWARD_FUNC();
 }
 
 //入弯状态函数实现
 void FUNC_INTO_CURVE(){
-    MySteeringPIDAdapter_State(ON_TURN);
+    SteeringPID_State(ON_TURN);
     FORWARD_FUNC();
     CUR_STATUS = ON_CURVE;
 }
@@ -125,15 +124,15 @@ void FUNC_ON_CURVE(){
 
 //出弯状态函数实现
 void FUNC_OUT_CURVE(){
-    MySteeringPIDAdapter_State(ON_STRAIGHT);
+    SteeringPID_State(ON_STRAIGHT);
     FORWARD_FUNC();
     CUR_STATUS = STRAIGHT;
 }
 
 //入环状态函数实现
 void FUNC_INTO_CIRCLE(){
-    MySteeringPIDAdapter_State(ON_TURN);
-    MySteeringControl_TASK(10);
+    SteeringPID_State(ON_TURN);
+    SteeringControl(10);
     delay_ms(1000);
     CUR_STATUS = ON_CIRCLE;
 }
@@ -145,7 +144,7 @@ void FUNC_ON_CIRCLE(){
 
 //出环状态函数实现
 void FUNC_OUT_CIRCLE(){
-    MySteeringPIDAdapter_State(ON_STRAIGHT);
+    SteeringPID_State(ON_STRAIGHT);
     FORWARD_FUNC();
     delay_ms(1000);
     CUR_STATUS = STRAIGHT;

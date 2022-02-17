@@ -29,8 +29,8 @@ void STEP_MOTOR_INIT(STEP_MOTOR* MOTOR,STEP_MOTOR_CHANNEL ALI,STEP_MOTOR_CHANNEL
 
 void STEP_MOTOR_FORWARD(STEP_MOTOR* MOTOR,int Duty){
     MOTOR->CURRENT_PWM_DUTY = Duty;
-    pwm_duty(MOTOR->ALI,Duty);
-    pwm_duty(MOTOR->BLI,0);
+    pwm_duty(MOTOR->ALI,0);
+    pwm_duty(MOTOR->BLI,Duty);
 }
 
 void STEP_MOTOR_STOP(STEP_MOTOR* MOTOR){
@@ -40,8 +40,8 @@ void STEP_MOTOR_STOP(STEP_MOTOR* MOTOR){
 
 void STEP_MOTOR_BACK(STEP_MOTOR* MOTOR,int Duty){
     MOTOR->CURRENT_PWM_DUTY = Duty;
-    pwm_duty(MOTOR->ALI,0);
-    pwm_duty(MOTOR->BLI,Duty);
+    pwm_duty(MOTOR->ALI,Duty);
+    pwm_duty(MOTOR->BLI,0);
 }
 
 uint32 STEP_MOTOR_GET_DUTY(STEP_MOTOR* MOTOR){

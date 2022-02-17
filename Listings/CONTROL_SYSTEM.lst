@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     26/01/22  12:28:52  PAGE 1   
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     17/02/22  14:35:33  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE CONTROL_SYSTEM
@@ -13,119 +13,119 @@ stmt  level    source
     2          #include "SERVO_MOTOR_CONTROL.h"
     3          #include "STEP_MOTOR_CONTROL.h"
     4          #include "EM_SENSOR.h"
-    5          #include "EM_FILTER.h"
-    6          #include "ENCODE_SENSOR.h"
-    7          #include "LCD_show.h"
-    8          #include "headfile.h"
-    9          
-   10          #define SPEED 500
-   11          #define AUTO_CONTROL 0
+    5          #include "ENCODE_SENSOR.h"
+    6          #include "LCD_show.h"
+    7          #include "headfile.h"
+    8          
+    9          #define SPEED 400
+   10          
+   11          CAR_STATUS CUR_STATUS;  //当前状态
    12          
-   13          // MyCAR_STATUS TEMP_STATUS; //临时状态变量
-   14          MyCAR_STATUS CUR_STATUS;  //当前状态
-   15          
-   16          int EM_DATA_LIST[4];  //电磁传感器数据存储列表
-   17          int TARGET_SPEED;     //目标速度
-   18          int CURRENT_SPEED;    //当前速度
-   19          int index;            //临时变量
-   20          float ANGLE;          //舵机打角
-   21          int RES_L;
-   22          
-   23          //EM_FILTER FILTER;        //电磁传感器               
-   24          //ENCODE_SENSOR ENCODE_L;  //左轮编码器
-   25          
-   26          void (*func_list[7])();//函数指针数组，用于映射不同状态对应的函数
-   27          
-   28          MyCAR_STATUS CAR_STATUS_JUDGE() {//状态判断
-   29   1          float backup;
-   30   1          int TARGET_SPEED;
-   31   1          int huan_dw;//环岛标志位
-   32   1      
-   33   1          if((EM_DATA_LIST[0]-EM_DATA_LIST[3])>0)  backup=EM_DATA_LIST[0]-EM_DATA_LIST[3];
-   34   1          if((EM_DATA_LIST[0]-EM_DATA_LIST[3])<0)  backup=EM_DATA_LIST[3]-EM_DATA_LIST[1];
-   35   1          TARGET_SPEED=430-(int)(backup*1.2);   //弯道最低+直道加速
-   36   1          //分段PD
-   37   1          if(backup<=50)     return STRAIGHT;
-   38   1          if(50<backup<=200){
-   39   2              MySteeringPIDAdapter_State(2);
-   40   2              return ON_CURVE;
-   41   2          }   
-   42   1          if(200<backup){
-   43   2               MySteeringPIDAdapter_State(3);
-   44   2               return ON_CURVE;
-   45   2          } 
-   46   1           /* * * 环岛处理 * * */      
-   47   1          if((EM_DATA_LIST[0]>90&&EM_DATA_LIST[1]>90&&EM_DATA_LIST[1]>=65&&
-   48   1               EM_DATA_LIST[1]<=70&&EM_DATA_LIST[0]>=65&&EM_DATA_LIST[0]<=70)   
-   49   1               ||(EM_DATA_LIST[0]>90&&EM_DATA_LIST[1]>90&&EM_DATA_LIST[1]>=65&&
-   50   1                  EM_DATA_LIST[1]<=70&&EM_DATA_LIST[0]>=65&&EM_DATA_LIST[0]<70)) {//环标志
-   51   2              if(huan_dw==0) return INTO_CIRCLE;
-   52   2              else {//防止再次入环
-   53   3                  huan_dw=0;
-   54   3              }
-   55   2          }
-   56   1      }
-   57          
-C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     26/01/22  12:28:52  PAGE 2   
+   13          int DATA[4];  //电磁传感器数据存储列表
+   14          int TARGET_SPEED;     //目标速度
+   15          int CURRENT_SPEED;    //当前速度
+   16          float ANGLE;          //舵机打角
+   17          int RES;
+   18          
+   19          void (*func[7])();//函数指针数组，用于映射不同状态对应的函数
+   20          
+   21          CAR_STATUS CAR_STATUS_JUDGE() {//状态判断
+   22   1          float backup;//左右电感差值
+   23   1          int TARGET_SPEED;
+   24   1          int huan_dw;//环岛标志位
+   25   1      
+   26   1          if((DATA[0]-DATA[3])>0)  backup=DATA[0]-DATA[3];
+   27   1          if((DATA[0]-DATA[3])<0)  backup=DATA[3]-DATA[1];
+   28   1          TARGET_SPEED=430-(int)(backup*1.2);   //弯道最低+直道加速
+   29   1          //分段PD
+   30   1          if(backup<=50)     return STRAIGHT;
+   31   1          /* * * 弯道处理 * * */
+   32   1          if(50<backup<=200){
+   33   2              SteeringPID_State(2);
+   34   2              return ON_CURVE;
+   35   2          }   
+   36   1          if(200<backup){
+   37   2               SteeringPID_State(3);
+   38   2               return ON_CURVE;
+   39   2          } 
+   40   1           /* * * 环岛处理 * * */      
+   41   1          if((DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
+   42   1               DATA[1]<=70&&DATA[0]>=65&&DATA[0]<=70)   
+   43   1               ||(DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
+   44   1                  DATA[1]<=70&&DATA[0]>=65&&DATA[0]<70)) {//环标志
+   45   2              if(huan_dw==0) return INTO_CIRCLE;
+   46   2              else {//防止再次入环
+   47   3                  huan_dw=0;
+   48   3              }
+   49   2          }
+   50   1      }
+   51          
+   52          void SYS_INIT_ALL(){
+   53   1          sys_clk=30000000;//时钟频率
+   54   1          board_init();//固件初始化
+   55   1          lcd_init();//显示屏初始化
+   56   1          ISR_INIT();
+   57   1          EnableGlobalIRQ();//中断初始化
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     17/02/22  14:35:33  PAGE 2   
 
-   58          void MYSYS_INIT(){
-   59   1          //状态函数列表初始化
-   60   1          func_list[0] = FUNC_STRAIGHT;
-   61   1          func_list[1] = FUNC_INTO_CURVE;
-   62   1          func_list[2] = FUNC_ON_CURVE;
-   63   1          func_list[3] = FUNC_OUT_CURVE;
-   64   1          func_list[4] = FUNC_INTO_CIRCLE;
-   65   1          func_list[5] = FUNC_ON_CIRCLE;
-   66   1          func_list[6] = FUNC_OUT_CIRCLE;
-   67   1      
-   68   1          //FLAG=OFF;
+   58   1      }
+   59          
+   60          void CONTROL_SYS_INIT(){
+   61   1          //状态函数列表初始化
+   62   1          func[0] = FUNC_STRAIGHT;
+   63   1          func[1] = FUNC_INTO_CURVE;
+   64   1          func[2] = FUNC_ON_CURVE;
+   65   1          func[3] = FUNC_OUT_CURVE;
+   66   1          func[4] = FUNC_INTO_CIRCLE;
+   67   1          func[5] = FUNC_ON_CIRCLE;
+   68   1          func[6] = FUNC_OUT_CIRCLE;
    69   1          
-   70   1          EM_INIT_SENSOR();//电磁传感器初始化
+   70   1          EM_INIT();//电磁传感器初始化
    71   1          ENCODING_INIT();//编码器初始化
-   72   1          MyStepMotorControl_INIT();      //初始化步进电机控制系统
-   73   1          MySteeringControl_INIT();       //初始化舵机
-   74   1      }
-   75          
-   76          void Data_update(){
-   77   1          EM_READ_SENSOR(EM_DATA_LIST);                 //读取数据
-   78   1          // debug-----------------------------------------------------------------
-   79   1          LCD_display("L",EM_DATA_LIST[0],0);
-   80   1          LCD_display("LM",EM_DATA_LIST[1],1);
-   81   1          LCD_display("RM",EM_DATA_LIST[2],2);
-   82   1          LCD_display("R",EM_DATA_LIST[3],3);
-   83   1          LCD_display("LV",RES_L,4);
-   84   1      //-----------------------------------------------------------------  
-   85   1          RES_L = ENCODING_READ_RESULT();//编码器读取电机转速
+   72   1          StepMotorControl_INIT();//步进电机控制系统初始化
+   73   1          SteeringControl_INIT();//舵机控制系统初始化
+   74   1          lcd_clear(BLUE);
+   75   1          lcd_clear(WHITE);//lcd刷新
+   76   1      }
+   77          
+   78          void Data_update(){
+   79   1          EM_READ(DATA);//读取数据
+   80   1          LCD("L",DATA[0],0);//显示电感值
+   81   1          LCD("LM",DATA[1],1);
+   82   1          LCD("RM",DATA[2],2);
+   83   1          LCD("R",DATA[3],3);
+   84   1          LCD("SPEED",RES,4);//显示编码器读取数据
+   85   1          RES = ENCODING_READ_RESULT();//编码器读取电机转速
    86   1      }
    87          
-   88          void MyControlSys_TASK() {
-   89   1      
-   90   1          ANGLE = MySteeringControl_GETANGLE(EM_DATA_LIST, 0);
-   91   1          MyStepMotorControl_TASK(RES_L,SPEED);
-   92   1          MySteeringControl_TASK(ANGLE);
-   93   1          CUR_STATUS = CAR_STATUS_JUDGE();
-   94   1          (*func_list[CUR_STATUS])();
+   88          void ControlSys() {
+   89   1          //  ANGLE = SPEED(DATA, 0);
+   90   1          //  StepMotorControl(RES,SPEED);
+   91   1          //  SteeringControl(-ANGLE);
+   92   1          CUR_STATUS = CAR_STATUS_JUDGE();
+   93   1          //LCD("STATU",CUR_STATUS,8);
+   94   1          (*func[CUR_STATUS])();
    95   1      }
    96          
    97          //前进函数
    98          void FORWARD_FUNC(){
-   99   1          ANGLE=MySteeringControl_GETANGLE(EM_DATA_LIST,0);
+   99   1          ANGLE=ANGLE_GETANGLE(DATA,0);
   100   1          CURRENT_SPEED=ENCODING_READ_RESULT();//编码器计算当前速度
   101   1          TARGET_SPEED=SPEED; //min_SPEED + (max_SPEED - min_SPEED)/10*ANGLE;
   102   1          //利用舵机打角角度，处理出速度目标值
-  103   1          MyStepMotorControl_TASK(RES_L,TARGET_SPEED);//电机输出
-  104   1          MySteeringControl_TASK(ANGLE);
+  103   1          StepMotorControl(RES,TARGET_SPEED);//电机输出
+  104   1          SteeringControl(-ANGLE);
   105   1      }
   106          
   107          //直线行驶状态函数实现
   108          void FUNC_STRAIGHT() {
-  109   1          MySteeringPIDAdapter_State(1);
+  109   1          SteeringPID_State(ON_STRAIGHT);
   110   1          FORWARD_FUNC();
   111   1      }
   112          
   113          //入弯状态函数实现
   114          void FUNC_INTO_CURVE(){
-  115   1          MySteeringPIDAdapter_State(ON_TURN);
+  115   1          SteeringPID_State(ON_TURN);
   116   1          FORWARD_FUNC();
   117   1          CUR_STATUS = ON_CURVE;
   118   1      }
@@ -134,20 +134,20 @@ stmt  level    source
   121          void FUNC_ON_CURVE(){
   122   1          FORWARD_FUNC();
   123   1      }
-C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     26/01/22  12:28:52  PAGE 3   
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     17/02/22  14:35:33  PAGE 3   
 
   124          
   125          //出弯状态函数实现
   126          void FUNC_OUT_CURVE(){
-  127   1          MySteeringPIDAdapter_State(ON_STRAIGHT);
+  127   1          SteeringPID_State(ON_STRAIGHT);
   128   1          FORWARD_FUNC();
   129   1          CUR_STATUS = STRAIGHT;
   130   1      }
   131          
   132          //入环状态函数实现
   133          void FUNC_INTO_CIRCLE(){
-  134   1          MySteeringPIDAdapter_State(ON_TURN);
-  135   1          MySteeringControl_TASK(10);
+  134   1          SteeringPID_State(ON_TURN);
+  135   1          SteeringControl(10);
   136   1          delay_ms(1000);
   137   1          CUR_STATUS = ON_CIRCLE;
   138   1      }
@@ -159,24 +159,24 @@ stmt  level    source
   144          
   145          //出环状态函数实现
   146          void FUNC_OUT_CIRCLE(){
-  147   1          MySteeringPIDAdapter_State(ON_STRAIGHT);
+  147   1          SteeringPID_State(ON_STRAIGHT);
   148   1          FORWARD_FUNC();
   149   1          delay_ms(1000);
   150   1          CUR_STATUS = STRAIGHT;
   151   1      }
   152          
-*** WARNING C180 IN LINE 55 OF CODE\USER\CONTROL_SYSTEM.c: 'CAR_STATUS_JUDGE': not every path returns a value
-*** WARNING C180 IN LINE 55 OF CODE\USER\CONTROL_SYSTEM.c: 'CAR_STATUS_JUDGE': not every path returns a value
+*** WARNING C180 IN LINE 49 OF CODE\USER\CONTROL_SYSTEM.c: 'CAR_STATUS_JUDGE': not every path returns a value
+*** WARNING C180 IN LINE 49 OF CODE\USER\CONTROL_SYSTEM.c: 'CAR_STATUS_JUDGE': not every path returns a value
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       711     ------
+  code size            =       707     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =        36          2
+  xdata size           =        34          2
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
@@ -186,7 +186,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =        13     ------
+  hconst size          =        16     ------
 End of Module Information.
 
 

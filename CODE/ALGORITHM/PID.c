@@ -35,15 +35,10 @@ float PID_CALC_RESULT(PID* PID_CONTROL,float CURRENT_INPUT){
 }
 
 void PID_INIT_NEWPID(PID* NEW_PID,float Param_P,float Param_I,float Param_D,float Param_Target,PID_CONTROL_MODE PID_MODE){
-    //memset(NEW_PID,0,sizeof(struct PID_CONTROL_STRUCT));
     NEW_PID->PID_X_MODE = PID_MODE;
     NEW_PID->PID_PREV_ERROR     = 0;
     NEW_PID->PID_LAST_ERROR     = 0;
     NEW_PID->PID_SUM_ERROR      = 0;
     PID_SET_FACTORS(NEW_PID,Param_P,Param_I,Param_D);
     PID_SET_TARGET(NEW_PID,Param_Target);
-}
-
-void PID_DEINIT_PID(PID* PID_CONTROL){
-    //free(PID_CONTROL);
 }

@@ -3,6 +3,6 @@
 
 #include "SEEKFREE_18TFT.h"
 
-void LCD_display(const int8* str,int16 value,int8 row_num);
+void LCD(const int8* str,int16 value,int8 row_num);
 
 #endif

@@ -1,6 +1,4 @@
 ".\Objects\EM_Calc.obj",
-".\Objects\EM_FILTER.obj",
-".\Objects\LCD_ALGORITHM.obj",
 ".\Objects\PID.obj",
 ".\Objects\LCD_show.obj",
 ".\Objects\board.obj",
@@ -39,8 +37,7 @@
 ".\Objects\isr.obj",
 ".\Objects\CONTROL_SYSTEM.obj",
 ".\Objects\SERVO_MOTOR_CONTROL.obj",
-".\Objects\STEP_MOTOR_CONTROL.obj",
-".\Objects\TASK_SYS.obj" 
+".\Objects\STEP_MOTOR_CONTROL.obj" 
 TO ".\Objects\Project" 
 PRINT(".\Listings\Project.map") CASE 
 CLASSES (EDATA (0x0-0x1FFF), 

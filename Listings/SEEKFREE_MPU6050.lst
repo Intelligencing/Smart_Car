@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  SEEKFREE_MPU6050                                                   26/01/22  12:28:51  PAGE 1   
+C251 COMPILER V5.60.0,  SEEKFREE_MPU6050                                                   17/02/22  14:35:31  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE SEEKFREE_MPU6050
@@ -66,7 +66,7 @@ stmt  level    source
    50   1          while(0x07 != simiic_read_reg(MPU6050_DEV_ADDR, SMPLRT_DIV,SIMIIC))
    51   1          {
    52   2          delay_ms(1);
-C251 COMPILER V5.60.0,  SEEKFREE_MPU6050                                                   26/01/22  12:28:51  PAGE 2   
+C251 COMPILER V5.60.0,  SEEKFREE_MPU6050                                                   17/02/22  14:35:31  PAGE 2   
 
    53   2              //卡在这里原因有以下几点
    54   2              //1 MPU6050坏了，如果是新的这样的概率极低
@@ -134,7 +134,7 @@ stmt  level    source
   110          void mpu6050_get_gyro(void)
   111          {
   112   1          uint8 dat[6];
-C251 COMPILER V5.60.0,  SEEKFREE_MPU6050                                                   26/01/22  12:28:51  PAGE 3   
+C251 COMPILER V5.60.0,  SEEKFREE_MPU6050                                                   17/02/22  14:35:31  PAGE 3   
 
   113   1      
   114   1          simiic_read_regs(MPU6050_DEV_ADDR, GYRO_XOUT_H, dat, 6, SIMIIC);  
