@@ -1,5 +1,5 @@
 #include "SERVO_MOTOR_CONTROL.h"
-#include"EM_Calc.h"
+#include "EM_Calc.h"
 #include "PID.h"
 #include "SERVO_MOTOR.h"
 #include "LCD_show.h"
@@ -11,13 +11,14 @@ PID STEERING_PID;
 float ANGLE_ADAPTER(float WHEEL_ANGLE){
     float Steering_ANGLE;
     Steering_ANGLE = WHEEL_ANGLE*0.23333;
-    if(Steering_ANGLE>7) Steering_ANGLE = 7;
-    if(Steering_ANGLE<-7) Steering_ANGLE = -7;
+    if(Steering_ANGLE>9) Steering_ANGLE = 9;
+    if(Steering_ANGLE<-9) Steering_ANGLE = -9;
     return Steering_ANGLE;
 }
 
 void SteeringPID_State(SteeringState State){
     PID_SET_FACTORS(&STEERING_PID,Params[State].Kp,Params[State].Ki,Params[State].Kd);
+    //LCD("P" ,STEERING_PID.FACTOR_Proportional*1000 ,8);
 }
 
 void SteeringControl_INIT(){
@@ -46,7 +47,7 @@ float ANGLE_GETANGLE(int* EM_DATA,int userAngle){
     float CURRENT_INPUT;
     float ANGLE;
     CURRENT_INPUT = EM_CALC_POS_RES(EM_DATA)*1000;
-	LCD("D",CURRENT_INPUT,5);
+	  LCD("D",CURRENT_INPUT,5);
     if(userAngle == 0){
         ANGLE = PID_CALC_RESULT(&STEERING_PID,CURRENT_INPUT); 
     }       

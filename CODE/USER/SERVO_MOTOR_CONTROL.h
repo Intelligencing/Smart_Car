@@ -1,16 +1,16 @@
 #ifndef SERVO_MOTOR_CONTROL_H
 #define SERVO_MOTOR_CONTROL_H
 
-#define STEERING_Kp_0 0.3
+#define STEERING_Kp_0 0.03
 #define STEERING_Ki_0 0
 #define STEERING_Kd_0 0.03
 #define STEERING_Kp_1 0.3
 #define STEERING_Ki_1 0
-#define STEERING_Kd_1 0.03
-#define STEERING_Kp_2 0.3
+#define STEERING_Kd_1 0.033
+#define STEERING_Kp_2 0.35
 #define STEERING_Ki_2 0
-#define STEERING_Kd_2 0.03
-#define STEERING_Kp_3 0.3
+#define STEERING_Kd_2 0.033
+#define STEERING_Kp_3 0.03
 #define STEERING_Ki_3 0
 #define STEERING_Kd_3 0.03
 

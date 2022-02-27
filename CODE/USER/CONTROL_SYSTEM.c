@@ -6,7 +6,7 @@
 #include "LCD_show.h"
 #include "headfile.h"
 
-#define SPEED 400
+#define SPEED 270
 
 CAR_STATUS CUR_STATUS;  //当前状态
 
@@ -17,36 +17,57 @@ float ANGLE;          //舵机打角
 int RES;
 
 void (*func[7])();//函数指针数组，用于映射不同状态对应的函数
-
+int i,a;
+i=0;
+a=0;
 CAR_STATUS CAR_STATUS_JUDGE() {//状态判断
     float backup;//左右电感差值
-    int TARGET_SPEED;
     int huan_dw;//环岛标志位
-
-    if((DATA[0]-DATA[3])>0)  backup=DATA[0]-DATA[3];
-    if((DATA[0]-DATA[3])<0)  backup=DATA[3]-DATA[1];
-    TARGET_SPEED=430-(int)(backup*1.2);   //弯道最低+直道加速
+	  int TARGET_SPEED;
+	
+	backup=(DATA[0]-DATA[3]>0 ? DATA[0]-DATA[3] : DATA[3]-DATA[0]);
     //分段PD
-    if(backup<=50)     return STRAIGHT;
+//	if (DATA[0]<80&&DATA[3]<80)
+//    {
+//			  SteeringPID_State(2);
+//        return INTO_CURVE;/* code */
+//    }
+    		
+    if(backup<=100&&a==0){
+			return STRAIGHT;
+		}
     /* * * 弯道处理 * * */
-    if(50<backup<=200){
+    if(100<backup&&backup<=300&&a==0){
+        SteeringPID_State(1);
+        return INTO_CURVE;
+    }   
+//   if(backup>250){
+//        SteeringPID_State(2);
+//        return ON_CURVE;
+//   } 
+	 if(backup>300||a<=30){
+        a++;
+		if(a>30) a=0;
         SteeringPID_State(2);
         return ON_CURVE;
-    }   
-    if(200<backup){
-         SteeringPID_State(3);
-         return ON_CURVE;
-    } 
-     /* * * 环岛处理 * * */      
-    if((DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
-         DATA[1]<=70&&DATA[0]>=65&&DATA[0]<=70)   
-         ||(DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
-            DATA[1]<=70&&DATA[0]>=65&&DATA[0]<70)) {//环标志
-        if(huan_dw==0) return INTO_CIRCLE;
-        else {//防止再次入环
-            huan_dw=0;
-        }
-    }
+   } 
+     /* * * 环岛处理 * * */ 
+
+		// 	if(DATA[1]>1650&&DATA[2]>1650&&DATA[3]<700&&DATA[0]<700) {//环标志
+        // if(huan_dw==0) return INTO_CIRCLE;
+        // else {//防止再次入环
+        //     huan_dw=0;
+        // }
+
+//    if((DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
+//         DATA[1]<=70&&DATA[0]>=65&&DATA[0]<=70)   
+//         ||(DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
+//            DATA[1]<=70&&DATA[0]>=65&&DATA[0]<70)) {//环标志
+//        if(huan_dw==0) return INTO_CIRCLE;
+//        else {//防止再次入环
+//            huan_dw=0;
+ //       }
+//    }
 }
 
 void SYS_INIT_ALL(){
@@ -90,15 +111,21 @@ void ControlSys() {
     //  StepMotorControl(RES,SPEED);
     //  SteeringControl(-ANGLE);
     CUR_STATUS = CAR_STATUS_JUDGE();
-    //LCD("STATU",CUR_STATUS,8);
+    LCD("STATU",CUR_STATUS,8);
     (*func[CUR_STATUS])();
+
+    
 }
 
 //前进函数
 void FORWARD_FUNC(){
+	  float backup;//左右电感差值
+	  int TARGET_SPEED;
     ANGLE=ANGLE_GETANGLE(DATA,0);
     CURRENT_SPEED=ENCODING_READ_RESULT();//编码器计算当前速度
-    TARGET_SPEED=SPEED; //min_SPEED + (max_SPEED - min_SPEED)/10*ANGLE;
+	  backup=(DATA[1]-DATA[2]>0 ? DATA[1]-DATA[2] : DATA[2]-DATA[1]);
+    TARGET_SPEED=375-(int)(backup*0.13 );   //弯道最低+直道加速
+    //TARGET_SPEED=SPEED; //min_SPEED + (max_SPEED - min_SPEED)/10*ANGLE;
     //利用舵机打角角度，处理出速度目标值
     StepMotorControl(RES,TARGET_SPEED);//电机输出
     SteeringControl(-ANGLE);
@@ -132,6 +159,7 @@ void FUNC_OUT_CURVE(){
 //入环状态函数实现
 void FUNC_INTO_CIRCLE(){
     SteeringPID_State(ON_TURN);
+	  delay_ms(1000);
     SteeringControl(10);
     delay_ms(1000);
     CUR_STATUS = ON_CIRCLE;

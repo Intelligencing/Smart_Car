@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 17/02/22  14:35:33  PAGE 1   
+C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 27/02/22  21:58:59  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE STEP_MOTOR_CONTROL
@@ -67,7 +67,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 17/02/22  14:35:33  PAGE 2   
+C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 27/02/22  21:58:59  PAGE 2   
 
   hconst size          =        12     ------
 End of Module Information.

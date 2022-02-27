@@ -4,7 +4,7 @@
 
 #define SERVO_OUTPUT PWMB_CH1_P74
 
-#define MAX_ANGLE 7
+#define MAX_ANGLE 9
 
 void SERVO_INIT_MOTOR(){
     pwm_init(SERVO_OUTPUT,50,770);

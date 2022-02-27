@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "STEP_MOTOR_CONTROL.C": "cpp",
+        "SERVO_MOTOR_CONTROL.C": "cpp",
+        "STEP_MOTOR.C": "cpp"
+    }
+}
