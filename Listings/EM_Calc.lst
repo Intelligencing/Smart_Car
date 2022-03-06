@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  EM_Calc                                                            23/02/22  23:33:30  PAGE 1   
+C251 COMPILER V5.60.0,  EM_Calc                                                            05/03/22  22:36:46  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE EM_Calc
@@ -16,8 +16,8 @@ stmt  level    source
     5          #define RM 3
     6          #define R  2
     7          
-    8          #define ParamA 1
-    9          #define ParamB 0
+    8          #define ParamA 3
+    9          #define ParamB 1
    10          
    11          float EM_CALC_POS_RES(int* EM_data){
    12   1         float RES;
@@ -38,7 +38,7 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =        78     ------
+  code size            =       184     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------

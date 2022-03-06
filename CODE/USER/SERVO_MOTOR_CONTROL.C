@@ -46,12 +46,18 @@ void SteeringControl(float ANGLE){
 float ANGLE_GETANGLE(int* EM_DATA,int userAngle){
     float CURRENT_INPUT;
     float ANGLE;
+    float Param;
     CURRENT_INPUT = EM_CALC_POS_RES(EM_DATA)*1000;
-	  LCD("D",CURRENT_INPUT,5);
+    Param=CURRENT_INPUT*0.01;
+	  //LCD("D",CURRENT_INPUT,5);
+	  LCD("P",Param*1000,5);
     if(userAngle == 0){
-        ANGLE = PID_CALC_RESULT(&STEERING_PID,CURRENT_INPUT); 
+        //ANGLE = PID_CALC_RESULT(&STEERING_PID,CURRENT_INPUT); 
+		ANGLE=-0.052*CURRENT_INPUT;
+			
     }       
     else 
         ANGLE = userAngle;//强制打角
+		//LCD("D",ANGLE,5);
         return ANGLE;//返回摆角
 }

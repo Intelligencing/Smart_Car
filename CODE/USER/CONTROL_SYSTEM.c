@@ -5,6 +5,7 @@
 #include "ENCODE_SENSOR.h"
 #include "LCD_show.h"
 #include "headfile.h"
+#include "common.h"
 
 #define SPEED 270
 
@@ -18,26 +19,50 @@ int RES;
 
 void (*func[7])();//函数指针数组，用于映射不同状态对应的函数
 int i,a;
-i=0;
 a=0;
+int SC_flag;//三叉路口标志位
+int flag;
+
 CAR_STATUS CAR_STATUS_JUDGE() {//状态判断
     float backup;//左右电感差值
     int huan_dw;//环岛标志位
-	  int TARGET_SPEED;
-	
-	backup=(DATA[0]-DATA[3]>0 ? DATA[0]-DATA[3] : DATA[3]-DATA[0]);
+			
+	backup=(DATA[1]-DATA[2]>0 ? DATA[1]-DATA[2] : DATA[2]-DATA[1]);
     //分段PD
 //	if (DATA[0]<80&&DATA[3]<80)
 //    {
 //			  SteeringPID_State(2);
 //        return INTO_CURVE;/* code */
 //    }
-    		
-    if(backup<=100&&a==0){
+//    	//	 /*三叉处理*/
+//	 if(DATA[1]<500&&DATA[2]<500&&DATA[0]<600&&DATA[3]<600&&SC_flag==0&&flag==0){//入三叉
+//		 SteeringControl(-8); 
+//		  delay_ms(150);
+//		 SC_flag=1;
+//	 }
+//	 if(DATA[1]>1000||DATA[2]>1000&&SC_flag==1&&flag==0){//出三叉
+//		 flag=1;//已经进入一次
+//		 SteeringControl(-8);
+//		  delay_ms(150);
+//		 SC_flag=0;
+//	 }
+//	 if(DATA[1]<500&&DATA[2]<500&&DATA[0]<600&& DATA[3]<600&&SC_flag==0&&flag==1){//入三叉
+//		 SteeringControl(8);
+//		  delay_ms(150);
+//		 SC_flag=1;
+//	 }
+//	 if(DATA[1]>1000||DATA[2]>1000&&SC_flag==1&&flag==1){//出三叉
+//		 flag=0;
+//		 SteeringControl(8);
+//		 delay_ms(150);
+//		 SC_flag=0;
+//	 }
+	 
+    if(backup<=300&&a==0){
 			return STRAIGHT;
 		}
     /* * * 弯道处理 * * */
-    if(100<backup&&backup<=300&&a==0){
+    if(300<backup&&backup<=600&&a==0){
         SteeringPID_State(1);
         return INTO_CURVE;
     }   
@@ -45,29 +70,34 @@ CAR_STATUS CAR_STATUS_JUDGE() {//状态判断
 //        SteeringPID_State(2);
 //        return ON_CURVE;
 //   } 
-	 if(backup>300||a<=30){
+	 if(backup>600||a<=1){
         a++;
-		if(a>30) a=0;
+		if(a>1) a=0;
         SteeringPID_State(2);
         return ON_CURVE;
    } 
+
+	 
+//	 /*十字路口处理*/
+//	 if(DATA[0]>1000&&DATA[3]>1000&&DATA[1]>1000||DATA[2]>1000){
+//		 SteeringControl(0);
+//	 }
      /* * * 环岛处理 * * */ 
-
-		// 	if(DATA[1]>1650&&DATA[2]>1650&&DATA[3]<700&&DATA[0]<700) {//环标志
-        // if(huan_dw==0) return INTO_CIRCLE;
-        // else {//防止再次入环
-        //     huan_dw=0;
-        // }
-
-//    if((DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
-//         DATA[1]<=70&&DATA[0]>=65&&DATA[0]<=70)   
-//         ||(DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
-//            DATA[1]<=70&&DATA[0]>=65&&DATA[0]<70)) {//环标志
-//        if(huan_dw==0) return INTO_CIRCLE;
-//        else {//防止再次入环
-//            huan_dw=0;
- //       }
-//    }
+//		if(DATA[1]>2000&&DATA[2]>2000&&DATA[3]>DATA[0]) {//环标志
+//			if(huan_dw==0) return INTO_CIRCLE;
+//				 else {//防止再次入环
+//							 huan_dw=0;
+//				 }
+//			if((DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
+//					 DATA[1]<=70&&DATA[0]>=65&&DATA[0]<=70)   
+//					 ||(DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
+//							DATA[1]<=70&&DATA[0]>=65&&DATA[0]<70)) {//环标志
+//					if(huan_dw==0) return INTO_CIRCLE;
+//					else {//防止再次入环
+//							huan_dw=0;
+//					}
+//			}
+	//	}
 }
 
 void SYS_INIT_ALL(){
@@ -94,6 +124,8 @@ void CONTROL_SYS_INIT(){
     SteeringControl_INIT();//舵机控制系统初始化
     lcd_clear(BLUE);
     lcd_clear(WHITE);//lcd刷新
+	  SC_flag=0;//三叉路口标志位
+    flag=0;
 }
 
 void Data_update(){
@@ -102,6 +134,7 @@ void Data_update(){
     LCD("LM",DATA[1],1);
     LCD("RM",DATA[2],2);
     LCD("R",DATA[3],3);
+	//LCD("FLAG",SC_flag,4);//显示编码器读取数据
     LCD("SPEED",RES,4);//显示编码器读取数据
     RES = ENCODING_READ_RESULT();//编码器读取电机转速
 }
@@ -123,8 +156,8 @@ void FORWARD_FUNC(){
 	  int TARGET_SPEED;
     ANGLE=ANGLE_GETANGLE(DATA,0);
     CURRENT_SPEED=ENCODING_READ_RESULT();//编码器计算当前速度
-	  backup=(DATA[1]-DATA[2]>0 ? DATA[1]-DATA[2] : DATA[2]-DATA[1]);
-    TARGET_SPEED=375-(int)(backup*0.13 );   //弯道最低+直道加速
+	  backup=(DATA[1]-DATA[2]>0 ? DATA[1]-DATA[2] : DATA[1]-DATA[2]);
+    TARGET_SPEED=300-(int)(backup*0.1);   //弯道最低+直道加速0.013
     //TARGET_SPEED=SPEED; //min_SPEED + (max_SPEED - min_SPEED)/10*ANGLE;
     //利用舵机打角角度，处理出速度目标值
     StepMotorControl(RES,TARGET_SPEED);//电机输出

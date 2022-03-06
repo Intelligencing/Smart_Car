@@ -5,8 +5,8 @@
 #define RM 3
 #define R  2
 
-#define ParamA 1
-#define ParamB 0
+#define ParamA 3
+#define ParamB 1
 
 float EM_CALC_POS_RES(int* EM_data){
    float RES;

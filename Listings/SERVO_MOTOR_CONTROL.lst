@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                27/02/22  21:42:33  PAGE 1   
+C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                05/03/22  22:36:46  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE SERVO_MOTOR_CONTROL
@@ -58,22 +58,28 @@ stmt  level    source
    46          float ANGLE_GETANGLE(int* EM_DATA,int userAngle){
    47   1          float CURRENT_INPUT;
    48   1          float ANGLE;
-   49   1          CURRENT_INPUT = EM_CALC_POS_RES(EM_DATA)*1000;
-   50   1          LCD("D",CURRENT_INPUT,5);
-   51   1          if(userAngle == 0){
-   52   2              ANGLE = PID_CALC_RESULT(&STEERING_PID,CURRENT_INPUT); 
-   53   2          }       
-   54   1          else 
-   55   1              ANGLE = userAngle;//强制打角
-   56   1              return ANGLE;//返回摆角
-C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                27/02/22  21:42:33  PAGE 2   
+   49   1          float Param;
+   50   1          CURRENT_INPUT = EM_CALC_POS_RES(EM_DATA)*1000;
+   51   1          Param=CURRENT_INPUT*0.01;
+   52   1          //LCD("D",CURRENT_INPUT,5);
+   53   1          LCD("P",Param*1000,5);
+   54   1          if(userAngle == 0){
+   55   2              //ANGLE = PID_CALC_RESULT(&STEERING_PID,CURRENT_INPUT); 
+   56   2          ANGLE=-0.052*CURRENT_INPUT;
+C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                05/03/22  22:36:46  PAGE 2   
 
-   57   1      }
+   57   2            
+   58   2          }       
+   59   1          else 
+   60   1              ANGLE = userAngle;//强制打角
+   61   1          //LCD("D",ANGLE,5);
+   62   1              return ANGLE;//返回摆角
+   63   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       460     ------
+  code size            =       470     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
