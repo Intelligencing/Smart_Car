@@ -5,7 +5,7 @@
 #include "LCD_show.h"
 
 struct SteeringPID_params Params[4];
-
+float LAST_ERROR;
 PID STEERING_PID;
 
 float ANGLE_ADAPTER(float WHEEL_ANGLE){
@@ -18,7 +18,6 @@ float ANGLE_ADAPTER(float WHEEL_ANGLE){
 
 void SteeringPID_State(SteeringState State){
     PID_SET_FACTORS(&STEERING_PID,Params[State].Kp,Params[State].Ki,Params[State].Kd);
-    //LCD("P" ,STEERING_PID.FACTOR_Proportional*1000 ,8);
 }
 
 void SteeringControl_INIT(){
@@ -43,21 +42,19 @@ void SteeringControl(float ANGLE){
     SERVO_SET_ANGLE(ANGLE_ADAPTER(ANGLE));//利用电磁信号计算舵机大致摆角（调用PIDadapter算ERROR与目标值）
 }
 
-float ANGLE_GETANGLE(int* EM_DATA,int userAngle){
+float ANGLE_GETANGLE(int* EM_DATA,float userAngle,float Kp,float Ki,float Kd){
     float CURRENT_INPUT;
     float ANGLE;
-    float Param;
-    CURRENT_INPUT = EM_CALC_POS_RES(EM_DATA)*1000;
-    Param=CURRENT_INPUT*0.01;
-	  //LCD("D",CURRENT_INPUT,5);
-	  LCD("P",Param*1000,5);
+//    CURRENT_INPUT = 0;
+//    ANGLE = 0;
+    CURRENT_INPUT = EM_CALC_POS_RES(EM_DATA);
     if(userAngle == 0){
+        Ki+=-CURRENT_INPUT;
         //ANGLE = PID_CALC_RESULT(&STEERING_PID,CURRENT_INPUT); 
-		ANGLE=-0.052*CURRENT_INPUT;
-			
+		ANGLE = -Kp*CURRENT_INPUT-Ki*CURRENT_INPUT+Kd*(-CURRENT_INPUT-LAST_ERROR);//
+		LAST_ERROR = -CURRENT_INPUT;	
     }       
     else 
         ANGLE = userAngle;//强制打角
-		//LCD("D",ANGLE,5);
         return ANGLE;//返回摆角
 }

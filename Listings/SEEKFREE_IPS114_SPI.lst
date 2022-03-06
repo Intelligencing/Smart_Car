@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 1   
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE SEEKFREE_IPS114_SPI
@@ -66,7 +66,7 @@ stmt  level    source
    50          
    51          
    52          
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 2   
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 2   
 
    53          //-------------------------------------------------------------------------------------------------------
              -------------
@@ -134,7 +134,7 @@ stmt  level    source
   111          //  @since      v1.0
   112          //  Sample usage:               
   113          //-------------------------------------------------------------------------------------------------------
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 3   
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 3   
 
              -------------
   114          void ips114_writeDatai_16bit_simspi(uint16 dat) //向液晶屏写一个16位数据
@@ -202,7 +202,7 @@ stmt  level    source
   174   1          ips114_writeIndex_simspi(0xBB);
   175   1          ips114_writeData_simspi(0x37);
   176   1      
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 4   
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 4   
 
   177   1          ips114_writeIndex_simspi(0xC0);
   178   1          ips114_writeData_simspi(0x2C);
@@ -270,7 +270,7 @@ stmt  level    source
   240          {
   241   1        #if(IPS114_DISPLAY_DIR==0)
                  {
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 5   
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 5   
 
                    ips114_writeIndex_simspi(0x2a);//列地址设置
                    ips114_writeDatai_16bit_simspi(x1+52);
@@ -338,7 +338,7 @@ stmt  level    source
   304          //-------------------------------------------------------------------------------------------------------
              -------------
   305          //  @brief      液晶画点
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 6   
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 6   
 
   306          //  @param      x               坐标x方向的起点
   307          //  @param      y               坐标y方向的起点
@@ -406,7 +406,7 @@ stmt  level    source
   364   1        j = 0;
   365   1        while(dat[j] != '\0')
   366   1        {
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 7   
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 7   
 
   367   2          ips114_showchar_simspi(x+8*j,y*16,dat[j]);
   368   2          j++;
@@ -474,7 +474,7 @@ stmt  level    source
   426   1        
   427   1      }
   428          
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 8   
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 8   
 
   429          //-------------------------------------------------------------------------------------------------------
              -------------
@@ -542,7 +542,7 @@ stmt  level    source
   488   2        }
   489   1      }
   490          
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 9   
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 9   
 
   491          //-------------------------------------------------------------------------------------------------------
              -------------
@@ -610,7 +610,7 @@ stmt  level    source
   550   1          if(10<num)      num = 10;
   551   1              
   552   1          if(0>dat)   length = zf_sprintf( &buff[0],"%f",dat);//负数
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 10  
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 10  
 
   553   1          else
   554   1          {
@@ -678,7 +678,7 @@ stmt  level    source
   610          {
   611   1        IPS114_CS(0);
   612   1          IPS114_DC(1);
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 11  
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 11  
 
   613   1      
   614   1        spi_mosi(dat);
@@ -746,7 +746,7 @@ stmt  level    source
   671   1          ips114_writeIndex(0xB2);
   672   1          ips114_writeData(0x0C);
   673   1          ips114_writeData(0x0C);
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 12  
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 12  
 
   674   1          ips114_writeData(0x00);
   675   1          ips114_writeData(0x33);
@@ -814,7 +814,7 @@ stmt  level    source
   737   1          ips114_writeIndex(0x11); 
   738   1          delay_ms(120); 
   739   1      
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 13  
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 13  
 
   740   1          ips114_writeIndex(0x29);
   741   1          ips114_clear(IPS114_BGCOLOR);
@@ -882,7 +882,7 @@ stmt  level    source
   801   1        ips114_set_region(0,0,IPS114_X_MAX-1,IPS114_Y_MAX-1);
   802   1          for(i=0;i<IPS114_X_MAX;i++)
   803   1          {
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 14  
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 14  
 
   804   2              for (j=0;j<IPS114_Y_MAX;j++)
   805   2            {
@@ -950,7 +950,7 @@ stmt  level    source
   862          //  @param      dat             需要显示的字符串
   863          //  @return     void
   864          //  @since      v1.0
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 15  
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 15  
 
   865          //  Sample usage:               ips114_showstr(0,0,"seekfree");
   866          //-------------------------------------------------------------------------------------------------------
@@ -1018,7 +1018,7 @@ stmt  level    source
   923   1        
   924   1        a[0] = dat/100;
   925   1        a[1] = dat/10%10;
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 16  
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 16  
 
   926   1        a[2] = dat%10;
   927   1        i = 0;
@@ -1086,7 +1086,7 @@ stmt  level    source
   985   1        a[1] = dat/1000%10;
   986   1        a[2] = dat/100%10;
   987   1        a[3] = dat/10%10;
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 17  
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 17  
 
   988   1        a[4] = dat%10;
   989   1        
@@ -1154,7 +1154,7 @@ stmt  level    source
  1048          //                              负数会显示一个 ‘-’号   正数显示一个空格
  1049          //-------------------------------------------------------------------------------------------------------
              -------------
-C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                02/03/22  20:31:24  PAGE 18  
+C251 COMPILER V5.60.0,  SEEKFREE_IPS114_SPI                                                06/03/22  11:40:04  PAGE 18  
 
  1050          void ips114_showfloat(uint16 x,uint16 y,double dat,uint8 num,uint8 pointnum)
  1051          {

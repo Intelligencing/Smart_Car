@@ -33,7 +33,7 @@ void SteeringControl_INIT();
 
 void SteeringControl(float ANGLE);
 
-float ANGLE_GETANGLE(int* EM_DATA,int userAngle);
+float ANGLE_GETANGLE(int* EM_DATA,float userAngle,float Kp,float Ki,float Kd);
 
 
 #endif

@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                05/03/22  22:36:46  PAGE 1   
+C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                06/03/22  19:39:01  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE SERVO_MOTOR_CONTROL
@@ -16,7 +16,7 @@ stmt  level    source
     5          #include "LCD_show.h"
     6          
     7          struct SteeringPID_params Params[4];
-    8          
+    8          float LAST_ERROR;
     9          PID STEERING_PID;
    10          
    11          float ANGLE_ADAPTER(float WHEEL_ANGLE){
@@ -29,62 +29,59 @@ stmt  level    source
    18          
    19          void SteeringPID_State(SteeringState State){
    20   1          PID_SET_FACTORS(&STEERING_PID,Params[State].Kp,Params[State].Ki,Params[State].Kd);
-   21   1          //LCD("P" ,STEERING_PID.FACTOR_Proportional*1000 ,8);
-   22   1      }
-   23          
-   24          void SteeringControl_INIT(){
-   25   1        SERVO_INIT_MOTOR();
-   26   1          Params[0].Kp = STEERING_Kp_0;
-   27   1          Params[0].Ki = STEERING_Ki_0;
-   28   1          Params[0].Kd = STEERING_Kd_0;
-   29   1          Params[1].Kp = STEERING_Kp_1; 
-   30   1          Params[1].Ki = STEERING_Ki_1;
-   31   1          Params[1].Kd = STEERING_Kd_1;
-   32   1          Params[2].Kp = STEERING_Kp_2; 
-   33   1          Params[2].Ki = STEERING_Ki_2;
-   34   1          Params[2].Kd = STEERING_Kd_2;
-   35   1          Params[3].Kp = STEERING_Kp_3; 
-   36   1          Params[3].Ki = STEERING_Ki_3;
-   37   1          Params[3].Kd = STEERING_Kd_3;
-   38   1          PID_INIT_NEWPID(&STEERING_PID,0,0,0,0,PID_REALIZE_MODE);
-   39   1          SteeringPID_State(ON_STRAIGHT);
-   40   1      }
-   41          
-   42          void SteeringControl(float ANGLE){
-   43   1          SERVO_SET_ANGLE(ANGLE_ADAPTER(ANGLE));//利用电磁信号计算舵机大致摆角（调用PIDadapter
+   21   1      }
+   22          
+   23          void SteeringControl_INIT(){
+   24   1        SERVO_INIT_MOTOR();
+   25   1          Params[0].Kp = STEERING_Kp_0;
+   26   1          Params[0].Ki = STEERING_Ki_0;
+   27   1          Params[0].Kd = STEERING_Kd_0;
+   28   1          Params[1].Kp = STEERING_Kp_1; 
+   29   1          Params[1].Ki = STEERING_Ki_1;
+   30   1          Params[1].Kd = STEERING_Kd_1;
+   31   1          Params[2].Kp = STEERING_Kp_2; 
+   32   1          Params[2].Ki = STEERING_Ki_2;
+   33   1          Params[2].Kd = STEERING_Kd_2;
+   34   1          Params[3].Kp = STEERING_Kp_3; 
+   35   1          Params[3].Ki = STEERING_Ki_3;
+   36   1          Params[3].Kd = STEERING_Kd_3;
+   37   1          PID_INIT_NEWPID(&STEERING_PID,0,0,0,0,PID_REALIZE_MODE);
+   38   1          SteeringPID_State(ON_STRAIGHT);
+   39   1      }
+   40          
+   41          void SteeringControl(float ANGLE){
+   42   1          SERVO_SET_ANGLE(ANGLE_ADAPTER(ANGLE));//利用电磁信号计算舵机大致摆角（调用PIDadapter
              -算ERROR与目标值）
-   44   1      }
-   45          
-   46          float ANGLE_GETANGLE(int* EM_DATA,int userAngle){
-   47   1          float CURRENT_INPUT;
-   48   1          float ANGLE;
-   49   1          float Param;
-   50   1          CURRENT_INPUT = EM_CALC_POS_RES(EM_DATA)*1000;
-   51   1          Param=CURRENT_INPUT*0.01;
-   52   1          //LCD("D",CURRENT_INPUT,5);
-   53   1          LCD("P",Param*1000,5);
-   54   1          if(userAngle == 0){
-   55   2              //ANGLE = PID_CALC_RESULT(&STEERING_PID,CURRENT_INPUT); 
-   56   2          ANGLE=-0.052*CURRENT_INPUT;
-C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                05/03/22  22:36:46  PAGE 2   
+   43   1      }
+   44          
+   45          float ANGLE_GETANGLE(int* EM_DATA,float userAngle,float Kp,float Ki,float Kd){
+   46   1          float CURRENT_INPUT;
+   47   1          float ANGLE;
+   48   1      //    CURRENT_INPUT = 0;
+   49   1      //    ANGLE = 0;
+   50   1          CURRENT_INPUT = EM_CALC_POS_RES(EM_DATA);
+   51   1          if(userAngle == 0){
+   52   2              Ki+=-CURRENT_INPUT;
+   53   2              //ANGLE = PID_CALC_RESULT(&STEERING_PID,CURRENT_INPUT); 
+   54   2          ANGLE = -Kp*CURRENT_INPUT-Ki*CURRENT_INPUT+Kd*(-CURRENT_INPUT-LAST_ERROR);//
+   55   2          LAST_ERROR = -CURRENT_INPUT;  
+   56   2          }       
+C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                06/03/22  19:39:01  PAGE 2   
 
-   57   2            
-   58   2          }       
-   59   1          else 
-   60   1              ANGLE = userAngle;//强制打角
-   61   1          //LCD("D",ANGLE,5);
-   62   1              return ANGLE;//返回摆角
-   63   1      }
+   57   1          else 
+   58   1              ANGLE = userAngle;//强制打角
+   59   1              return ANGLE;//返回摆角
+   60   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       470     ------
+  code size            =       497     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =        78          8
+  xdata size           =        82         16
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
@@ -94,7 +91,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =         2     ------
+  hconst size          =    ------     ------
 End of Module Information.
 
 
