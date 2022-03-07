@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                06/03/22  19:39:01  PAGE 1   
+C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                07/03/22  12:24:46  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE SERVO_MOTOR_CONTROL
@@ -21,7 +21,7 @@ stmt  level    source
    10          
    11          float ANGLE_ADAPTER(float WHEEL_ANGLE){
    12   1          float Steering_ANGLE;
-   13   1          Steering_ANGLE = WHEEL_ANGLE*0.23333;
+   13   1          Steering_ANGLE = WHEEL_ANGLE*0.233333;//0.233333
    14   1          if(Steering_ANGLE>9) Steering_ANGLE = 9;
    15   1          if(Steering_ANGLE<-9) Steering_ANGLE = -9;
    16   1          return Steering_ANGLE;
@@ -47,7 +47,7 @@ stmt  level    source
    36   1          Params[3].Kd = STEERING_Kd_3;
    37   1          PID_INIT_NEWPID(&STEERING_PID,0,0,0,0,PID_REALIZE_MODE);
    38   1          SteeringPID_State(ON_STRAIGHT);
-   39   1      }
+   39   1      } 
    40          
    41          void SteeringControl(float ANGLE){
    42   1          SERVO_SET_ANGLE(ANGLE_ADAPTER(ANGLE));//利用电磁信号计算舵机大致摆角（调用PIDadapter
@@ -61,27 +61,29 @@ stmt  level    source
    49   1      //    ANGLE = 0;
    50   1          CURRENT_INPUT = EM_CALC_POS_RES(EM_DATA);
    51   1          if(userAngle == 0){
-   52   2              Ki+=-CURRENT_INPUT;
+   52   2              Ki= Ki-CURRENT_INPUT;
    53   2              //ANGLE = PID_CALC_RESULT(&STEERING_PID,CURRENT_INPUT); 
    54   2          ANGLE = -Kp*CURRENT_INPUT-Ki*CURRENT_INPUT+Kd*(-CURRENT_INPUT-LAST_ERROR);//
-   55   2          LAST_ERROR = -CURRENT_INPUT;  
-   56   2          }       
-C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                06/03/22  19:39:01  PAGE 2   
+   55   2            LCD("I",Ki*CURRENT_INPUT,6);
+   56   2            LCD("D",Kd*(-CURRENT_INPUT-LAST_ERROR),7);
+C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                07/03/22  12:24:46  PAGE 2   
 
-   57   1          else 
-   58   1              ANGLE = userAngle;//强制打角
-   59   1              return ANGLE;//返回摆角
-   60   1      }
+   57   2          LAST_ERROR = -CURRENT_INPUT;  
+   58   2          }       
+   59   1          else 
+   60   1              ANGLE = userAngle;//强制打角
+   61   1              return ANGLE;//返回摆角
+   62   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       497     ------
+  code size            =       636     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =        82         16
+  xdata size           =        82         24
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
@@ -91,7 +93,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =    ------     ------
+  hconst size          =         4     ------
 End of Module Information.
 
 

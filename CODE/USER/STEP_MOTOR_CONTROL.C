@@ -32,8 +32,8 @@ int StepMotorControl(int CURRENT_SPEED,int TARGET_SPEED){
     if(MOTOR.CURRENT_PWM_DUTY > max_pwm) MOTOR.CURRENT_PWM_DUTY = max_pwm;//步进电机限幅
     if(MOTOR.CURRENT_PWM_DUTY < 0) MOTOR.CURRENT_PWM_DUTY = 0;
     STEP_MOTOR_FORWARD(&MOTOR,MOTOR.CURRENT_PWM_DUTY);
-    LCD("MOTOR_D",delta,6);
-    LCD("PWM",MOTOR.CURRENT_PWM_DUTY,7);
+    //LCD("MOTOR_D",delta,6);
+    //LCD("PWM",MOTOR.CURRENT_PWM_DUTY,7);
     
     return delta;
 }

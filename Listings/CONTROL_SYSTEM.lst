@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     06/03/22  22:00:12  PAGE 1   
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     07/03/22  13:10:26  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE CONTROL_SYSTEM
@@ -66,7 +66,7 @@ stmt  level    source
    55   2         }
    56   1         else{//防止再次入环
    57   2              huan_dw=0;
-C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     06/03/22  22:00:12  PAGE 2   
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     07/03/22  13:10:26  PAGE 2   
 
    58   2              return STRAIGHT;
    59   2         }
@@ -134,16 +134,16 @@ stmt  level    source
   121   1          flag=0;
   122   1      }
   123          
-C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     06/03/22  22:00:12  PAGE 3   
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     07/03/22  13:10:26  PAGE 3   
 
   124          void Data_update(){
   125   1          int ERROR;
   126   1          EM_READ(DATA);//读取数据
   127   1          ERROR = EM_CALC_POS_RES(DATA)*1000;
-  128   1          LCD("L",DATA[0],0);//显示电感值
-  129   1          LCD("LM",DATA[1],1);
-  130   1          LCD("RM",DATA[2],2);
-  131   1          LCD("R",DATA[3],3);
+  128   1          LCD("R",DATA[0],0);//显示电感值
+  129   1          LCD("RM",DATA[1],1);
+  130   1          LCD("LM",DATA[2],2);
+  131   1          LCD("L",DATA[3],3);
   132   1          //LCD("SPEED",RES,4);//显示编码器读取数据
   133   1          //LCD("ANGLE",ANGLE,5);//显示角度
   134   1          LCD("D",ERROR,4);//显示误差
@@ -162,12 +162,12 @@ stmt  level    source
   147          //前进函数
   148          void FORWARD_FUNC(float USERANGLE,int SPEED){   
   149   1          float Kp;
-  150   1          Kp = (backup/(DATA[1]+DATA[2]))*209;//60
+  150   1          Kp = (backup/(DATA[1]+DATA[2]))*50;//60
   151   1          LCD("Kp",Kp,5);//显示角度
-  152   1          ANGLE = ANGLE_GETANGLE(DATA,USERANGLE,Kp,0,8);//位置式PID
+  152   1          ANGLE = ANGLE_GETANGLE(DATA,USERANGLE,Kp,34,25);//位置式PID
   153   1          LCD("ANGLE",ANGLE,8);//显示角度
   154   1          
-  155   1          if (SPEED == 0) TARGET_SPEED = 525-(int)(backup*0.18);
+  155   1          if (SPEED == 0) TARGET_SPEED = 470-(int)(backup*0.18);
   156   1          else  TARGET_SPEED=SPEED;  //弯道最低+直道加速0.013
   157   1          if(TARGET_SPEED > 1000||DATA[1]<10)  TARGET_SPEED=0;//下坡限速
   158   1        //TARGET_SPEED=SPEED; //min_SPEED + (max_SPEED - min_SPEED)/10*ANGLE;
@@ -202,7 +202,7 @@ stmt  level    source
   187   1      }
   188          
   189          //入环状态函数实现
-C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     06/03/22  22:00:12  PAGE 4   
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     07/03/22  13:10:26  PAGE 4   
 
   190          void FUNC_INTO_CIRCLE(){
   191   1          //SteeringPID_State(ON_TURN);
@@ -232,7 +232,7 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =      1117     ------
+  code size            =      1121     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------

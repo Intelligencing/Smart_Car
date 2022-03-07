@@ -125,10 +125,10 @@ void Data_update(){
     int ERROR;
     EM_READ(DATA);//读取数据
     ERROR = EM_CALC_POS_RES(DATA)*1000;
-    LCD("L",DATA[0],0);//显示电感值
-    LCD("LM",DATA[1],1);
-    LCD("RM",DATA[2],2);
-    LCD("R",DATA[3],3);
+    LCD("R",DATA[0],0);//显示电感值
+    LCD("RM",DATA[1],1);
+    LCD("LM",DATA[2],2);
+    LCD("L",DATA[3],3);
     //LCD("SPEED",RES,4);//显示编码器读取数据
     //LCD("ANGLE",ANGLE,5);//显示角度
     LCD("D",ERROR,4);//显示误差
@@ -147,12 +147,12 @@ void ControlSys() {
 //前进函数
 void FORWARD_FUNC(float USERANGLE,int SPEED){	  
     float Kp;
-    Kp = (backup/(DATA[1]+DATA[2]))*209;//60
+    Kp = (backup/(DATA[1]+DATA[2]))*50;//60
     LCD("Kp",Kp,5);//显示角度
-    ANGLE = ANGLE_GETANGLE(DATA,USERANGLE,Kp,0,8);//位置式PID
+    ANGLE = ANGLE_GETANGLE(DATA,USERANGLE,Kp,34,25);//位置式PID
 	  LCD("ANGLE",ANGLE,8);//显示角度
     
-    if (SPEED == 0) TARGET_SPEED = 525-(int)(backup*0.18);
+    if (SPEED == 0) TARGET_SPEED = 470-(int)(backup*0.18);
     else  TARGET_SPEED=SPEED;  //弯道最低+直道加速0.013
     if(TARGET_SPEED > 1000||DATA[1]<10)  TARGET_SPEED=0;//下坡限速
 	//TARGET_SPEED=SPEED; //min_SPEED + (max_SPEED - min_SPEED)/10*ANGLE;

@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 06/03/22  21:17:15  PAGE 1   
+C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 07/03/22  11:43:10  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE STEP_MOTOR_CONTROL
@@ -43,8 +43,8 @@ stmt  level    source
    32   1          if(MOTOR.CURRENT_PWM_DUTY > max_pwm) MOTOR.CURRENT_PWM_DUTY = max_pwm;//步进电机限幅
    33   1          if(MOTOR.CURRENT_PWM_DUTY < 0) MOTOR.CURRENT_PWM_DUTY = 0;
    34   1          STEP_MOTOR_FORWARD(&MOTOR,MOTOR.CURRENT_PWM_DUTY);
-   35   1          LCD("MOTOR_D",delta,6);
-   36   1          LCD("PWM",MOTOR.CURRENT_PWM_DUTY,7);
+   35   1          //LCD("MOTOR_D",delta,6);
+   36   1          //LCD("PWM",MOTOR.CURRENT_PWM_DUTY,7);
    37   1          
    38   1          return delta;
    39   1      }
@@ -52,7 +52,7 @@ stmt  level    source
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       270     ------
+  code size            =       236     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
@@ -67,9 +67,9 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 06/03/22  21:17:15  PAGE 2   
+C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 07/03/22  11:43:10  PAGE 2   
 
-  hconst size          =        12     ------
+  hconst size          =    ------     ------
 End of Module Information.
 
 

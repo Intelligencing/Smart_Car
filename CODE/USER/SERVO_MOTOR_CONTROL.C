@@ -10,7 +10,7 @@ PID STEERING_PID;
 
 float ANGLE_ADAPTER(float WHEEL_ANGLE){
     float Steering_ANGLE;
-    Steering_ANGLE = WHEEL_ANGLE*0.23333;
+    Steering_ANGLE = WHEEL_ANGLE*0.233333;//0.233333
     if(Steering_ANGLE>9) Steering_ANGLE = 9;
     if(Steering_ANGLE<-9) Steering_ANGLE = -9;
     return Steering_ANGLE;
@@ -36,7 +36,7 @@ void SteeringControl_INIT(){
     Params[3].Kd = STEERING_Kd_3;
     PID_INIT_NEWPID(&STEERING_PID,0,0,0,0,PID_REALIZE_MODE);
   	SteeringPID_State(ON_STRAIGHT);
-}
+} 
 
 void SteeringControl(float ANGLE){
     SERVO_SET_ANGLE(ANGLE_ADAPTER(ANGLE));//利用电磁信号计算舵机大致摆角（调用PIDadapter算ERROR与目标值）
@@ -49,9 +49,11 @@ float ANGLE_GETANGLE(int* EM_DATA,float userAngle,float Kp,float Ki,float Kd){
 //    ANGLE = 0;
     CURRENT_INPUT = EM_CALC_POS_RES(EM_DATA);
     if(userAngle == 0){
-        Ki+=-CURRENT_INPUT;
+        Ki= Ki-CURRENT_INPUT;
         //ANGLE = PID_CALC_RESULT(&STEERING_PID,CURRENT_INPUT); 
 		ANGLE = -Kp*CURRENT_INPUT-Ki*CURRENT_INPUT+Kd*(-CURRENT_INPUT-LAST_ERROR);//
+			LCD("I",Ki*CURRENT_INPUT,6);
+			LCD("D",Kd*(-CURRENT_INPUT-LAST_ERROR),7);
 		LAST_ERROR = -CURRENT_INPUT;	
     }       
     else 
