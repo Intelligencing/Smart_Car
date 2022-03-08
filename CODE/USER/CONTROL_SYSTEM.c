@@ -18,45 +18,49 @@ int SC_flag;//三叉路口标志位
 int flag;
 int TARGET_SPEED;
 float ANGLE;
-
+int b;
 CAR_STATUS CAR_STATUS_JUDGE() {//状态判断
     int huan_dw;//环岛标志位
   /*三叉处理*/
-	if(DATA[1]<500&&DATA[2]<500&&DATA[0]<600&&DATA[3]<600&&SC_flag==0&&flag==0){//入左三叉
-		SteeringControl(-8); 
-		SC_flag=1;
-        return ON_JUNCTION;
-	}
-	if(DATA[1]>1000||DATA[2]>1000&&SC_flag==1&&flag==0){//出三叉
-		flag=1;//已经进入一次
-		SteeringControl(-8);
-		SC_flag=0;
-        return ON_JUNCTION;
-	}
-	if(DATA[1]<500&&DATA[2]<500&&DATA[0]<600&& DATA[3]<600&&SC_flag==0&&flag==1){//入右三叉
-		SteeringControl(8);
-		SC_flag=1;
-        return ON_JUNCTION;
-	}
-	if(DATA[1]>1000||DATA[2]>1000&&SC_flag==1&&flag==1){//出三叉
-		flag=0;
-		SteeringControl(8);
-		SC_flag=0;
-        return ON_JUNCTION;
-	}	 
-	 /*十字路口处理*/
-	if(DATA[0]>1000&&DATA[3]>1000&&DATA[1]>1000||DATA[2]>1000){
-		return ON_CROSS;
-	}
-     /* * * 环岛处理 * * */ 
-	if(DATA[1]>2000&&DATA[2]>2000&&DATA[3]>DATA[0]&&huan_dw==0) {//环标志
-		huan_dw++;
-        return INTO_CIRCLE;
-   }
-   else{//防止再次入环
-        huan_dw=0;
+//	if(DATA[1]<500&&DATA[2]<500&&DATA[0]<600&&DATA[3]<600&&SC_flag==0&&flag==0){//入左三叉
+//		SC_flag=1;
+//        SteeringControl(-40);
+//        return ON_JUNCTION;
+//	}
+//	if(DATA[1]>1000||DATA[2]>1000&&SC_flag==1&&flag==0){//出左三叉
+//		flag=1;//已经进入一次 
+//        SteeringControl(-40); 
+//		SC_flag=0;
+//        return ON_JUNCTION;
+//	} 
+//    if(DATA[1]<500&&DATA[2]<500&&DATA[0]<600&&DATA[3]<600&&SC_flag==0&&flag==1){//入右三叉
+//		SC_flag=1;
+//        SteeringControl(40);
+//        return ON_JUNCTION;
+//	}
+//	if(DATA[1]>1000||DATA[2]>1000&&SC_flag==1&&flag==1){//出右三叉
+//		flag=0;//入三叉标志位清零
+//        SteeringControl(40);
+//		SC_flag=0;
+//        return ON_JUNCTION;
+//	} 
+//	 /*十字路口处理*/
+//	if(DATA[0]>1000&&DATA[3]>1000&&DATA[1]>1000||DATA[2]>1000){
+//		return ON_CROSS;
+//	}
+//     /* * * 环岛处理 * * */ 
+//	if(DATA[1]>2000&&DATA[2]>2000&&DATA[3]>DATA[0]&&huan_dw==0) {//环标志
+//		huan_dw++;
+//        return INTO_CIRCLE;
+//   }
+//   if(DATA[1]>2000&&DATA[2]>2000&&DATA[3]>DATA[0]&&huan_dw==1) {//环标志
+//		huan_dw++;
+//        return OUT_CIRCLE;
+//   }
+//   else{//防止再次入环
         return STRAIGHT;
-   }
+//   }
+	 
 //		if((DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
 //			DATA[1]<=70&&DATA[0]>=65&&DATA[0]<=70)   
 //			||(DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
@@ -119,6 +123,8 @@ void CONTROL_SYS_INIT(){
     lcd_clear(WHITE);//lcd刷新
 	SC_flag=0;//三叉路口标志位
     flag=0;
+	
+	b=0;
 }
 
 void Data_update(){
@@ -137,24 +143,26 @@ void Data_update(){
 }
 
 void ControlSys() {
-//    CUR_STATUS = CAR_STATUS_JUDGE();
-//    LCD("STATU",CUR_STATUS,8);
-//    (*func[CUR_STATUS])();
-	FORWARD_FUNC(0,0);
+   CUR_STATUS = CAR_STATUS_JUDGE();
+   LCD("STATU",CUR_STATUS,8);
+   (*func[CUR_STATUS])();
+	//FORWARD_FUNC(0,0);
     
 }
 
 //前进函数
 void FORWARD_FUNC(float USERANGLE,int SPEED){	  
-    float Kp;
-    Kp = (backup/(DATA[1]+DATA[2]))*50;//60
-    LCD("Kp",Kp,5);//显示角度
-    ANGLE = ANGLE_GETANGLE(DATA,USERANGLE,Kp,34,25);//位置式PID
-	  LCD("ANGLE",ANGLE,8);//显示角度
-    
-    if (SPEED == 0) TARGET_SPEED = 470-(int)(backup*0.18);
+    float Kp;  	 
+    Kp = (backup/(DATA[1]+DATA[2]))*98;//60
+    //LCD("Kp",Kp,5);//显示角度
+    ANGLE = ANGLE_GETANGLE(DATA,USERANGLE,Kp,0,40);//位置式PIDKp = (backup/(DATA[1]+DATA[2]))*50;
+	 //60ANGLE = ANGLE_GETANGLE(DATA,USERANGLE,Kp,34,25);//位置式PID
+	  LCD("ANGLE",ANGLE,8);//显示角度 
+    if (SPEED == 0) TARGET_SPEED = (530-(int)(backup*0.16));
     else  TARGET_SPEED=SPEED;  //弯道最低+直道加速0.013
-    if(TARGET_SPEED > 1000||DATA[1]<10)  TARGET_SPEED=0;//下坡限速
+	  b=(b>RES ? b : RES);
+    LCD("TS",TARGET_SPEED,5);
+	//if(RES > 1000||DATA[1]<10)  TARGET_SPEED=-1000;//下坡限速  
 	//TARGET_SPEED=SPEED; //min_SPEED + (max_SPEED - min_SPEED)/10*ANGLE;
     //利用舵机打角角度，处理出速度目标值
     StepMotorControl(RES,TARGET_SPEED);//电机输出
@@ -190,20 +198,24 @@ void FUNC_OUT_CURVE(){
 void FUNC_INTO_CIRCLE(){
     //SteeringPID_State(ON_TURN);
 	delay_ms(1000);
-    SteeringControl(10);
+    if(DATA[0]>DATA[3]) SteeringControl(40);
+    else SteeringControl(-40);
     delay_ms(1000);
     CUR_STATUS = INTO_CIRCLE;
 }
 
 //在十字路口中状态函数实现
 void FUNC_CROSS(){
-    FORWARD_FUNC(0,0);
+    FORWARD_FUNC(1,0);
 }
 
 //出环状态函数实现
 void FUNC_OUT_CIRCLE(){
     //SteeringPID_State(ON_STRAIGHT);
     FORWARD_FUNC(0,0);
+    delay_ms(1000);
+    if(DATA[0]>DATA[3]) SteeringControl(-40);
+    else SteeringControl(40);
     delay_ms(1000);
     CUR_STATUS = STRAIGHT;
 }

@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          06/03/22  11:40:03  PAGE 1   
+C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          08/03/22  20:19:26  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE SEEKFREE_BLUETOOTH_CH9141
@@ -66,7 +66,7 @@ stmt  level    source
    52          
    53          
    54          void bluetooth_ch9141_check_response(void);
-C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          06/03/22  11:40:03  PAGE 2   
+C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          08/03/22  20:19:26  PAGE 2   
 
    55          
    56          //-------------------------------------------------------------------------------------------------------
@@ -134,7 +134,7 @@ stmt  level    source
   113          //  Sample usage: 
   114          //  @note       用户无需关心
   115          //-------------------------------------------------------------------------------------------------------
-C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          06/03/22  11:40:03  PAGE 3   
+C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          08/03/22  20:19:26  PAGE 3   
 
              -------------
   116          void bluetooth_ch9141_send_at_command(const int8 *str)
@@ -202,7 +202,7 @@ stmt  level    source
              -------------
   173          void bluetooth_ch9141_exit_at_mode(void)
   174          {
-C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          06/03/22  11:40:03  PAGE 4   
+C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          08/03/22  20:19:26  PAGE 4   
 
   175   1          bluetooth_ch9141_send_at_command("AT+EXIT");
   176   1          at_mode = 0;            //进入透传模式
@@ -270,7 +270,7 @@ stmt  level    source
   231          //  @brief      蓝牙转串口模块设置模式
   232          //  @param      mode    模式设置，可设置选项查看CH9141_MODE_enum枚举成员
   233          //  @return     void          
-C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          06/03/22  11:40:03  PAGE 5   
+C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          08/03/22  20:19:26  PAGE 5   
 
   234          //  @since      v1.0
   235          //  Sample usage: 
@@ -338,7 +338,7 @@ stmt  level    source
   291          //  @return     void          
   292          //  @since      v1.0
   293          //  Sample usage: 
-C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          06/03/22  11:40:03  PAGE 6   
+C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          08/03/22  20:19:26  PAGE 6   
 
   294          //  @note       
   295          //-------------------------------------------------------------------------------------------------------
@@ -406,7 +406,7 @@ stmt  level    source
   351          //  @return     int8    返回信号强度0到-127
   352          //  @since      v1.0
   353          //  Sample usage: 
-C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          06/03/22  11:40:03  PAGE 7   
+C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          08/03/22  20:19:26  PAGE 7   
 
   354          //  @note       调用此函数需要先调用bluetooth_ch9141_enter_at_mode或者拉低CMD引脚 进入AT模式
   355          //              需要特别注意bluetooth_ch9141_enter_at_mode函数内部有500ms的延时
@@ -474,7 +474,7 @@ stmt  level    source
              -------------
   414          //  @brief      蓝牙转串口模块初始化
   415          //  @param      mode    蓝牙模式 MASTER_MODE(主机)或者SLAVE_MODE(从机)
-C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          06/03/22  11:40:03  PAGE 8   
+C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          08/03/22  20:19:26  PAGE 8   
 
   416          //  @return     void          
   417          //  @since      v1.0
@@ -542,7 +542,7 @@ stmt  level    source
   474   2          bluetooth_ch9141_enter_at_mode();          //进入AT模式
   475   2      
   476   2          //设置完模式之后需要复位然后再次进入AT模式才能继续设置其他参数，否则模式设置不成功
-C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          06/03/22  11:40:03  PAGE 9   
+C251 COMPILER V5.60.0,  SEEKFREE_BLUETOOTH_CH9141                                          08/03/22  20:19:26  PAGE 9   
 
   477   2              bluetooth_ch9141_set_tx_power(TX_POWER_4DB);//设置蓝牙发送功率
   478   2              bluetooth_ch9141_set_name("ble");

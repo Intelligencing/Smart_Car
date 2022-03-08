@@ -2,7 +2,7 @@
 #define STEP_MOTOR_CONTROL_H
 
 #define ERROR_RANGE 1
-#define STEERING_Kp 0.8
+#define STEERING_Kp 1
 #define STEERING_Ki 0.3
 #define STEERING_Kd 0.07
 #define STEP_MOTOR_MAX_DUTY 5000

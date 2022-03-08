@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  SEEKFREE_WIRELESS                                                  06/03/22  11:40:05  PAGE 1   
+C251 COMPILER V5.60.0,  SEEKFREE_WIRELESS                                                  08/03/22  20:19:27  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE SEEKFREE_WIRELESS
@@ -66,7 +66,7 @@ stmt  level    source
    50          
    51          //-------------------------------------------------------------------------------------------------------
              -------------
-C251 COMPILER V5.60.0,  SEEKFREE_WIRELESS                                                  06/03/22  11:40:05  PAGE 2   
+C251 COMPILER V5.60.0,  SEEKFREE_WIRELESS                                                  08/03/22  20:19:27  PAGE 2   
 
    52          //  @brief      无线转串口模块初始化
    53          //  @param      NULL
@@ -135,7 +135,7 @@ Module Information          Static   Overlayable
   xdata size           =    ------          2
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
-C251 COMPILER V5.60.0,  SEEKFREE_WIRELESS                                                  06/03/22  11:40:05  PAGE 3   
+C251 COMPILER V5.60.0,  SEEKFREE_WIRELESS                                                  08/03/22  20:19:27  PAGE 3   
 
   bit size             =    ------     ------
   ebit size            =    ------     ------

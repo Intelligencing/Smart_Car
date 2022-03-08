@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                07/03/22  12:24:46  PAGE 1   
+C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                08/03/22  20:19:28  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE SERVO_MOTOR_CONTROL
@@ -66,7 +66,7 @@ stmt  level    source
    54   2          ANGLE = -Kp*CURRENT_INPUT-Ki*CURRENT_INPUT+Kd*(-CURRENT_INPUT-LAST_ERROR);//
    55   2            LCD("I",Ki*CURRENT_INPUT,6);
    56   2            LCD("D",Kd*(-CURRENT_INPUT-LAST_ERROR),7);
-C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                07/03/22  12:24:46  PAGE 2   
+C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                08/03/22  20:19:28  PAGE 2   
 
    57   2          LAST_ERROR = -CURRENT_INPUT;  
    58   2          }       

@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  EM_SENSOR                                                          06/03/22  11:40:05  PAGE 1   
+C251 COMPILER V5.60.0,  EM_SENSOR                                                          08/03/22  21:25:50  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE EM_SENSOR
@@ -20,11 +20,28 @@ stmt  level    source
     9   1      }
    10          
    11          void EM_READ(int* DATA_LIST){
-   12   1          DATA_LIST[0] = adc_once(ADC_P00,ADC_12BIT);
-   13   1          DATA_LIST[1] = adc_once(ADC_P01,ADC_12BIT);
-   14   1          DATA_LIST[2] = adc_once(ADC_P05,ADC_12BIT);
-   15   1          DATA_LIST[3] = adc_once(ADC_P06,ADC_12BIT);
-   16   1      }
+   12   1          int i;
+   13   1          float p;
+   14   1          int DATA_MAX[4];
+   15   1          int DATA_MIN[4];
+   16   1          DATA_LIST[0] = adc_once(ADC_P00,ADC_12BIT);
+   17   1          DATA_LIST[1] = adc_once(ADC_P01,ADC_12BIT);
+   18   1          DATA_LIST[2] = adc_once(ADC_P05,ADC_12BIT);
+   19   1          DATA_LIST[3] = adc_once(ADC_P06,ADC_12BIT);
+   20   1          /*电感值归一化*/
+   21   1      //    for(i=0;i<4;i++){
+   22   1      //        if(DATA_LIST[i]>DATA_MAX[i]) DATA_MAX[i]=DATA_LIST[i];
+   23   1      //        if(DATA_LIST[i]<DATA_MIN[i]) DATA_MIN[i]=DATA_LIST[i];
+   24   1      //    }
+   25   1      //    for(i=0;i<4;i++){
+   26   1      //        p=(float)(DATA_LIST[i]-DATA_MIN[i])/(float)(DATA_MAX[i]-DATA_LIST[i]);
+   27   1      //        DATA_LIST[i]=p*1000;
+   28   1      //    }
+   29   1      }
+*** WARNING C47 IN LINE 12 OF CODE\DRIVER\EM_SENSOR.c: 'i': unreferenced local variable
+*** WARNING C47 IN LINE 13 OF CODE\DRIVER\EM_SENSOR.c: 'p': unreferenced local variable
+*** WARNING C47 IN LINE 14 OF CODE\DRIVER\EM_SENSOR.c: 'DATA_MAX': unreferenced local variable
+*** WARNING C47 IN LINE 15 OF CODE\DRIVER\EM_SENSOR.c: 'DATA_MIN': unreferenced local variable
 
 
 Module Information          Static   Overlayable
@@ -48,4 +65,4 @@ Module Information          Static   Overlayable
 End of Module Information.
 
 
-C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
+C251 COMPILATION COMPLETE.  4 WARNING(S),  0 ERROR(S)

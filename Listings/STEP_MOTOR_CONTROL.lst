@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 07/03/22  11:43:10  PAGE 1   
+C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 08/03/22  21:28:04  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE STEP_MOTOR_CONTROL
@@ -42,17 +42,19 @@ stmt  level    source
    31   1          MOTOR.CURRENT_PWM_DUTY = MOTOR.CURRENT_PWM_DUTY +delta ;
    32   1          if(MOTOR.CURRENT_PWM_DUTY > max_pwm) MOTOR.CURRENT_PWM_DUTY = max_pwm;//步进电机限幅
    33   1          if(MOTOR.CURRENT_PWM_DUTY < 0) MOTOR.CURRENT_PWM_DUTY = 0;
-   34   1          STEP_MOTOR_FORWARD(&MOTOR,MOTOR.CURRENT_PWM_DUTY);
-   35   1          //LCD("MOTOR_D",delta,6);
-   36   1          //LCD("PWM",MOTOR.CURRENT_PWM_DUTY,7);
-   37   1          
-   38   1          return delta;
-   39   1      }
+   34   1          //if(MOTOR.CURRENT_PWM_DUTY>=0) STEP_MOTOR_FORWARD(&MOTOR,MOTOR.CURRENT_PWM_DUTY);
+   35   1          //if(MOTOR.CURRENT_PWM_DUTY<0) STEP_MOTOR_BACK(&MOTOR,-MOTOR.CURRENT_PWM_DUTY);
+   36   1          STEP_MOTOR_FORWARD(&MOTOR,MOTOR.CURRENT_PWM_DUTY);
+   37   1          //LCD("MOTOR_D",delta,6);
+   38   1          //LCD("PWM",MOTOR.CURRENT_PWM_DUTY,7);
+   39   1          
+   40   1          return delta;
+   41   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       236     ------
+  code size            =       234     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
@@ -65,10 +67,10 @@ Module Information          Static   Overlayable
   bitaddressable size  =    ------     ------
   ebitaddressable size =    ------     ------
   far data size        =    ------     ------
+C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 08/03/22  21:28:04  PAGE 2   
+
   huge data size       =    ------     ------
   const size           =    ------     ------
-C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 07/03/22  11:43:10  PAGE 2   
-
   hconst size          =    ------     ------
 End of Module Information.
 
