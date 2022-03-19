@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  STEP_MOTOR                                                         08/03/22  20:19:28  PAGE 1   
+C251 COMPILER V5.60.0,  STEP_MOTOR                                                         18/03/22  21:03:16  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE STEP_MOTOR
@@ -66,7 +66,7 @@ stmt  level    source
    48   1          return MOTOR->CURRENT_PWM_DUTY;
    49   1      }
    50          
-C251 COMPILER V5.60.0,  STEP_MOTOR                                                         08/03/22  20:19:28  PAGE 2   
+C251 COMPILER V5.60.0,  STEP_MOTOR                                                         18/03/22  21:03:16  PAGE 2   
 
 
 

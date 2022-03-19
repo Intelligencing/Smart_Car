@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  EM_SENSOR                                                          08/03/22  21:25:50  PAGE 1   
+C251 COMPILER V5.60.0,  EM_SENSOR                                                          18/03/22  21:03:15  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE EM_SENSOR
@@ -12,46 +12,50 @@ stmt  level    source
     1          #include "EM_SENSOR.h"
     2          #include "zf_adc.h"
     3          
-    4          void EM_INIT(){
-    5   1          adc_init(ADC_P00,ADC_SYSclk_DIV_10);
-    6   1          adc_init(ADC_P01,ADC_SYSclk_DIV_10);
-    7   1          adc_init(ADC_P05,ADC_SYSclk_DIV_10);
-    8   1          adc_init(ADC_P06,ADC_SYSclk_DIV_10);
-    9   1      }
-   10          
-   11          void EM_READ(int* DATA_LIST){
-   12   1          int i;
-   13   1          float p;
-   14   1          int DATA_MAX[4];
-   15   1          int DATA_MIN[4];
-   16   1          DATA_LIST[0] = adc_once(ADC_P00,ADC_12BIT);
-   17   1          DATA_LIST[1] = adc_once(ADC_P01,ADC_12BIT);
-   18   1          DATA_LIST[2] = adc_once(ADC_P05,ADC_12BIT);
-   19   1          DATA_LIST[3] = adc_once(ADC_P06,ADC_12BIT);
-   20   1          /*电感值归一化*/
-   21   1      //    for(i=0;i<4;i++){
-   22   1      //        if(DATA_LIST[i]>DATA_MAX[i]) DATA_MAX[i]=DATA_LIST[i];
-   23   1      //        if(DATA_LIST[i]<DATA_MIN[i]) DATA_MIN[i]=DATA_LIST[i];
-   24   1      //    }
-   25   1      //    for(i=0;i<4;i++){
-   26   1      //        p=(float)(DATA_LIST[i]-DATA_MIN[i])/(float)(DATA_MAX[i]-DATA_LIST[i]);
-   27   1      //        DATA_LIST[i]=p*1000;
-   28   1      //    }
-   29   1      }
-*** WARNING C47 IN LINE 12 OF CODE\DRIVER\EM_SENSOR.c: 'i': unreferenced local variable
-*** WARNING C47 IN LINE 13 OF CODE\DRIVER\EM_SENSOR.c: 'p': unreferenced local variable
-*** WARNING C47 IN LINE 14 OF CODE\DRIVER\EM_SENSOR.c: 'DATA_MAX': unreferenced local variable
-*** WARNING C47 IN LINE 15 OF CODE\DRIVER\EM_SENSOR.c: 'DATA_MIN': unreferenced local variable
+    4          int DATA_MAX[4];
+    5          int DATA_MIN[4];
+    6          
+    7          void EM_INIT(){
+    8   1        int i;
+    9   1          adc_init(ADC_P00,ADC_SYSclk_DIV_10);
+   10   1          adc_init(ADC_P01,ADC_SYSclk_DIV_10);
+   11   1          adc_init(ADC_P05,ADC_SYSclk_DIV_10);
+   12   1          adc_init(ADC_P06,ADC_SYSclk_DIV_10);
+   13   1        
+   14   1        for(i=0;i<4;i++){
+   15   2        DATA_MAX[i]=0;
+   16   2        DATA_MIN[i]=0;
+   17   2        }
+   18   1      }
+   19          
+   20          void EM_READ(int* DATA_LIST){
+   21   1          int i;
+   22   1          float p;
+   23   1          
+   24   1          DATA_LIST[0] = adc_once(ADC_P00,ADC_12BIT);
+   25   1          DATA_LIST[1] = adc_once(ADC_P01,ADC_12BIT);
+   26   1          DATA_LIST[2] = adc_once(ADC_P05,ADC_12BIT);
+   27   1          DATA_LIST[3] = adc_once(ADC_P06,ADC_12BIT);
+   28   1          /*电感值归一化*/
+   29   1          for(i=0;i<4;i++){
+   30   2              if(DATA_LIST[i]>DATA_MAX[i]) DATA_MAX[i]=DATA_LIST[i];
+   31   2              if(DATA_LIST[i]<DATA_MIN[i]) DATA_MIN[i]=DATA_LIST[i];
+   32   2          }
+   33   1          for(i=0;i<4;i++){
+   34   2              p=(float)(DATA_LIST[i]-DATA_MIN[i])/(float)(DATA_MAX[i]-DATA_MIN[i]);
+   35   2              DATA_LIST[i]=p*1600; 
+   36   2          }
+   37   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       102     ------
+  code size            =       313     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =    ------     ------
+  xdata size           =        16     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
@@ -64,5 +68,7 @@ Module Information          Static   Overlayable
   hconst size          =    ------     ------
 End of Module Information.
 
+C251 COMPILER V5.60.0,  EM_SENSOR                                                          18/03/22  21:03:15  PAGE 2   
 
-C251 COMPILATION COMPLETE.  4 WARNING(S),  0 ERROR(S)
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                08/03/22  20:19:28  PAGE 1   
+C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                18/03/22  21:03:17  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE SERVO_MOTOR_CONTROL
@@ -60,25 +60,27 @@ stmt  level    source
    48   1      //    CURRENT_INPUT = 0;
    49   1      //    ANGLE = 0;
    50   1          CURRENT_INPUT = EM_CALC_POS_RES(EM_DATA);
-   51   1          if(userAngle == 0){
-   52   2              Ki= Ki-CURRENT_INPUT;
-   53   2              //ANGLE = PID_CALC_RESULT(&STEERING_PID,CURRENT_INPUT); 
-   54   2          ANGLE = -Kp*CURRENT_INPUT-Ki*CURRENT_INPUT+Kd*(-CURRENT_INPUT-LAST_ERROR);//
-   55   2            LCD("I",Ki*CURRENT_INPUT,6);
-   56   2            LCD("D",Kd*(-CURRENT_INPUT-LAST_ERROR),7);
-C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                08/03/22  20:19:28  PAGE 2   
+   51   1        if (CURRENT_INPUT<0) CURRENT_INPUT=-CURRENT_INPUT*CURRENT_INPUT;
+   52   1        else CURRENT_INPUT=CURRENT_INPUT*CURRENT_INPUT;
+   53   1          if(userAngle == 0){
+   54   2              Ki= Ki-CURRENT_INPUT;
+   55   2              //ANGLE = PID_CALC_RESULT(&STEERING_PID,CURRENT_INPUT); 
+   56   2          ANGLE = -Kp*CURRENT_INPUT-Ki*CURRENT_INPUT+Kd*(-CURRENT_INPUT-LAST_ERROR);//
+C251 COMPILER V5.60.0,  SERVO_MOTOR_CONTROL                                                18/03/22  21:03:17  PAGE 2   
 
-   57   2          LAST_ERROR = -CURRENT_INPUT;  
-   58   2          }       
-   59   1          else 
-   60   1              ANGLE = userAngle;//强制打角
-   61   1              return ANGLE;//返回摆角
-   62   1      }
+   57   2            //LCD  ("I",Ki*CURRENT_INPUT,6);
+   58   2            LCD("D",Kd*(-CURRENT_INPUT-LAST_ERROR),7);
+   59   2          LAST_ERROR = -CURRENT_INPUT;  
+   60   2          }       
+   61   1          else 
+   62   1              ANGLE = userAngle;//强制打角
+   63   1              return ANGLE;//返回摆角
+   64   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       636     ------
+  code size            =       662     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
@@ -93,7 +95,7 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =         4     ------
+  hconst size          =         2     ------
 End of Module Information.
 
 

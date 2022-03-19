@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     08/03/22  21:46:13  PAGE 1   
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     18/03/22  21:56:56  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE CONTROL_SYSTEM
@@ -29,228 +29,258 @@ stmt  level    source
    18          int flag;
    19          int TARGET_SPEED;
    20          float ANGLE;
-   21          int b;
+   21          int b,h,s,SPO;
    22          CAR_STATUS CAR_STATUS_JUDGE() {//状态判断
-   23   1          int huan_dw;//环岛标志位
-   24   1        /*三叉处理*/
-   25   1      //  if(DATA[1]<500&&DATA[2]<500&&DATA[0]<600&&DATA[3]<600&&SC_flag==0&&flag==0){//入左三叉
-   26   1      //    SC_flag=1;
-   27   1      //        SteeringControl(-40);
-   28   1      //        return ON_JUNCTION;
-   29   1      //  }
-   30   1      //  if(DATA[1]>1000||DATA[2]>1000&&SC_flag==1&&flag==0){//出左三叉
-   31   1      //    flag=1;//已经进入一次 
-   32   1      //        SteeringControl(-40); 
-   33   1      //    SC_flag=0;
-   34   1      //        return ON_JUNCTION;
-   35   1      //  } 
-   36   1      //    if(DATA[1]<500&&DATA[2]<500&&DATA[0]<600&&DATA[3]<600&&SC_flag==0&&flag==1){//入右三叉
-   37   1      //    SC_flag=1;
-   38   1      //        SteeringControl(40);
-   39   1      //        return ON_JUNCTION;
-   40   1      //  }
-   41   1      //  if(DATA[1]>1000||DATA[2]>1000&&SC_flag==1&&flag==1){//出右三叉
-   42   1      //    flag=0;//入三叉标志位清零
-   43   1      //        SteeringControl(40);
-   44   1      //    SC_flag=0;
-   45   1      //        return ON_JUNCTION;
-   46   1      //  } 
-   47   1      //   /*十字路口处理*/
-   48   1      //  if(DATA[0]>1000&&DATA[3]>1000&&DATA[1]>1000||DATA[2]>1000){
-   49   1      //    return ON_CROSS;
-   50   1      //  }
-   51   1      //     /* * * 环岛处理 * * */ 
-   52   1      //  if(DATA[1]>2000&&DATA[2]>2000&&DATA[3]>DATA[0]&&huan_dw==0) {//环标志
-   53   1      //    huan_dw++;
-   54   1      //        return INTO_CIRCLE;
-   55   1      //   }
-   56   1      //   if(DATA[1]>2000&&DATA[2]>2000&&DATA[3]>DATA[0]&&huan_dw==1) {//环标志
-   57   1      //    huan_dw++;
-C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     08/03/22  21:46:13  PAGE 2   
+   23   1      //    int huan_dw;//环岛标志位
+   24   1      //  if(huan_dw==0&&DATA[0]>1400&&(DATA[3]>1400||DATA[1]>2000)&&DATA[0]>DATA[3]) {//右环入
+   25   1      //    SteeringControl(40);
+   26   1      //    h++;
+   27   1      //  }
+   28   1      //  if(huan_dw==1&&DATA[0]>1400&&(DATA[3]>1400||DATA[1]>2000)&&DATA[0]>DATA[3])//右环出
+   29   1      //    SteeringControl(0);
+   30   1      //  
+   31   1      //  
+   32   1      
+   33   1      //        /******三叉判断********/
+   34   1      //  if(flag==0&&DATA[2]+DATA[1]<1700&&DATA[0]>450&&DATA[3]>450&&DATA[0]<1400&&DATA[3]<1400){//三叉右打
+             -角
+   35   1      //   SteeringControl(-40);
+   36   1      //   s++ ;
+   37   1      //  }//s==12
+   38   1      //  if(flag==1&&DATA[2]+DATA[1]<1700&&DATA[0]>450&&DATA[3]>450&&DATA[0]<1400&&DATA[3]<1400)//三叉左打�
+             -��
+   39   1      //    SteeringControl(40);
+   40   1      
+   41   1      //         /*****出环、出三叉判断********/
+   42   1      //    if(s>1&&DATA[0]>1400)flag=1;
+   43   1        /*三叉处理*/
+   44   1      //  if(DATA[1]<500&&DATA[2]<500&&DATA[0]<600&&DATA[3]<600&&SC_flag==0&&flag==0){//入左三叉
+   45   1      //        SC_flag=1;
+   46   1      //        SteeringControl(-40);
+   47   1      //        return ON_JUNCTION;
+   48   1      //  }
+   49   1      //  if(DATA[1]>1000||DATA[2]>1000&&SC_flag==1&&flag==0){//出左三叉
+   50   1      //    flag=1;//已经进入一次 
+   51   1      //        SteeringControl(-40); 
+   52   1      //    SC_flag=0;
+   53   1      //        return ON_JUNCTION;
+   54   1      //  } 
+   55   1      //    if(DATA[1]<500&&DATA[2]<500&&DATA[0]<600&&DATA[3]<600&&SC_flag==0&&flag==1){//入右三叉
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     18/03/22  21:56:56  PAGE 2   
 
-   58   1      //        return OUT_CIRCLE;
-   59   1      //   }
-   60   1      //   else{//防止再次入环
-   61   1              return STRAIGHT;
-   62   1      //   }
-   63   1         
-   64   1      //    if((DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
-   65   1      //      DATA[1]<=70&&DATA[0]>=65&&DATA[0]<=70)   
-   66   1      //      ||(DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
-   67   1      //      DATA[1]<=70&&DATA[0]>=65&&DATA[0]<70)) {//环标志
-   68   1      //      if(huan_dw==0) return INTO_CIRCLE;
-   69   1      //      else {//防止再次入环
-   70   1      //          huan_dw=0;
-   71   1      //        }
-   72   1      //    }
-   73   1      
-   74   1          //分段PD
-   75   1      //  if (DATA[0]<80&&DATA[3]<80)
-   76   1      //    {
-   77   1      //    SteeringPID_State(2);
-   78   1      //      return INTO_CURVE;/* code */
-   79   1      //    }
-   80   1      // if(backup<=300&&a==0){
-   81   1      //    return STRAIGHT;
-   82   1      //  }
-   83   1      // /* * * 弯道处理 * * */
-   84   1      // if(300<backup&&backup<=600&&a==0){
-   85   1      //     SteeringPID_State(1);
-   86   1      //     return INTO_CURVE;
-   87   1      // }   
-   88   1      //   if(backup>250){
-   89   1      //        SteeringPID_State(2);
-   90   1      //        return ON_CURVE;
-   91   1      //   } 
-   92   1      //   if(backup>600||a<=1){
-   93   1      //         a++;
-   94   1      //    if(a>1) a=0;
-   95   1      //         SteeringPID_State(2);
-   96   1      //         return ON_CURVE;
-   97   1      //    } 
-   98   1      }
-*** WARNING C47 IN LINE 23 OF CODE\USER\CONTROL_SYSTEM.c: 'huan_dw': unreferenced local variable
-   99          
-  100          void SYS_INIT_ALL(){
-  101   1          sys_clk=30000000;//时钟频率
-  102   1          board_init();//固件初始化
-  103   1          lcd_init();//显示屏初始化
-  104   1          ISR_INIT();
-  105   1          EnableGlobalIRQ();//中断初始化
-  106   1      }
-  107          
-  108          void CONTROL_SYS_INIT(){
-  109   1          //状态函数列表初始化
-  110   1          func[0] = FUNC_STRAIGHT;
-  111   1          func[1] = FUNC_INTO_CURVE;
-  112   1          func[2] = FUNC_ON_CURVE;
-  113   1          func[3] = FUNC_OUT_CURVE;
-  114   1          func[4] = FUNC_INTO_CIRCLE;
-  115   1          func[5] = FUNC_CROSS;
-  116   1          func[6] = FUNC_OUT_CIRCLE;
-  117   1          func[7] = FUNC_JUNCTION;
-  118   1          EM_INIT();//电磁传感器初始化
-  119   1          ENCODING_INIT();//编码器初始化
-  120   1          StepMotorControl_INIT();//步进电机控制系统初始化
-  121   1          SteeringControl_INIT();//舵机控制系统初始化
-  122   1          lcd_clear(BLUE);
-C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     08/03/22  21:46:13  PAGE 3   
+   56   1      //    SC_flag=1;
+   57   1      //        SteeringControl(40);
+   58   1      //        return ON_JUNCTION;
+   59   1      //  }
+   60   1      //  if(DATA[1]>1000||DATA[2]>1000&&SC_flag==1&&flag==1){//出右三叉
+   61   1      //    flag=0;//入三叉标志位清零
+   62   1      //        SteeringControl(40);
+   63   1      //    SC_flag=0;
+   64   1      //        return ON_JUNCTION;
+   65   1      //  } 
+   66   1      //   /*十字路口处理*/
+   67   1      //  if(DATA[0]>1000&&DATA[3]>1000&&DATA[1]>1000||DATA[2]>1000){
+   68   1      //    return ON_CROSS;
+   69   1      //  }
+   70   1      //     /* * * 环岛处理 * * */ 
+   71   1      //  if(DATA[1]>2000&&DATA[2]>2000&&DATA[3]>DATA[0]&&huan_dw==0) {//环标志
+   72   1      //    huan_dw++;
+   73   1      //        return INTO_CIRCLE;
+   74   1      //   }
+   75   1      //   if(DATA[1]>2000&&DATA[2]>2000&&DATA[3]>DATA[0]&&huan_dw==1) {//环标志
+   76   1      //    huan_dw++;
+   77   1      //        return OUT_CIRCLE;
+   78   1      //   }
+   79   1      //   else{//防止再次入环
+   80   1            //  return STRAIGHT;
+   81   1      //   }
+   82   1         
+   83   1      //    if((DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
+   84   1      //      DATA[1]<=70&&DATA[0]>=65&&DATA[0]<=70)   
+   85   1      //      ||(DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
+   86   1      //      DATA[1]<=70&&DATA[0]>=65&&DATA[0]<70)) {//环标志
+   87   1      //      if(huan_dw==0) return INTO_CIRCLE;
+   88   1      //      else {//防止再次入环
+   89   1      //          huan_dw=0;
+   90   1      //        }
+   91   1      //    }
+   92   1      
+   93   1          //分段PD
+   94   1      //  if (DATA[0]<80&&DATA[3]<80)
+   95   1      //    {
+   96   1      //    SteeringPID_State(2);
+   97   1      //      return INTO_CURVE;/* code */
+   98   1      //    }
+   99   1      // if(backup<=300&&a==0){
+  100   1      //    return STRAIGHT;
+  101   1      //  }
+  102   1      // /* * * 弯道处理 * * */
+  103   1      // if(300<backup&&backup<=600&&a==0){
+  104   1      //     SteeringPID_State(1);
+  105   1      //     return INTO_CURVE;
+  106   1      // }   
+  107   1      //   if(backup>250){
+  108   1      //        SteeringPID_State(2);
+  109   1      //        return ON_CURVE;
+  110   1      //   } 
+  111   1      //   if(backup>600||a<=1){
+  112   1      //         a++;
+  113   1      //    if(a>1) a=0;
+  114   1      //         SteeringPID_State(2);
+  115   1      //         return ON_CURVE;
+  116   1      //    } 
+  117   1      }
+  118          
+  119          void SYS_INIT_ALL(){
+  120   1          sys_clk=30000000;//时钟频率
+  121   1          board_init();//固件初始化
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     18/03/22  21:56:56  PAGE 3   
 
-  123   1          lcd_clear(WHITE);//lcd刷新
-  124   1        SC_flag=0;//三叉路口标志位
-  125   1          flag=0;
-  126   1        
-  127   1        b=0;
-  128   1      }
-  129          
-  130          void Data_update(){
-  131   1          int ERROR;
-  132   1          EM_READ(DATA);//读取数据
-  133   1          ERROR = EM_CALC_POS_RES(DATA)*1000;
-  134   1          LCD("R",DATA[0],0);//显示电感值
-  135   1          LCD("RM",DATA[1],1);
-  136   1          LCD("LM",DATA[2],2);
-  137   1          LCD("L",DATA[3],3);
-  138   1          //LCD("SPEED",RES,4);//显示编码器读取数据
-  139   1          //LCD("ANGLE",ANGLE,5);//显示角度
-  140   1          LCD("D",ERROR,4);//显示误差
-  141   1          RES = ENCODING_READ_RESULT();//编码器读取电机转速
-  142   1          backup=(DATA[1]-DATA[2]>0 ? DATA[1]-DATA[2] : DATA[2]-DATA[1]);
-  143   1      }
-  144          
-  145          void ControlSys() {
-  146   1         CUR_STATUS = CAR_STATUS_JUDGE();
-  147   1         LCD("STATU",CUR_STATUS,8);
-  148   1         (*func[CUR_STATUS])();
-  149   1        //FORWARD_FUNC(0,0);
-  150   1          
-  151   1      }
-  152          
-  153          //前进函数
-  154          void FORWARD_FUNC(float USERANGLE,int SPEED){   
-  155   1          float Kp;    
-  156   1          Kp = (backup/(DATA[1]+DATA[2]))*98;//60
-  157   1          //LCD("Kp",Kp,5);//显示角度
-  158   1          ANGLE = ANGLE_GETANGLE(DATA,USERANGLE,Kp,0,40);//位置式PIDKp = (backup/(DATA[1]+DATA[2]))*50;
-  159   1         //60ANGLE = ANGLE_GETANGLE(DATA,USERANGLE,Kp,34,25);//位置式PID
-  160   1          LCD("ANGLE",ANGLE,8);//显示角度 
-  161   1          if (SPEED == 0) TARGET_SPEED = (530-(int)(backup*0.16));
-  162   1          else  TARGET_SPEED=SPEED;  //弯道最低+直道加速0.013
-  163   1          b=(b>RES ? b : RES);
-  164   1          LCD("TS",TARGET_SPEED,5);
-  165   1        //if(RES > 1000||DATA[1]<10)  TARGET_SPEED=-1000;//下坡限速  
-  166   1        //TARGET_SPEED=SPEED; //min_SPEED + (max_SPEED - min_SPEED)/10*ANGLE;
-  167   1          //利用舵机打角角度，处理出速度目标值
-  168   1          StepMotorControl(RES,TARGET_SPEED);//电机输出
-  169   1          SteeringControl(-ANGLE);
+  122   1          lcd_init();//显示屏初始化
+  123   1          ISR_INIT();
+  124   1          EnableGlobalIRQ();//中断初始化
+  125   1      }
+  126          
+  127          void CONTROL_SYS_INIT(){
+  128   1          //状态函数列表初始化
+  129   1          func[0] = FUNC_STRAIGHT;
+  130   1          func[1] = FUNC_INTO_CURVE;
+  131   1          func[2] = FUNC_ON_CURVE;
+  132   1          func[3] = FUNC_OUT_CURVE;
+  133   1          func[4] = FUNC_INTO_CIRCLE;
+  134   1          func[5] = FUNC_CROSS;
+  135   1          func[6] = FUNC_OUT_CIRCLE;
+  136   1          func[7] = FUNC_JUNCTION;
+  137   1          EM_INIT();//电磁传感器初始化
+  138   1          ENCODING_INIT();//编码器初始化
+  139   1          StepMotorControl_INIT();//步进电机控制系统初始化
+  140   1          SteeringControl_INIT();//舵机控制系统初始化
+  141   1          lcd_clear(BLUE);
+  142   1          lcd_clear(WHITE);//lcd刷新
+  143   1          SC_flag=0;//三叉路口标志位
+  144   1          flag=0;
+  145   1          SPO=0;
+  146   1          b=0;
+  147   1      }
+  148          
+  149          void Data_update(){
+  150   1          int ERROR;
+  151   1          EM_READ(DATA);//读取数据
+  152   1          ERROR = EM_CALC_POS_RES(DATA)*1000;
+  153   1          LCD("R",DATA[0],0);//显示电感值
+  154   1          LCD("RM",DATA[1],1);
+  155   1          LCD("LM",DATA[2],2);
+  156   1          LCD("L",DATA[3],3);
+  157   1          //LCD("SPEED",RES,4);//显示编码器读取数据
+  158   1          //LCD("ANGLE",ANGLE,5);//显示角度
+  159   1          LCD("D",ERROR,4);//显示误差
+  160   1          RES = ENCODING_READ_RESULT();//编码器读取电机转速
+  161   1          backup=(DATA[1]-DATA[2]>0 ? DATA[1]-DATA[2] : DATA[2]-DATA[1]);
+  162   1      }
+  163          
+  164          void ControlSys() {
+  165   1         //CUR_STATUS = CAR_STATUS_JUDGE();
+  166   1        // LCD("STATU",CUR_STATUS,8);
+  167   1         //(*func[CUR_STATUS])();
+  168   1        FORWARD_FUNC(0,0);
+  169   1          
   170   1      }
   171          
-  172          //直线行驶状态函数实现
-  173          void FUNC_STRAIGHT() {
-  174   1          //SteeringPID_State(ON_STRAIGHT);
-  175   1          FORWARD_FUNC(0,0);
-  176   1      }
-  177          
-  178          //入弯状态函数实现
-  179          void FUNC_INTO_CURVE(){
-  180   1          //SteeringPID_State(ON_TURN);
-  181   1          FORWARD_FUNC(0,0);
-  182   1          CUR_STATUS = ON_CURVE;
-  183   1      }
-  184          
-  185          //在弯道中状态函数实现
-  186          void FUNC_ON_CURVE(){
-  187   1          FORWARD_FUNC(0,0);
-  188   1      }
-C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     08/03/22  21:46:13  PAGE 4   
+  172          //前进函数
+  173          void FORWARD_FUNC(float USERANGLE,int SPEED){   
+  174   1          float Kp;  
+  175   1          Kp = (backup/((DATA[1]+DATA[2]+DATA[0]+DATA[3])*0.53))*130;//60
+  176   1          //LCD("Kp",Kp,5);//显示角度
+  177   1          ANGLE = ANGLE_GETANGLE(DATA,USERANGLE,Kp,0,70);//位置式PIDKp = (backup/(DATA[1]+DATA[2]))*50;
+  178   1          if(DATA[0]<10&&DATA[3]>300) ANGLE=40;
+  179   1          if(DATA[3]<10&&DATA[0]>300) ANGLE=-40;
+  180   1         //60ANGLE = ANGLE_GETANGLE(DATA,USERANGLE,Kp,34,25);//位置式PID
+  181   1          LCD("ANGLE",ANGLE,8);//显示角度 
+  182   1          if (SPEED == 0) TARGET_SPEED = (400-(int)(backup*0.16));
+  183   1          else  TARGET_SPEED=SPEED;  //弯道最低+直道加速0.013
+  184   1          b=(b>RES ? b : RES);
+  185   1          LCD("TS",RES,5);
+  186   1          if(RES > 2000)  TARGET_SPEED=0;//下坡限速 
+  187   1          if(DATA[1]<10) TARGET_SPEED=-1000; 
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     18/03/22  21:56:56  PAGE 4   
 
-  189          
-  190          //出弯状态函数实现
-  191          void FUNC_OUT_CURVE(){
-  192   1          //SteeringPID_State(ON_STRAIGHT);
-  193   1          FORWARD_FUNC(0,0);
-  194   1          CUR_STATUS = STRAIGHT;
-  195   1      }
-  196          
-  197          //入环状态函数实现
-  198          void FUNC_INTO_CIRCLE(){
-  199   1          //SteeringPID_State(ON_TURN);
-  200   1        delay_ms(1000);
-  201   1          if(DATA[0]>DATA[3]) SteeringControl(40);
-  202   1          else SteeringControl(-40);
-  203   1          delay_ms(1000);
-  204   1          CUR_STATUS = INTO_CIRCLE;
-  205   1      }
-  206          
-  207          //在十字路口中状态函数实现
-  208          void FUNC_CROSS(){
-  209   1          FORWARD_FUNC(1,0);
-  210   1      }
-  211          
-  212          //出环状态函数实现
-  213          void FUNC_OUT_CIRCLE(){
-  214   1          //SteeringPID_State(ON_STRAIGHT);
-  215   1          FORWARD_FUNC(0,0);
-  216   1          delay_ms(1000);
-  217   1          if(DATA[0]>DATA[3]) SteeringControl(-40);
-  218   1          else SteeringControl(40);
-  219   1          delay_ms(1000);
-  220   1          CUR_STATUS = STRAIGHT;
-  221   1      }
-  222          void FUNC_JUNCTION(){
-  223   1          FORWARD_FUNC(0,0);
-  224   1      }
-  225          
+  188   1          //if(DATA[1]+DATA[2]>1800&&DATA[1]+DATA[2]<2000&&DATA[1]<1100&&DATA[2]<1100&&DATA[0]+DATA[3]>500)  SPO=
+             -1;
+  189   1          //LCD("SP",SPO,8);  
+  190   1        //TARGET_SPEED=SPEED; //min_SPEED + (max_SPEED - min_SPEED)/10*ANGLE;
+  191   1          //利用舵机打角角度，处理出速度目标值
+  192   1          StepMotorControl(RES,TARGET_SPEED);//电机输出
+  193   1          SteeringControl(-ANGLE);
+  194   1      }
+  195          
+  196          //直线行驶状态函数实现
+  197          void FUNC_STRAIGHT() {
+  198   1          //SteeringPID_State(ON_STRAIGHT);
+  199   1          FORWARD_FUNC(0,0);
+  200   1      }
+  201          
+  202          //入弯状态函数实现
+  203          void FUNC_INTO_CURVE(){
+  204   1          //SteeringPID_State(ON_TURN);
+  205   1          FORWARD_FUNC(0,0);
+  206   1          CUR_STATUS = ON_CURVE;
+  207   1      }
+  208          
+  209          //在弯道中状态函数实现
+  210          void FUNC_ON_CURVE(){
+  211   1          FORWARD_FUNC(0,0);
+  212   1      }
+  213          
+  214          //出弯状态函数实现
+  215          void FUNC_OUT_CURVE(){
+  216   1          //SteeringPID_State(ON_STRAIGHT);
+  217   1          FORWARD_FUNC(0,0);
+  218   1          CUR_STATUS = STRAIGHT;
+  219   1      }
+  220          
+  221          //入环状态函数实现
+  222          void FUNC_INTO_CIRCLE(){
+  223   1          //SteeringPID_State(ON_TURN);
+  224   1        delay_ms(1000);
+  225   1          if(DATA[0]>DATA[3]) SteeringControl(40);
+  226   1          else SteeringControl(-40);
+  227   1          delay_ms(1000);
+  228   1          CUR_STATUS = INTO_CIRCLE;
+  229   1      }
+  230          
+  231          //在十字路口中状态函数实现
+  232          void FUNC_CROSS(){
+  233   1          FORWARD_FUNC(1,0);
+  234   1      }
+  235          
+  236          //出环状态函数实现
+  237          void FUNC_OUT_CIRCLE(){
+  238   1          //SteeringPID_State(ON_STRAIGHT);
+  239   1          FORWARD_FUNC(0,0);
+  240   1          delay_ms(1000);
+  241   1          if(DATA[0]>DATA[3]) SteeringControl(-40);
+  242   1          else SteeringControl(40);
+  243   1          delay_ms(1000);
+  244   1          CUR_STATUS = STRAIGHT;
+  245   1      }
+  246          void FUNC_JUNCTION(){
+  247   1          FORWARD_FUNC(0,0);
+  248   1      }
+  249          
+*** WARNING C135 IN LINE 117 OF CODE\USER\CONTROL_SYSTEM.c: 'CAR_STATUS_JUDGE': no return value
+*** WARNING C135 IN LINE 117 OF CODE\USER\CONTROL_SYSTEM.c: 'CAR_STATUS_JUDGE': no return value
+
+C251 COMPILER V5.60.0,  CONTROL_SYSTEM                                                     18/03/22  21:56:56  PAGE 5   
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       837     ------
+  code size            =       944     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
   pdata size           =    ------     ------
-  xdata size           =        44     ------
+  xdata size           =        50     ------
   xdata-const size     =    ------     ------
   edata size           =    ------     ------
   bit size             =    ------     ------
@@ -260,8 +290,8 @@ Module Information          Static   Overlayable
   far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =        27     ------
+  hconst size          =        21     ------
 End of Module Information.
 
 
-C251 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
+C251 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)

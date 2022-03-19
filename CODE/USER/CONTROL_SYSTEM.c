@@ -18,12 +18,31 @@ int SC_flag;//三叉路口标志位
 int flag;
 int TARGET_SPEED;
 float ANGLE;
-int b;
+int b,h,s,SPO;
 CAR_STATUS CAR_STATUS_JUDGE() {//状态判断
-    int huan_dw;//环岛标志位
+//    int huan_dw;//环岛标志位
+//	if(huan_dw==0&&DATA[0]>1400&&(DATA[3]>1400||DATA[1]>2000)&&DATA[0]>DATA[3]) {//右环入
+//		SteeringControl(40);
+//		h++;
+//	}
+//	if(huan_dw==1&&DATA[0]>1400&&(DATA[3]>1400||DATA[1]>2000)&&DATA[0]>DATA[3])//右环出
+//		SteeringControl(0);
+//	
+//	
+
+//	      /******三叉判断********/
+//	if(flag==0&&DATA[2]+DATA[1]<1700&&DATA[0]>450&&DATA[3]>450&&DATA[0]<1400&&DATA[3]<1400){//三叉右打角
+//	 SteeringControl(-40);
+//	 s++ ;
+//	}//s==12
+//	if(flag==1&&DATA[2]+DATA[1]<1700&&DATA[0]>450&&DATA[3]>450&&DATA[0]<1400&&DATA[3]<1400)//三叉左打脚
+//		SteeringControl(40);
+
+//	       /*****出环、出三叉判断********/
+//		if(s>1&&DATA[0]>1400)flag=1;
   /*三叉处理*/
 //	if(DATA[1]<500&&DATA[2]<500&&DATA[0]<600&&DATA[3]<600&&SC_flag==0&&flag==0){//入左三叉
-//		SC_flag=1;
+//		    SC_flag=1;
 //        SteeringControl(-40);
 //        return ON_JUNCTION;
 //	}
@@ -58,7 +77,7 @@ CAR_STATUS CAR_STATUS_JUDGE() {//状态判断
 //        return OUT_CIRCLE;
 //   }
 //   else{//防止再次入环
-        return STRAIGHT;
+      //  return STRAIGHT;
 //   }
 	 
 //		if((DATA[0]>90&&DATA[1]>90&&DATA[1]>=65&&
@@ -121,10 +140,10 @@ void CONTROL_SYS_INIT(){
     SteeringControl_INIT();//舵机控制系统初始化
     lcd_clear(BLUE);
     lcd_clear(WHITE);//lcd刷新
-	SC_flag=0;//三叉路口标志位
+	  SC_flag=0;//三叉路口标志位
     flag=0;
-	
-	b=0;
+	  SPO=0;
+	  b=0;
 }
 
 void Data_update(){
@@ -143,26 +162,31 @@ void Data_update(){
 }
 
 void ControlSys() {
-   CUR_STATUS = CAR_STATUS_JUDGE();
-   LCD("STATU",CUR_STATUS,8);
-   (*func[CUR_STATUS])();
-	//FORWARD_FUNC(0,0);
+   //CUR_STATUS = CAR_STATUS_JUDGE();
+  // LCD("STATU",CUR_STATUS,8);
+   //(*func[CUR_STATUS])();
+	FORWARD_FUNC(0,0);
     
 }
 
 //前进函数
 void FORWARD_FUNC(float USERANGLE,int SPEED){	  
-    float Kp;  	 
-    Kp = (backup/(DATA[1]+DATA[2]))*98;//60
+    float Kp;  
+    Kp = (backup/((DATA[1]+DATA[2]+DATA[0]+DATA[3])*0.53))*130;//60
     //LCD("Kp",Kp,5);//显示角度
-    ANGLE = ANGLE_GETANGLE(DATA,USERANGLE,Kp,0,40);//位置式PIDKp = (backup/(DATA[1]+DATA[2]))*50;
+    ANGLE = ANGLE_GETANGLE(DATA,USERANGLE,Kp,0,70);//位置式PIDKp = (backup/(DATA[1]+DATA[2]))*50;
+		if(DATA[0]<10&&DATA[3]>300) ANGLE=40;
+		if(DATA[3]<10&&DATA[0]>300) ANGLE=-40;
 	 //60ANGLE = ANGLE_GETANGLE(DATA,USERANGLE,Kp,34,25);//位置式PID
 	  LCD("ANGLE",ANGLE,8);//显示角度 
-    if (SPEED == 0) TARGET_SPEED = (530-(int)(backup*0.16));
+    if (SPEED == 0) TARGET_SPEED = (400-(int)(backup*0.16));
     else  TARGET_SPEED=SPEED;  //弯道最低+直道加速0.013
 	  b=(b>RES ? b : RES);
-    LCD("TS",TARGET_SPEED,5);
-	//if(RES > 1000||DATA[1]<10)  TARGET_SPEED=-1000;//下坡限速  
+    LCD("TS",RES,5);
+	  if(RES > 2000)  TARGET_SPEED=0;//下坡限速 
+		if(DATA[1]<10) TARGET_SPEED=-1000; 
+		//if(DATA[1]+DATA[2]>1800&&DATA[1]+DATA[2]<2000&&DATA[1]<1100&&DATA[2]<1100&&DATA[0]+DATA[3]>500)  SPO=1;
+    //LCD("SP",SPO,8);	
 	//TARGET_SPEED=SPEED; //min_SPEED + (max_SPEED - min_SPEED)/10*ANGLE;
     //利用舵机打角角度，处理出速度目标值
     StepMotorControl(RES,TARGET_SPEED);//电机输出

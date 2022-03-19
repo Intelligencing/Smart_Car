@@ -1,4 +1,4 @@
-C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 08/03/22  21:28:04  PAGE 1   
+C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 18/03/22  21:03:17  PAGE 1   
 
 
 C251 COMPILER V5.60.0, COMPILATION OF MODULE STEP_MOTOR_CONTROL
@@ -34,27 +34,28 @@ stmt  level    source
    23   1          //     PID_SET_TARGET(&MOTOR,TARGET_SPEED);
    24   1          //     STEP_MOTOR_FORWORD(PID_CALC_RESULT(&STEP_MOTOR_PID,CURRENT_SPEED));
    25   1          // }
-   26   1          int delta;
-   27   1          int max_pwm;
-   28   1          max_pwm = MOTOR_MAX_PWM(CURRENT_SPEED);
-   29   1          PID_SET_TARGET(&STEPMOTOR_PID,TARGET_SPEED);
-   30   1          delta = PID_CALC_RESULT(&STEPMOTOR_PID,CURRENT_SPEED);
-   31   1          MOTOR.CURRENT_PWM_DUTY = MOTOR.CURRENT_PWM_DUTY +delta ;
-   32   1          if(MOTOR.CURRENT_PWM_DUTY > max_pwm) MOTOR.CURRENT_PWM_DUTY = max_pwm;//步进电机限幅
-   33   1          if(MOTOR.CURRENT_PWM_DUTY < 0) MOTOR.CURRENT_PWM_DUTY = 0;
-   34   1          //if(MOTOR.CURRENT_PWM_DUTY>=0) STEP_MOTOR_FORWARD(&MOTOR,MOTOR.CURRENT_PWM_DUTY);
-   35   1          //if(MOTOR.CURRENT_PWM_DUTY<0) STEP_MOTOR_BACK(&MOTOR,-MOTOR.CURRENT_PWM_DUTY);
-   36   1          STEP_MOTOR_FORWARD(&MOTOR,MOTOR.CURRENT_PWM_DUTY);
-   37   1          //LCD("MOTOR_D",delta,6);
-   38   1          //LCD("PWM",MOTOR.CURRENT_PWM_DUTY,7);
-   39   1          
-   40   1          return delta;
-   41   1      }
+   26   1           int delta;
+   27   1           int max_pwm;
+   28   1           max_pwm = MOTOR_MAX_PWM(CURRENT_SPEED);
+   29   1           PID_SET_TARGET(&STEPMOTOR_PID,TARGET_SPEED);
+   30   1           delta = PID_CALC_RESULT(&STEPMOTOR_PID,CURRENT_SPEED);
+   31   1           MOTOR.CURRENT_PWM_DUTY = MOTOR.CURRENT_PWM_DUTY +delta ;
+   32   1           if(MOTOR.CURRENT_PWM_DUTY > max_pwm) MOTOR.CURRENT_PWM_DUTY = max_pwm;//步进电机限幅
+   33   1           if(MOTOR.CURRENT_PWM_DUTY < -max_pwm) MOTOR.CURRENT_PWM_DUTY = -max_pwm;
+   34   1          LCD("I",MOTOR.CURRENT_PWM_DUTY,6);
+   35   1          if(MOTOR.CURRENT_PWM_DUTY>=0) STEP_MOTOR_FORWARD(&MOTOR,MOTOR.CURRENT_PWM_DUTY);
+   36   1          if(MOTOR.CURRENT_PWM_DUTY<0) STEP_MOTOR_BACK(&MOTOR,-MOTOR.CURRENT_PWM_DUTY);
+   37   1          //STEP_MOTOR_FORWARD(&MOTOR,MOTOR.CURRENT_PWM_DUTY);
+   38   1          //LCD("MOTOR_D",delta,6);
+   39   1          //LCD("PWM",MOTOR.CURRENT_PWM_DUTY,7);
+   40   1          
+   41   1          return delta;
+   42   1      }
 
 
 Module Information          Static   Overlayable
 ------------------------------------------------
-  code size            =       234     ------
+  code size            =       288     ------
   ecode size           =    ------     ------
   data size            =    ------     ------
   idata size           =    ------     ------
@@ -66,12 +67,12 @@ Module Information          Static   Overlayable
   ebit size            =    ------     ------
   bitaddressable size  =    ------     ------
   ebitaddressable size =    ------     ------
-  far data size        =    ------     ------
-C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 08/03/22  21:28:04  PAGE 2   
+C251 COMPILER V5.60.0,  STEP_MOTOR_CONTROL                                                 18/03/22  21:03:17  PAGE 2   
 
+  far data size        =    ------     ------
   huge data size       =    ------     ------
   const size           =    ------     ------
-  hconst size          =    ------     ------
+  hconst size          =         2     ------
 End of Module Information.
 
 
